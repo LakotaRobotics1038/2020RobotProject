@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.robot.CANSpark1038;
+import frc.robot.CANSpark1038;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
