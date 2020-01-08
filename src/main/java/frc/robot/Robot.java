@@ -29,6 +29,8 @@ public class Robot extends TimedRobot {
   private final DriveTrain driveTrain = DriveTrain.getInstance();
   public Compressor c = new Compressor();
 
+  public static DriveTrain robotDrive = DriveTrain.getInstance();
+
    // Joystick
    private final Joystick1038 driverJoystick = new Joystick1038(0);
    public double multiplyer;

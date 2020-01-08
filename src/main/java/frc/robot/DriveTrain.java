@@ -121,6 +121,10 @@ public class DriveTrain extends Subsystem {
         differentialDrive.arcadeDrive(yaxis, xaxis, true);
     }
 
+    public void drive(double moveVal, double rotateVal) {
+		differentialDrive.curvatureDrive(moveVal, rotateVal, false);
+	}
+
     @Override
     protected void initDefaultCommand() {
 

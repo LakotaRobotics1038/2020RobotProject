@@ -1,8 +1,7 @@
 package frc.subsystem;
 
-import frc.robot.I2CGyro;
-import org.usfirst.frc.team1038.robot.Robot;
-import org.usfirst.frc.team1038.subsystem.DriveTrain;
+import frc.robot.Robot;
+import frc.robot.DriveTrain;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.PIDCommand;
@@ -21,7 +20,7 @@ public class TurnCommand extends PIDCommand {
 //	private final static double P = 0.007;
 //	private final static double I = 0.000;
 //	private final static double D = 0.000;
-	private I2CGyro gyroSensor = I2CGyro.getInstance();
+	//private I2CGyro gyroSensor = I2CGyro.getInstance();
 	private DriveTrain drive = DriveTrain.getInstance();
 	private PIDController turnPID = getPIDController();
 	
