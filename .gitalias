@@ -9,3 +9,4 @@
     jurneeCommit = commit --author=\"Jurnee Saineghi <jurnee.t.saineghi@gmail.com>\" -m
     julianCommit = commit --author=\"Julian Heidt <julian.heidt@gmail.com>\" -m
     drewCommit = commit --author=\"Drew Friend <dfriend414@gmail.com>\" -m
+    ryanCommit = commit --author=\"Ryan Sippy <rdsippy@gmail.com>\" -m
