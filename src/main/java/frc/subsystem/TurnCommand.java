@@ -3,7 +3,7 @@ package frc.subsystem;
 import frc.robot.Robot;
 import frc.robot.DriveTrain;
 
-import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
