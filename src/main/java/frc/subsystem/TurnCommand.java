@@ -31,7 +31,7 @@ public class TurnCommand extends PIDCommand {
 	public TurnCommand(int setpoint) {
 		super(P, I, D);
 		setSetpoint(setpoint);
-		turnPID.setAbsoluteTolerance(TOLERANCE);
+		turnPID.setTolerance(TOLERANCE);
 		turnPID.setOutputRange(-OUTPUT_RANGE, OUTPUT_RANGE);
 		super.setInputRange(0, 360);
 		turnPID.setContinuous(true);
