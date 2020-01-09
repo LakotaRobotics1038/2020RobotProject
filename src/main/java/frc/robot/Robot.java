@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 
+import frc.subsystem.*;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -26,7 +28,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   // Drive
-  private final DriveTrain driveTrain = DriveTrain.getInstance();
+  public static DriveTrain driveTrain = DriveTrain.getInstance();
   public Compressor c = new Compressor();
 
    // Joystick

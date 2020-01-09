@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.subsystem;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -16,14 +16,18 @@ public class DriveTrain extends Subsystem {
     public driveModes currentDriveMode = driveModes.dualArcadeDrive;
 
     public final double WHEEL_DIAMETER = 4;
+    private final int RIGHT_FRONT_SPARK_PORT = 53;
+    private final int LEFT_FRONT_SPARK_PORT = 53;
+    private final int RIGHT_BACK_SPARK_PORT = 53;
+    private final int LEFT_BACK_SPARK_PORT = 53;
 
     public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(4, 5);
     public boolean isHighGear = false;
 
-    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(53, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(52, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(51, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(50, MotorType.kBrushless);
+    public CANSpark1038 CANSparkRightFront = new CANSpark1038(RIGHT_FRONT_SPARK_PORT, MotorType.kBrushless);
+    public CANSpark1038 CANSparkRightBack = new CANSpark1038(RIGHT_BACK_SPARK_PORT, MotorType.kBrushless);
+    public CANSpark1038 CANSparkLeftFront = new CANSpark1038(LEFT_FRONT_SPARK_PORT, MotorType.kBrushless);
+    public CANSpark1038 CANSparkLeftBack = new CANSpark1038(LEFT_BACK_SPARK_PORT, MotorType.kBrushless);
 
     public CANEncoder CANSparkRightEncoder = CANSparkRightBack.getEncoder();
     public CANEncoder CANSparkLeftEncoder = CANSparkLeftBack.getEncoder();
@@ -85,6 +89,9 @@ public class DriveTrain extends Subsystem {
     public void lowGear() {
         isHighGear = false;
         GearChangeSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void resetEncoders() {
     }
 
     // Switch between drive modes
