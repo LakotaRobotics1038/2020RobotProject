@@ -34,6 +34,10 @@ public class Robot extends TimedRobot {
   private final Joystick1038 driverJoystick = new Joystick1038(0);
   public double multiplyer;
 
+  //Endgame
+  private final Endgame endgame = Endgame.getInstance();
+
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -56,6 +60,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    endgame.endgamePeriodic();
   }
 
   /**
@@ -98,6 +103,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
   }
 
   /**
@@ -122,14 +128,12 @@ public class Robot extends TimedRobot {
           driverJoystick.getLeftJoystickHorizontal() * multiplyer);
       break;
     }
+    if(driverJoystick.getXButton()){
+      endgame.setIsLifting();
+    }
+    if(driverJoystick.getYButton()){
+      endgame.setIsAdjusting();
+    }
   }
 
-  public void endgamePeriodic() {
-    if (driverJoystick.getYButton() == true) {
-      Endgame.getInstance();
-    }
-    if (driverJoystick.getXButton() == true) {
-      Endgame.setIsLifting();
-    }
-  }
 }
