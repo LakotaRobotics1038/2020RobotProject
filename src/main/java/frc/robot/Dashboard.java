@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //camera imports
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
-// TODO gyro 
+// Gyro imports
+import org.usfirst.frc.team1038.robot.I2CGyro;
 // TODO match time (sam's turn)
 public class Dashboard {
     private static Dashboard dashboard;
@@ -25,15 +26,21 @@ public class Dashboard {
     * Instantiates dashboard object
     */
     private Dashboard() {
+            //matchtime
             SmartDashboard.putNumber("Match Time", -1);
-
+            //Camera
             UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
+            //Gyro
+            putBoolean("Controls/Reset Gyro", false);
+            putBoolean("Controls/Reset Gyro", false);
     }
 
     public void update() {
         // TODO make sam fix SmartDashboard.putNumber("Left Distance", arduinoReader.getFrontLeftLaserVal());
         // TODO make sam fix SmartDashboard.putNumber("Right Distance", arduinoReader.getFrontRightLaserVal());
         SmartDashboard.putNumber("Match Time", driverStation.getMatchTime());
+        //putNumber("Gyro", I2CGyro.getInstance().getAngle());    
+        putData("Drivers/Gyro", I2CGyro.getInstance());
         // color displayed   
         gameData = DriverStation.getInstance().getGameSpecificMessage();
         if(gameData.length() > 0) {
@@ -63,7 +70,7 @@ public class Dashboard {
             //Code for no data received yet
         }
     }
-
+   
   
 }
 
