@@ -30,13 +30,26 @@ public class Spinner extends Subsystem {
 
     public void spinnerPeriodic() {
         if (rotationEnabled){
-            //spins the thing
+            //TODO spins the thing
         }
         else if (colorEnabled){
-            //do the other thing
+            //TODO do the other thing
         }
     }
 
+    public void setRotationEnabled(){
+        if(!colorEnabled){
+            rotationEnabled = true;
+        }
+    }
+
+    public void setcolorEnabled(){
+        if(!rotationEnabled){
+            colorEnabled = true;
+        }
+    }
+
+    
 
     @Override
     protected void initDefaultCommand() {
