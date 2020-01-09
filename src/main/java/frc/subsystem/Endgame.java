@@ -7,7 +7,7 @@ import frc.robot.CANSpark1038;
 
 
 public class Endgame extends Subsystem {
-    private final int endgameMotorPort = 54;
+    private final int endgameMotorPort = 58;
     private CANSpark1038 endgameMotor = new CANSpark1038(endgameMotorPort, MotorType.kBrushless);
     private static Endgame endgame;
     private boolean isLifting = false;
@@ -27,9 +27,9 @@ public class Endgame extends Subsystem {
             //TODO Lifts the Robot
         }
         else if (isAdjusting){
-            //TODO Adjust the Robot Position on
+            //TODO Adjust the Robot Position
 
-            //Change Limit Switch when Drew/Sam get Done with Class 
+            //TODO Change Limit Switch when Drew/Sam get Done with Class 
             while (limitSwitch.get()>0){
                 endgameMotor.set(.5);
             }
