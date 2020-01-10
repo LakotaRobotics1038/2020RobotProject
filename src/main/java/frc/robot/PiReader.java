@@ -26,21 +26,15 @@ public class PiReader {
     private final int BAUD_RATE = 9600;
 
     // Sensors
-    private int frontLaserSensorData = 0;
-    private double lineFollowerData = 0;
-    private int rearLaserSensorData = 0;
-    private int frontLeftLaserSensorData = 0;
-    private int frontRightLaserSensorData = 0;
-    private int scoringAccelerometerData = 0;
-    private int acquisitionAccelerometerData = 0;
+    
 
     // Objects
     private static SerialPort piPort;
     private static PiReader PiReader;
 
-    private String[] sensors = { "frontLeftLaserSensor", "lineFollower" };
+    private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch", "colorSensor"};
 
-    private Map<String, Double> sensorValues = Map.of("frontLeftLaserSensor", null, "lineFollower", null);
+    private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch", null, "colorSensor", null);
 
     /**
      * Returns the pi instance created when the robot starts
@@ -117,24 +111,12 @@ public class PiReader {
     }
 
     /**
-     * The front laser looking towards the ground
+     * The front left laser looking forwards
      * 
-     * @return Distance to ground from front bottom laser in cm
+     * @return Distance to object from front left in cm
      */
-    public int getFrontBottomLaserVal() {
-        return frontLaserSensorData;
-    }
-
-    /**
-     * The rear laser looking towards the ground
-     * 
-     * @return Distance to ground from rear bottom laser in cm
-     */
-    public int getRearBottomLaserVal() {
-        number = rearLaserSensorData;
-        long longNumber = Math.round(number);
-        int intNumber = Math.toIntExact(longNumber);
-        return intNumber;
+    public int getGyroVal() {
+        return (int) Math.round(sensorValues.get("gyro"));
     }
 
     /**
@@ -142,44 +124,25 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getFrontLeftLaserVal() {
-        return (int) Math.round(sensorValues.get("frontLeftLaserSensor"));
+    public int getLeftEndgameSwitchVal() {
+        return (int) Math.round(sensorValues.get("leftEndgameSwitch"));
     }
 
     /**
-     * The front right laser looking forwards
+     * The front left laser looking forwards
      * 
-     * @return Distance to object from front right in cm
+     * @return Distance to object from front left in cm
      */
-    public int getFrontRightLaserVal() {
-        return frontRightLaserSensorData;
+    public int getRightEndgameSwitchVal() {
+        return (int) Math.round(sensorValues.get("rightEndgameSwitch"));
     }
 
     /**
-     * Position of middle of white tape
+     * The front left laser looking forwards
      * 
-     * @return Middle of white tape as an average
+     * @return Distance to object from front left in cm
      */
-    public double getLineFollowerVal() {
-        return lineFollowerData;
-    }
-
-    /**
-     * Accelerometer on the four bar
-     * 
-     * @return Angle of scoring arm by calculating from vertical and horizontal
-     *         forces
-     */
-    public int getScoringAccelerometerVal() {
-        return scoringAccelerometerData;
-    }
-
-    /**
-     * Accelerometer on the wrist piece
-     * 
-     * @return Angle of wrist by calculating from vertical and horizontal forces
-     */
-    public int getAcqAccelerometerVal() {
-        return acquisitionAccelerometerData;
+    public int getColorSensorVal() {
+        return (int) Math.round(sensorValues.get("colorSensor"));
     }
 }
