@@ -26,15 +26,15 @@ public class PiReader {
     private final int BAUD_RATE = 9600;
 
     // Sensors
-    
 
     // Objects
     private static SerialPort piPort;
     private static PiReader PiReader;
 
-    private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch", "colorSensor"};
+    private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch", "colorSensor" };
 
-    private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch", null, "colorSensor", null);
+    private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
+            null, "colorSensor", null);
 
     /**
      * Returns the pi instance created when the robot starts
