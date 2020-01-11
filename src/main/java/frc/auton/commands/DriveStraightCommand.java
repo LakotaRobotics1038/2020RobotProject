@@ -4,13 +4,13 @@
 package frc.auton.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.subsystem.DriveTrain;
+import frc.robot.PiReader;
+
 //import org.usfirst.frc.team1038.robot.I2CGyro;
-import frc.robot.Robot;
-public class DriveStraightCommand extends PIDCommand {
-	private double encoderZero;
+public class DriveStraightCommand extends CommandBase {
 	private final double END_DRIVE_SPEED = 0.0;
 	private final double END_DRIVE_ROTATION = 0.0;
 	private final double TOLERANCE = 1.9;
@@ -21,10 +21,10 @@ public class DriveStraightCommand extends PIDCommand {
 	private final static double tP = 0.200; // .23 proto
 	private final static double tI = 0.001;
 	private final static double tD = 0.000;
-	private I2CGyro gyroSensor = I2CGyro.getInstance();
+	private PiReader gyroSensor = PiReader.getInstance();
 	private final DriveTrain drive;
-	private PIDController drivePID = getController();
-	private PIDController turnPID = new PIDController(tP, tI, tD, gyroSensor, Robot.emptySpark);
+	private PIDController drivePID; 
+	private PIDController turnPID;
 
 	/**
 	 * Makes a new Drive Straight Command
@@ -33,8 +33,10 @@ public class DriveStraightCommand extends PIDCommand {
 	 */
 	public DriveStraightCommand(double setpoint) {
 		// Drive
-		super(new PIDController(dP, dI, dD), DriveTrain.getInstance()::getLeftDriveEncoderDistance, setpoint,
-				d -> DriveTrain.getInstance().dualArcadeDrive(d));
+		
+		drivePID = new PIDController(dP,dI,dD);
+		turnPID = new PIDController(tP, tI, tD);
+
 		drive = DriveTrain.getInstance();
 		drivePID.setPID(dP, dI, dD);
 

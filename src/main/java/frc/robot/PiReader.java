@@ -118,9 +118,11 @@ public class PiReader {
     public int getGyroVal() {
         return (int) Math.round(sensorValues.get("gyro"));
     }
-
+    public double getAngle(){
+        return getGyroVal();
+    }
     public void reset() {
-        
+
     }
 
     /**
