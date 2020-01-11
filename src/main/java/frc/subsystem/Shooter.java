@@ -28,13 +28,6 @@ public class Shooter implements Subsystem {
    public void setShooterEnabled() {
 
    }
-
-
    
-   
-    @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
-
-    }
+    
 }

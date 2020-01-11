@@ -2,10 +2,11 @@ package frc.subsystem;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import frc.robot.CANSpark1038;
 
-public class Spinner extends Subsystem {
+public class Spinner implements Subsystem {
     private final int SPINNER_MOTOR_PORT = 50;
     private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
     private boolean rotationEnabled = false;
@@ -51,9 +52,6 @@ public class Spinner extends Subsystem {
 
     
 
-    @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
-    }
+  
 
 }

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.subsystem.DriveTrain;
 //import org.usfirst.frc.team1038.robot.I2CGyro;
 import frc.robot.Robot;
-
 public class DriveStraightCommand extends PIDCommand {
 	private double encoderZero;
 	private final double END_DRIVE_SPEED = 0.0;
@@ -23,7 +22,7 @@ public class DriveStraightCommand extends PIDCommand {
 	private final static double tI = 0.001;
 	private final static double tD = 0.000;
 	private I2CGyro gyroSensor = I2CGyro.getInstance();
-	private DriveTrain drive = DriveTrain.getInstance();
+	private final DriveTrain drive;
 	private PIDController drivePID = getController();
 	private PIDController turnPID = new PIDController(tP, tI, tD, gyroSensor, Robot.emptySpark);
 
@@ -35,10 +34,13 @@ public class DriveStraightCommand extends PIDCommand {
 	public DriveStraightCommand(double setpoint) {
 		// Drive
 		super(new PIDController(dP, dI, dD), DriveTrain.getInstance()::getLeftDriveEncoderDistance, setpoint,
-				d -> DriveTrain.getInstance().tankDrive(d, d));
+				d -> DriveTrain.getInstance().dualArcadeDrive(d));
+		drive = DriveTrain.getInstance();
 		drivePID.setPID(dP, dI, dD);
-		//*12 Converts inches to feet
-		drivePID.setSetpoint(setpoint * 12 + (DriveTrain.getInstance().getLeftDriveEncoderDistance()));
+
+
+		// *12 Converts inches to feet
+		drivePID.setSetpoint(setpoint * 12 + (drive.getLeftDriveEncoderDistance()));
 		drivePID.setTolerance(TOLERANCE);
 		// drivePID.setOutputRange(-MAX_OUTPUT, MAX_OUTPUT);
 		drivePID.disableContinuousInput();
@@ -48,7 +50,7 @@ public class DriveStraightCommand extends PIDCommand {
 		turnPID.setTolerance(TOLERANCE);
 		turnPID.enableContinuousInput(0, 360);
 		SmartDashboard.putData("Controls/Drive Straight Angle", turnPID);
-		addRequirements(Robot.driveTrain);
+		addRequirements(drive);
 	}
 
 	@Override
@@ -65,11 +67,25 @@ public class DriveStraightCommand extends PIDCommand {
 		// assuming that in the new version of PIDControl they made .enable automatic
 		// drivePID.enable();
 		// turnPID.enable();
-		double distancePID = drivePID.calculate();
-		double anglePID = turnPID.get();
+		double distancePID = drivePID.calculate(drive.getLeftDriveEncoderDistance());
+		double anglePID = turnPID.calculate(gyroSensor.getAngle());
+		// TODO incorperate the turnPID calculate.
+		
 		System.out.println("dist out: " + distancePID + " ang out: " + anglePID + " ang sp: " + turnPID.getSetpoint()
 				+ "ang: " + gyroSensor.getAngle());
-		usePIDOutput(distancePID, anglePID);
+		
+	}
+
+
+	@Override
+	public void end(boolean interrupted) {
+		if(interrupted) {
+			System.out.println("Straight interrupted");
+		}
+		drivePID.reset();
+		turnPID.reset();
+		drive.tankDrive(END_DRIVE_SPEED, END_DRIVE_ROTATION);
+		System.out.println("DriveStraight ended");
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package frc.subsystem;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.CANSpark1038;
 import com.revrobotics.CANEncoder;
@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-public class DriveTrain extends Subsystem {
+public class DriveTrain implements Subsystem {
     public enum driveModes {
         tankDrive, singleArcadeDrive, dualArcadeDrive
     };
@@ -128,8 +128,5 @@ public class DriveTrain extends Subsystem {
         differentialDrive.arcadeDrive(yaxis, xaxis, true);
     }
 
-    @Override
-    protected void initDefaultCommand() {
-
-    }
+   
 }

@@ -1,13 +1,9 @@
 package frc.subsystem;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class Endgame extends Subsystem {
+public class Endgame implements Subsystem {
 
-    @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
-
-    }
+   
    
 }

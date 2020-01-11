@@ -119,6 +119,10 @@ public class PiReader {
         return (int) Math.round(sensorValues.get("gyro"));
     }
 
+    public void reset() {
+        
+    }
+
     /**
      * The front left laser looking forwards
      * 

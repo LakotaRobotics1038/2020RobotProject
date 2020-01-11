@@ -8,6 +8,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 // TODO gyro 
 // TODO match time (sam's turn)
 public class Dashboard {
+
+    private String position;
+    private String autonChooser;
     private static Dashboard dashboard;
     // TODO make sam fix private ArduinoReader arduinoReader = ArduinoReader.getInstance();
     private DriverStation driverStation = DriverStation.getInstance(); 
@@ -21,6 +24,8 @@ public class Dashboard {
     return dashboard;
     }
 
+
+    
     /**
     * Instantiates dashboard object
     */
@@ -58,11 +63,24 @@ public class Dashboard {
                 //This is corrupt data
                 break;
             }
+
+            position = Robot.startPosition.getSelected();
+            autonChooser = Robot.autoChooser.getSelected();
         } 
         else {
             //Code for no data received yet
         }
     }
+
+
+    
+    public String getPosition() {
+        return position;
+    }
+
+    public String getAutonChooser() {
+		return autonChooser;
+	}
 
   
 }
