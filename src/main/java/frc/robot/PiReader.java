@@ -33,7 +33,7 @@ public class PiReader {
 
     private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch", "colorSensor" };
 
-    private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
+    private static Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
             null, "colorSensor", null);
 
     /**
@@ -124,7 +124,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getLeftEndgameSwitchVal() {
+    public static int getLeftEndgameSwitchVal() {
         return (int) Math.round(sensorValues.get("leftEndgameSwitch"));
     }
 
@@ -133,7 +133,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getRightEndgameSwitchVal() {
+    public static int getRightEndgameSwitchVal() {
         return (int) Math.round(sensorValues.get("rightEndgameSwitch"));
     }
 

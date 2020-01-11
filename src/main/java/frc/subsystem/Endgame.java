@@ -2,8 +2,8 @@ package frc.subsystem;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Joystick1038;
 import frc.robot.CANSpark1038;
+import frc.robot.PiReader;
 
 public class Endgame implements Subsystem {
     private final int endgameMotorPort = 58;
@@ -31,11 +31,11 @@ public class Endgame implements Subsystem {
             // TODO Adjust the Robot Position
 
             // TODO Change Limit Switch when Drew/Sam get Done with Class
-            while (limitSwitch.get() > 0) {
+            if ((PiReader.getLeftEndgameSwitchVal()) > 0.5) {
                 endgameMotor.set(.5);
             }
 
-            while (limitSwitch.get() < 0) {
+            else if (PiReader.getLeftEndgameSwitchVal() < 0.5) {
                 endgameMotor.set(-.5);
             }
         }
