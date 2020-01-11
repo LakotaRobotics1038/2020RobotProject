@@ -3,8 +3,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //camera imports
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
+// import edu.wpi.cscore.UsbCamera;
+// import edu.wpi.first.cameraserver.CameraServer;
 // TODO gyro 
 // TODO match time (sam's turn)
 public class Dashboard {
@@ -32,7 +32,7 @@ public class Dashboard {
     private Dashboard() {
             SmartDashboard.putNumber("Match Time", -1);
             
-            UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
+           // UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
     }
 
     public void update() {

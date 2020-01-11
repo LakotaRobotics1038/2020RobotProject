@@ -14,7 +14,6 @@ public class DriveStraightCommand extends CommandBase {
 	private final double END_DRIVE_SPEED = 0.0;
 	private final double END_DRIVE_ROTATION = 0.0;
 	private final double TOLERANCE = 1.9;
-	private final double MAX_OUTPUT = .8;
 	private final static double dP = 0.150; // .04 proto
 	private final static double dI = 0.000;
 	private final static double dD = 0.002;
@@ -22,7 +21,7 @@ public class DriveStraightCommand extends CommandBase {
 	private final static double tI = 0.001;
 	private final static double tD = 0.000;
 	private PiReader gyroSensor = PiReader.getInstance();
-	private final DriveTrain drive;
+	private final DriveTrain drive = DriveTrain.getInstance();
 	private PIDController drivePID; 
 	private PIDController turnPID;
 
@@ -37,7 +36,6 @@ public class DriveStraightCommand extends CommandBase {
 		drivePID = new PIDController(dP,dI,dD);
 		turnPID = new PIDController(tP, tI, tD);
 
-		drive = DriveTrain.getInstance();
 		drivePID.setPID(dP, dI, dD);
 
 
@@ -76,6 +74,11 @@ public class DriveStraightCommand extends CommandBase {
 		System.out.println("dist out: " + distancePID + " ang out: " + anglePID + " ang sp: " + turnPID.getSetpoint()
 				+ "ang: " + gyroSensor.getAngle());
 		
+	}
+
+	public void usePIDOutput() {
+		//TODO tune pid values.
+		drive.dualArcadeDrive(drivePID.calculate(), turnPID.calculate());
 	}
 
 

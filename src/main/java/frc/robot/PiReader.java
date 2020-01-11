@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import java.io.BufferedReader;
 import java.util.Map;
 
 import edu.wpi.first.hal.util.UncleanStatusException;
@@ -22,7 +21,6 @@ public class PiReader {
     private String piDataMap[];
     private static String inputBuffer = "";
     private String line;
-    private double number = 0;
     private final int BAUD_RATE = 9600;
 
     // Sensors
