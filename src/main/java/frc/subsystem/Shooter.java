@@ -2,10 +2,10 @@ package frc.subsystem;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Joystick1038;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.CANSpark1038;
 
-public class Shooter extends Subsystem {
+public class Shooter implements Subsystem {
     // TODO change port numbers
     private final int SHOOTER_MOTOR_1_PORT = 0; 
     private final int SHOOTER_MOTOR_2_PORT = 1; 

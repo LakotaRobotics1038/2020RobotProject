@@ -26,7 +26,7 @@ public class Dashboard {
     */
     private Dashboard() {
             SmartDashboard.putNumber("Match Time", -1);
-
+            
             UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
     }
 
