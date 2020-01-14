@@ -9,8 +9,9 @@ public class Endgame implements Subsystem {
     private final int endgameMotorPort = 58;
     private CANSpark1038 endgameMotor = new CANSpark1038(endgameMotorPort, MotorType.kBrushless);
     private static Endgame endgame;
-    private boolean isLifting = false;
+    private boolean isExtending = false;
     private boolean isAdjusting = false;
+    private boolean isRetracting = false;
 
     public static Endgame getInstance() {
         if (endgame == null) {
@@ -25,9 +26,15 @@ public class Endgame implements Subsystem {
     }
 
     public void endgamePeriodic() {
-        if (isLifting) {
+        if (isExtending) {
             // TODO Lifts the Robot
-        } else if (isAdjusting) {
+        } 
+        
+        else if (isRetracting) {
+            // TODO Retracts the Robot
+        }
+        
+        else if (isAdjusting) {
             // TODO Adjust the Robot Position
 
             // TODO Change Limit Switch when Drew/Sam get Done with Class
@@ -41,16 +48,16 @@ public class Endgame implements Subsystem {
         }
     }
 
-    public void setIsLifting() {
-        if (!isAdjusting) {
-            isLifting = true;
-        }
+    public void setIsExtending() {
+        isExtending = true;
     }
 
     public void setIsAdjusting() {
-        if (!isLifting) {
-            isAdjusting = true;
-        }
+        isAdjusting = true;
 
+    }
+
+    public void setIsRetracting() {
+        isRetracting = true;
     }
 }

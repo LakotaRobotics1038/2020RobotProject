@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.Endgame;
+import frc.robot.PiReader;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,16 +28,15 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   // Drive
-  private final DriveTrain driveTrain = DriveTrain.getInstance();
-  public Compressor c = new Compressor();
+  // private final DriveTrain driveTrain = DriveTrain.getInstance();
+  // public Compressor c = new Compressor();
 
   // Joystick
   private final Joystick1038 driverJoystick = new Joystick1038(0);
   public double multiplyer;
 
-  //Endgame
+  // Endgame
   private final Endgame endgame = Endgame.getInstance();
-
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    PiReader.initialize();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -128,12 +129,22 @@ public class Robot extends TimedRobot {
           driverJoystick.getLeftJoystickHorizontal() * multiplyer);
       break;
     }
-    if(driverJoystick.getXButton()){
-      endgame.setIsLifting();
+
+    if (driverJoystick.getYButton()) {
+      endgame.setIsExtending();
+      endgame.endgamePeriodic();
     }
-    if(driverJoystick.getYButton()){
+
+    if(driverJoystick.getAButton()) {
+      endgame.setIsRetracting();
+      endgame.endgamePeriodic();
+    }
+
+    if (driverJoystick.getXButton()) {
       endgame.setIsAdjusting();
+      endgame.endgamePeriodic();
     }
+
   }
 
 }
