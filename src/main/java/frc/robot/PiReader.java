@@ -26,15 +26,19 @@ public class PiReader {
     private final int BAUD_RATE = 115200;
 
     // Sensors
+    private int gyro;
+    private boolean leftEndgameSwitch;
+    private boolean rightEndgameSwitch;
+    private int colorSensor;
+    private boolean firstBallSwitch;
+    private boolean secondBallSwitch;
+    private boolean thirdBallSwitch;
+    private boolean fourthBallSwitch;
+    private boolean fifthBallSwitch;
 
     // Objects
     private static SerialPort piPort;
     private static PiReader PiReader;
-
-// private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch"/*, "colorSensor" */};
-
-//     private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
-//             null/*, "colorSensor", null*/);
 
     /**
      * Returns the pi instance created when the robot starts
@@ -77,35 +81,21 @@ public class PiReader {
      */
     public void readpi() {
         try {
-            System.out.println(piPort.getBytesReceived() + " silly");
+            piPort.writeString("silly");
             while (piPort.getBytesReceived() != 0) {
-                System.out.println(piPort.readString() + "receiving");
                 piOutput = piPort.readString();
-                inputBuffer += piOutput;
-            }
-            line = "";
-            while (inputBuffer.indexOf("\r") != -1) {
-                int point = inputBuffer.indexOf("\r");
-                line = inputBuffer.substring(0, point);
-                if (inputBuffer.length() > point + 1) {
-                    inputBuffer = inputBuffer.substring(point + 2, inputBuffer.length());
-                } else {
-                    inputBuffer = "";
+                if (piOutput != "") {
+                    piDataMap = piOutput.split(",");
+                    gyro = Integer.parseInt(piDataMap[0]);
+                    leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
+                    rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
+                    colorSensor = Integer.parseInt(piDataMap[3]);
+                    firstBallSwitch = Boolean.parseBoolean(piDataMap[4]);
+                    secondBallSwitch = Boolean.parseBoolean(piDataMap[5]);
+                    thirdBallSwitch = Boolean.parseBoolean(piDataMap[6]);
+                    fourthBallSwitch = Boolean.parseBoolean(piDataMap[7]);
+
                 }
-            }
-            if (line != "") {
-                System.out.println(line);
-                piDataMap = line.split(",");
-                // TODO does this work?
-                for (int i = 0; i < piDataMap.length; i++) {
-                    // sensorValues.put(sensors[i], Double.parseDouble(piDataMap[i]));
-                }
-                // frontLaserSensorData = Integer.parseInt(piDataMap[0]);
-                // rearLaserSensorData = Integer.parseInt(piDataMap[1]);
-                // frontLeftLaserSensorData = Integer.parseInt(piDataMap[2]);
-                // frontRightLaserSensorData = Integer.parseInt(piDataMap[3]);
-                // acquisitionAccelerometerData = Integer.parseInt(piDataMap[4]);
-                // scoringAccelerometerData = Integer.parseInt(piDataMap[5]);
             }
         } catch (NumberFormatException e) {
             System.out.println(e);
@@ -127,34 +117,79 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    // public int getGyroVal() {
-    //     return (int) Math.round(sensorValues.get("gyro"));
-    // }
+    public int getGyroVal() {
+        return gyro;
+    }
 
-    // /**
-    //  * The front left laser looking forwards
-    //  * 
-    //  * @return Distance to object from front left in cm
-    //  */
-    // public int getLeftEndgameSwitchVal() {
-    //     return (int) Math.round(sensorValues.get("leftEndgameSwitch"));
-    // }
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public boolean getLeftEndgameSwitchVal() {
+        return leftEndgameSwitch;
+    }
 
-    // /**
-    //  * The front left laser looking forwards
-    //  * 
-    //  * @return Distance to object from front left in cm
-    //  */
-    // public int getRightEndgameSwitchVal() {
-    //     return (int) Math.round(sensorValues.get("rightEndgameSwitch"));
-    // }
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public Boolean getRightEndgameSwitchVal() {
+        return rightEndgameSwitch;
+    }
 
-    // /**
-    //  * The front left laser looking forwards
-    //  * 
-    //  * @return Distance to object from front left in cm
-    //  */
-    // public int getColorSensorVal() {
-    //     return (int) Math.round(sensorValues.get("colorSensor"));
-    // }
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public int getColorSensorVal() {
+        return colorSensor;
+    }
+
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public Boolean getFirstBallSwitchVal() {
+        return firstBallSwitch;
+    }
+
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public Boolean getSecondBallSwitchVal() {
+        return secondBallSwitch;
+    }
+
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public Boolean getThirdBallSwitchVal() {
+        return thirdBallSwitch;
+    }
+
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public Boolean getFourthBallSwitchVal() {
+        return fourthBallSwitch;
+    }
+
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public Boolean getFifthBallSwitchVal() {
+        return fifthBallSwitch;
+    }
 }
