@@ -29,7 +29,7 @@ public class PiReader {
     private int gyro;
     private boolean leftEndgameSwitch;
     private boolean rightEndgameSwitch;
-    private int colorSensor;
+    private String colorSensor;
     private boolean firstBallSwitch;
     private boolean secondBallSwitch;
     private boolean thirdBallSwitch;
@@ -89,7 +89,7 @@ public class PiReader {
                     gyro = Integer.parseInt(piDataMap[0]);
                     leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
                     rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
-                    colorSensor = Integer.parseInt(piDataMap[3]);
+                    colorSensor = String.parseString(piDataMap[3]);
                     firstBallSwitch = Boolean.parseBoolean(piDataMap[4]);
                     secondBallSwitch = Boolean.parseBoolean(piDataMap[5]);
                     thirdBallSwitch = Boolean.parseBoolean(piDataMap[6]);
@@ -117,7 +117,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getGyroVal() {
+    public static int getGyroVal() {
         return gyro;
     }
 
@@ -126,7 +126,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public boolean getLeftEndgameSwitchVal() {
+    public static boolean getLeftEndgameSwitchVal() {
         return leftEndgameSwitch;
     }
 
@@ -135,7 +135,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public Boolean getRightEndgameSwitchVal() {
+    public static Boolean getRightEndgameSwitchVal() {
         return rightEndgameSwitch;
     }
 
@@ -144,7 +144,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getColorSensorVal() {
+    public static String getColorSensorVal() {
         return colorSensor;
     }
 
@@ -153,7 +153,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public Boolean getFirstBallSwitchVal() {
+    public static Boolean getFirstBallSwitchVal() {
         return firstBallSwitch;
     }
 
@@ -162,7 +162,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public Boolean getSecondBallSwitchVal() {
+    public static Boolean getSecondBallSwitchVal() {
         return secondBallSwitch;
     }
 
@@ -171,7 +171,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public Boolean getThirdBallSwitchVal() {
+    public static Boolean getThirdBallSwitchVal() {
         return thirdBallSwitch;
     }
 
@@ -180,7 +180,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public Boolean getFourthBallSwitchVal() {
+    public static Boolean getFourthBallSwitchVal() {
         return fourthBallSwitch;
     }
 
@@ -189,7 +189,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public Boolean getFifthBallSwitchVal() {
+    public static Boolean getFifthBallSwitchVal() {
         return fifthBallSwitch;
     }
 }
