@@ -23,7 +23,7 @@ public class PiReader {
     private static String inputBuffer = "";
     private String line;
     private double number = 0;
-    private final int BAUD_RATE = 9600;
+    private final int BAUD_RATE = 115200;
 
     // Sensors
 
@@ -31,10 +31,10 @@ public class PiReader {
     private static SerialPort piPort;
     private static PiReader PiReader;
 
-    private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch", "colorSensor" };
+// private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch"/*, "colorSensor" */};
 
-    private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
-            null, "colorSensor", null);
+//     private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
+//             null/*, "colorSensor", null*/);
 
     /**
      * Returns the pi instance created when the robot starts
@@ -63,12 +63,23 @@ public class PiReader {
         System.out.println("Created new pi reader");
     }
 
+    public void testPi() {
+        try {
+            piPort.writeString("silly");
+            //System.out.println(piPort.readString() + " oops");
+        } catch(UncleanStatusException err) {
+            System.out.println(err);
+        }
+    }
+
     /**
      * Updates pi values and reads pi serial port
      */
     public void readpi() {
         try {
+            System.out.println(piPort.getBytesReceived() + " silly");
             while (piPort.getBytesReceived() != 0) {
+                System.out.println(piPort.readString() + "receiving");
                 piOutput = piPort.readString();
                 inputBuffer += piOutput;
             }
@@ -83,10 +94,11 @@ public class PiReader {
                 }
             }
             if (line != "") {
+                System.out.println(line);
                 piDataMap = line.split(",");
                 // TODO does this work?
                 for (int i = 0; i < piDataMap.length; i++) {
-                    sensorValues.put(sensors[i], Double.parseDouble(piDataMap[i]));
+                    // sensorValues.put(sensors[i], Double.parseDouble(piDataMap[i]));
                 }
                 // frontLaserSensorData = Integer.parseInt(piDataMap[0]);
                 // rearLaserSensorData = Integer.parseInt(piDataMap[1]);
@@ -115,34 +127,34 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getGyroVal() {
-        return (int) Math.round(sensorValues.get("gyro"));
-    }
+    // public int getGyroVal() {
+    //     return (int) Math.round(sensorValues.get("gyro"));
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public int getLeftEndgameSwitchVal() {
-        return (int) Math.round(sensorValues.get("leftEndgameSwitch"));
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public int getLeftEndgameSwitchVal() {
+    //     return (int) Math.round(sensorValues.get("leftEndgameSwitch"));
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public int getRightEndgameSwitchVal() {
-        return (int) Math.round(sensorValues.get("rightEndgameSwitch"));
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public int getRightEndgameSwitchVal() {
+    //     return (int) Math.round(sensorValues.get("rightEndgameSwitch"));
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public int getColorSensorVal() {
-        return (int) Math.round(sensorValues.get("colorSensor"));
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public int getColorSensorVal() {
+    //     return (int) Math.round(sensorValues.get("colorSensor"));
+    // }
 }
