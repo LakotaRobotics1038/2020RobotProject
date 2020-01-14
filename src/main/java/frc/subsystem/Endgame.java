@@ -37,19 +37,19 @@ public class Endgame implements Subsystem {
         else if (isAdjusting) {
             // TODO Adjust the Robot Position
 
-            // TODO Change Limit Switch when Drew/Sam get Done with Class
-            if ((PiReader.getLeftEndgameSwitchVal()) > 0.5) {
+            if (PiReader.getLeftEndgameSwitchVal()) {
                 endgameMotor.set(.5);
             }
 
-            else if (PiReader.getLeftEndgameSwitchVal() < 0.5) {
+            else if (PiReader.getRightEndgameSwitchVal()) {
                 endgameMotor.set(-.5);
             }
         }
     }
 
     public void setIsExtending() {
-        isExtending = true;
+            isExtending = true;
+        
     }
 
     public void setIsAdjusting() {

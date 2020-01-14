@@ -132,17 +132,14 @@ public class Robot extends TimedRobot {
 
     if (driverJoystick.getYButton()) {
       endgame.setIsExtending();
-      endgame.endgamePeriodic();
     }
 
     if(driverJoystick.getAButton()) {
       endgame.setIsRetracting();
-      endgame.endgamePeriodic();
     }
 
     if (driverJoystick.getXButton()) {
       endgame.setIsAdjusting();
-      endgame.endgamePeriodic();
     }
 
   }
