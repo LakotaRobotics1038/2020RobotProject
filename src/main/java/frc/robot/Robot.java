@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
+import frc.subsystem.Spinner;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,11 +32,14 @@ public class Robot extends TimedRobot {
 
    // Joystick
    private final Joystick1038 driverJoystick = new Joystick1038(0);
+   private final Joystick1038 operatorJoystick = new Joystick1038(1);
    public double multiplyer;
 
    // Pi Reader 
     private final PiReader piReader = PiReader.getInstance();
 
+    //Spinner
+    private final Spinner spinner = Spinner.getInstance();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -124,5 +128,14 @@ public class Robot extends TimedRobot {
 //         break;
 //     }
 //   } 
+public void operator() {
+    if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
+        spinner.setRotationEnabled();
+    }
+    else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled(){
+        spinner.setcolorEnabled();   
+    }
+    else    
+}
 }
 

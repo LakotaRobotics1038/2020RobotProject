@@ -34,7 +34,7 @@ public class Spinner implements Subsystem {
     }
 
     public void spin() {
-        spinnerMotor.set(.5);
+        spinnerMotor.set(.1);
     }
 
     public void spinnerPeriodic() {
@@ -43,16 +43,18 @@ public class Spinner implements Subsystem {
         if (rotationEnabled) {
 
                  while (currentRevolutions < 4){
-                 spinnerMotor.set(5);   
+                 spinnerMotor.set(.5);   
                  }
-                
-                spinnerMotor.set(5.0);
+                rotationEnabled = false;
+                spinnerMotor.set(0);
 
         } else if (colorEnabled) {
             String gameData = DriverStation.getInstance().getGameSpecificMessage();
+            //TODO pi reader isn't going to read color sensor, a java class will
             if (PiReader.getColorSensorVal() != gameData) {
-                spinnerMotor.set(5.0);
+                spinnerMotor.set(.5);
             } else {
+                rotationEnabled = false;
                 spinnerMotor.set(0);
             }
         }
@@ -68,6 +70,14 @@ public class Spinner implements Subsystem {
         if (!rotationEnabled) {
             colorEnabled = true;
         }
+    }
+
+    public Boolean getRotationEnabled(){
+        return rotationEnabled;
+    }
+
+    public Boolean getColorEnabled(){
+        return colorEnabled;
     }
 
     @Override
