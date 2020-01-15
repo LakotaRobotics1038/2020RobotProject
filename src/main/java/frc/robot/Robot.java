@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.Endgame;
 import frc.robot.PiReader;
-
+import frc.robot.DriveTrain;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -115,7 +115,7 @@ public class Robot extends TimedRobot {
   }
 
   public void driver() {
-    switch (driveTrain.currentDriveMode) {
+    switch (driveTrain.currentDriveMode()) {
     case tankDrive:
       driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
           driverJoystick.getRightJoystickVertical() * multiplyer);
