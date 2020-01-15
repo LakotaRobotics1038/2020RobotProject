@@ -1,6 +1,5 @@
-package frc.subsystem;
+package frc.auton.commands;
 
-import frc.robot.Robot;
 import frc.subsystem.DriveTrain;
 import frc.robot.PiReader;
 
