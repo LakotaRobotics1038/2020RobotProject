@@ -94,6 +94,35 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    /*
+    if haveBall = true
+      if balls = 4
+        if limit 4 notactive
+          run motor 5
+        else
+          haveBall = false
+          turn off motors
+      elif balls = 3
+        if limit 3 notactive
+          run motor 4,5
+        else
+          haveBall = false
+          turn off motors
+      elif balls = 2
+        if limit 2 notactive
+          run motor 3,4,5
+        else
+          haveBall = false
+          turn off motors
+      elif balls = 1
+        if limit 1 notactive
+          run motor 2,3,4,5
+        else
+          haveBall = false
+          turn off motors
+      elif balls = 5
+        haveBall = false
+    */
   }
 
   /**
