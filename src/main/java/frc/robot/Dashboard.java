@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //camera imports
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import frc.robot.PiReader;
 
 // Gyro imports
 //import org.usfirst.frc.team1038.robot.I2CGyro;
@@ -16,6 +17,7 @@ public class Dashboard {
     // ArduinoReader.getInstance();
     private DriverStation driverStation = DriverStation.getInstance();
     private String gameData;
+    private PiReader piReader = PiReader.getInstance();
 
     public static Dashboard getInstance() {
         if (dashboard == null) {
@@ -73,6 +75,17 @@ public class Dashboard {
         } else {
             // Code for no data received yet
         }
+
+        SmartDashboard.putBoolean("First ball", piReader.getFirstBallSwitchVal());
+
+        SmartDashboard.putBoolean("Second ball", piReader.getFirstBallSwitchVal());
+
+        SmartDashboard.putBoolean("Third ball", piReader.getFirstBallSwitchVal());
+
+        SmartDashboard.putBoolean("Fourth ball", piReader.getFirstBallSwitchVal());
+
+        SmartDashboard.putBoolean("Fifth ball", piReader.getFirstBallSwitchVal());
+
     }
 
 }
