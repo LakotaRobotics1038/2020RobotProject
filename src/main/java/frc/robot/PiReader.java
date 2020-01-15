@@ -89,7 +89,7 @@ public class PiReader {
                     gyro = Integer.parseInt(piDataMap[0]);
                     leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
                     rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
-                    colorSensor = String.parseString(piDataMap[3]);
+                    colorSensor = (piDataMap[3]);
                     firstBallSwitch = Boolean.parseBoolean(piDataMap[4]);
                     secondBallSwitch = Boolean.parseBoolean(piDataMap[5]);
                     thirdBallSwitch = Boolean.parseBoolean(piDataMap[6]);
