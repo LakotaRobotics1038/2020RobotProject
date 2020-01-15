@@ -18,7 +18,7 @@ public class Spinner implements Subsystem {
     private boolean colorEnabled = false;
     private static Spinner spinner;
     private double startingSpinnerCount = spinnerEncoder.getPosition();
-    private double currentCounts = spinnerEncoder.getPosition() - startingSpinnerCount;
+    private double currentCounts;
     private double currentRevolutions;
 
     public static Spinner getInstance() {
@@ -38,6 +38,7 @@ public class Spinner implements Subsystem {
     }
 
     public void spinnerPeriodic() {
+        double currentCounts = spinnerEncoder.getPosition() - startingSpinnerCount;
         double currentRevolutions = currentCounts / spinnerEncoder.getCountsPerRevolution();
         if (rotationEnabled) {
 
