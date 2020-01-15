@@ -2,6 +2,7 @@ package frc.subsystem;
 
 import frc.robot.Robot;
 import frc.robot.DriveTrain;
+import frc.robot.PiReader;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -20,7 +21,7 @@ public class TurnCommand extends PIDCommand {
 //	private final static double P = 0.007;
 //	private final static double I = 0.000;
 //	private final static double D = 0.000;
-	private I2CGyro gyroSensor = I2CGyro.getInstance();
+	private static PiReader gyroSensor = PiReader.getInstance();
 	private DriveTrain drive = DriveTrain.getInstance();
 	private PIDController turnPID = getController();
 	
@@ -28,9 +29,9 @@ public class TurnCommand extends PIDCommand {
 	 * Creates a new Turn Command
 	 * @param setpoint angle to turn to
 	 */
-	public TurnCommand(int setpoint) {
+	public TurnCommand(double setpoint) {
 		//needs gyro class to finsih constuctor
-		super(new PIDController(P, I, D), gyroSensor.getInstance():: getAngle, setpoint,
+		super(new PIDController(P, I, D), gyroSensor::getGyroVal, setpoint,
 			d -> DriveTrain.getInstance().dualArcadeDrive(0,d));
 		turnPID.setSetpoint(setpoint);
 		turnPID.setTolerance(TOLERANCE);
@@ -38,7 +39,7 @@ public class TurnCommand extends PIDCommand {
 		SmartDashboard.putData("Controls/Turn PID", turnPID);
 		addRequirements(drive);
 	}
-	
+
 	@Override
 	public void initialize() {
 	//	gyroSensor.reset();
@@ -48,7 +49,7 @@ public class TurnCommand extends PIDCommand {
 	public void execute() {
 		// turnPID.enable();
 		//needs gyro class for parameters
-		double PIDTurnAdjust = turnPID.calculate();
+		double PIDTurnAdjust = turnPID.calculate(gyroSensor.getGyroVal());
 		//this.usePIDOutput(PIDTurnAdjust); THIS MIGHT STILL BE NECCESSARY. Limits the power output of the motors.
 		if(PIDTurnAdjust > 0) {
 			System.out.println("Clockwise");
@@ -57,7 +58,7 @@ public class TurnCommand extends PIDCommand {
 		}
 		
 		// .calculate needs gyro class to get attributes.
-		System.out.println("Current Angle: " + gyroSensor.calculate() + ", PIDTurnAdjust: " + turnPID.calculate() + ", Setpoint: " + turnPID.getSetpoint());
+		System.out.println("Current Angle: " + gyroSensor.getGyroVal() + ", PIDTurnAdjust: " + turnPID.calculate(gyroSensor.getGyroVal()) + ", Setpoint: " + turnPID.getSetpoint());
 
 	}
 	
@@ -69,7 +70,7 @@ public class TurnCommand extends PIDCommand {
 		turnPID.reset();
 		//turnPID.disable();
 		//turnPID.free();
-		double gyroReading = gyroSensor.getAngle();
+		double gyroReading = gyroSensor.getGyroVal();
 		drive.drive(END_DRIVE_SPEED, END_DRIVE_ROTATION);
 		System.out.println("Finished at " + gyroReading);
 		System.out.println("TurnCommand ended");

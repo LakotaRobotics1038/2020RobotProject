@@ -125,7 +125,7 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public static int getGyroVal() {
+    public double getGyroVal() {
         return gyro;
     }
 
