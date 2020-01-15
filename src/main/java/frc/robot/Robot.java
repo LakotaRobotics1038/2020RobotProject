@@ -26,20 +26,25 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   // Drive
-  private final DriveTrain driveTrain = DriveTrain.getInstance();
-  public Compressor c = new Compressor();
+//   private final DriveTrain driveTrain = DriveTrain.getInstance();
+  //public Compressor c = new Compressor();
 
   public static DriveTrain robotDrive = DriveTrain.getInstance();
 
    // Joystick
    private final Joystick1038 driverJoystick = new Joystick1038(0);
    public double multiplyer;
+
+   // Pi Reader 
+    private final PiReader piReader = PiReader.getInstance();
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
+    piReader.initialize();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -55,6 +60,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    piReader.readpi();
   }
 
   /**
@@ -104,21 +110,21 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-  public void driver() {
-	switch (driveTrain.currentDriveMode) {
-      case tankDrive:
-        driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getRightJoystickVertical() * multiplyer);
-        break;
-      case dualArcadeDrive:
-        driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getRightJoystickHorizontal() * multiplyer);
-        break;
-      case singleArcadeDrive:
-        driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getLeftJoystickHorizontal() * multiplyer);
-        break;
-    }
-  } 
+//   public void driver() {
+// 	switch (driveTrain.currentDriveMode) {
+//       case tankDrive:
+//         driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+//             driverJoystick.getRightJoystickVertical() * multiplyer);
+//         break;
+//       case dualArcadeDrive:
+//         driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+//             driverJoystick.getRightJoystickHorizontal() * multiplyer);
+//         break;
+//       case singleArcadeDrive:
+//         driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+//             driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+//         break;
+//     }
+//   } 
 }
 
