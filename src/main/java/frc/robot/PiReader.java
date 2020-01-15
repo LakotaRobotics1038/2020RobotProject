@@ -26,15 +26,15 @@ public class PiReader {
     private final int BAUD_RATE = 115200;
 
     // Sensors
-    private int gyro;
-    private boolean leftEndgameSwitch;
-    private boolean rightEndgameSwitch;
-    private String colorSensor;
-    private boolean firstBallSwitch;
-    private boolean secondBallSwitch;
-    private boolean thirdBallSwitch;
-    private boolean fourthBallSwitch;
-    private boolean fifthBallSwitch;
+    private static int gyro;
+    private static boolean leftEndgameSwitch;
+    private static boolean rightEndgameSwitch;
+    private static String colorSensor;
+    private static boolean firstBallSwitch;
+    private static boolean secondBallSwitch;
+    private static boolean thirdBallSwitch;
+    private static boolean fourthBallSwitch;
+    private static boolean fifthBallSwitch;
 
     // Objects
     private static SerialPort piPort;
@@ -102,6 +102,14 @@ public class PiReader {
         } catch (UncleanStatusException e) {
             System.out.println(e);
         }
+    }
+
+    public void recalibrateGyro() {
+        piPort.writeString("Recalibrate dat saucy boi, bitch");
+    }
+
+    public void resetGyro() {
+        piPort.writeString("Reset that saucy boi, bitch");
     }
 
     /**
