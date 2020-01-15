@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import java.io.BufferedReader;
 import java.util.Map;
 
 import edu.wpi.first.hal.util.UncleanStatusException;
@@ -22,8 +21,7 @@ public class PiReader {
     private String piDataMap[];
     private static String inputBuffer = "";
     private String line;
-    private double number = 0;
-    private final int BAUD_RATE = 115200;
+    private final int BAUD_RATE = 9600;
 
     // Sensors
     private static int gyro;
@@ -172,6 +170,12 @@ public class PiReader {
      */
     public static Boolean getSecondBallSwitchVal() {
         return secondBallSwitch;
+    }
+    public double getAngle(){
+        return getGyroVal();
+    }
+    public void reset() {
+
     }
 
     /**

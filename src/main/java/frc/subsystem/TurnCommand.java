@@ -1,7 +1,7 @@
 package frc.subsystem;
 
 import frc.robot.Robot;
-import frc.robot.DriveTrain;
+import frc.subsystem.DriveTrain;
 import frc.robot.PiReader;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -71,7 +71,7 @@ public class TurnCommand extends PIDCommand {
 		//turnPID.disable();
 		//turnPID.free();
 		double gyroReading = gyroSensor.getGyroVal();
-		drive.drive(END_DRIVE_SPEED, END_DRIVE_ROTATION);
+		drive.tankDrive(END_DRIVE_SPEED, END_DRIVE_ROTATION);
 		System.out.println("Finished at " + gyroReading);
 		System.out.println("TurnCommand ended");
 	}

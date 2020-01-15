@@ -7,10 +7,15 @@
 
 package frc.robot;
 
+import frc.auton.AutonSelector;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import frc.subsystem.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,23 +25,23 @@ import edu.wpi.first.wpilibj.Compressor;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  //pi and gyro
+  private PiReader piReader = PiReader.getInstance();
 
+  //Auton Variables
+  public static SendableChooser<String> autoChooser = new SendableChooser<>();
+  public static SendableChooser<String> startPosition = new SendableChooser<>();
+  private SequentialCommandGroup autonPath;
+  private AutonSelector autonSelector = AutonSelector.getInstance();
+  private CommandScheduler schedule = CommandScheduler.getInstance();
   // Drive
-//   private final DriveTrain driveTrain = DriveTrain.getInstance();
-  //public Compressor c = new Compressor();
-
-  public static DriveTrain robotDrive = DriveTrain.getInstance();
+  public static DriveTrain driveTrain = DriveTrain.getInstance();
+  public Compressor c = new Compressor();
 
    // Joystick
    private final Joystick1038 driverJoystick = new Joystick1038(0);
    public double multiplyer;
 
-   // Pi Reader 
-    private final PiReader piReader = PiReader.getInstance();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -44,10 +49,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    piReader.initialize();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    startPosition.setDefaultOption("Center", AutonSelector.CenterPosition);
+		startPosition.addOption("Left", AutonSelector.LeftPosition);
+		startPosition.addOption("Right", AutonSelector.RightPosition);
+
+    autoChooser.setDefaultOption("Forward Auton", AutonSelector.ForwardAuto);
+
+		SmartDashboard.putData("Drivers/Start Position", startPosition);
+		SmartDashboard.putData("Drivers/Auton choices", autoChooser);
+
   }
 
   /**
@@ -76,9 +86,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    autonPath = autonSelector.chooseAuton();
+		piReader.reset();
+		schedule.schedule(autonPath);
   }
 
   /**
@@ -86,15 +96,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    if(schedule != null) {
+			schedule.run();
+		}
   }
 
   /**
