@@ -1,16 +1,25 @@
 package frc.subsystem;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.CANSpark1038;
+import frc.robot.Encoder1038;
+import frc.robot.PiReader;
 
 public class Spinner implements Subsystem {
     private final int SPINNER_MOTOR_PORT = 50;
     private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
+    private CANEncoder spinnerEncoder = spinnerMotor.getEncoder();
     private boolean rotationEnabled = false;
     private boolean colorEnabled = false;
     private static Spinner spinner;
+    private double startingSpinnerCount = spinnerEncoder.getPosition();
+    private double currentCounts = spinnerEncoder.getPosition() - startingSpinnerCount;
+    private double currentRevolutions;
 
     public static Spinner getInstance() {
         if (spinner == null) {
@@ -29,10 +38,22 @@ public class Spinner implements Subsystem {
     }
 
     public void spinnerPeriodic() {
+        double currentRevolutions = currentCounts / spinnerEncoder.getCountsPerRevolution();
         if (rotationEnabled) {
-            // TODO spins the thing
+
+                 while (currentRevolutions < 4){
+                 spinnerMotor.set(5);   
+                 }
+                
+                spinnerMotor.set(5.0);
+
         } else if (colorEnabled) {
-            // TODO do the other thing
+            String gameData = DriverStation.getInstance().getGameSpecificMessage();
+            if (PiReader.getColorSensorVal() != gameData) {
+                spinnerMotor.set(5.0);
+            } else {
+                spinnerMotor.set(0);
+            }
         }
     }
 
@@ -50,13 +71,6 @@ public class Spinner implements Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-<<<<<<< HEAD
-        //TODO Auto-generated method stub
-    }  
-}
-=======
         // TODO Auto-generated method stub
     }
-
 }
->>>>>>> c0ba4a880e79e912ae05b4396977bbac08871b86
