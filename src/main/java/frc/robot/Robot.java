@@ -132,10 +132,9 @@ public void operator() {
     if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
         spinner.setRotationEnabled();
     }
-    else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled(){
+    else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
         spinner.setcolorEnabled();   
     }
-    else    
 }
 }
 
