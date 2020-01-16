@@ -9,25 +9,46 @@ package frc.subsystem;
 
 import javax.lang.model.util.ElementScanner6;
 
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.PiReader;
+import frc.robot.CANSpark1038;
+
 /**
  * Add your docs here.
  */
 public class PowerCell {
+    private static PowerCell powerCell;
     private boolean haveBall = false;
     private int balls = 5;
+    private CANSpark1038 motor1 = new CANSpark1038(0, MotorType.kBrushed);
+    private CANSpark1038 motor2 = new CANSpark1038(0, MotorType.kBrushed);
+    private CANSpark1038 motor3 = new CANSpark1038(0, MotorType.kBrushed);
+    private CANSpark1038 motor4 = new CANSpark1038(0, MotorType.kBrushed);
+    private CANSpark1038 motor5 = new CANSpark1038(0, MotorType.kBrushed);
+    private PiReader piReader = PiReader.getInstance();
+    //TODO make motors work please
+
+    public static PowerCell getInstance() {
+        if(powerCell == null) {
+            System.out.println("creating a new powercell");
+            powerCell = new PowerCell();
+        }
+        return powerCell;
+    }
     
     public void haveFiveBall() {
         haveBall = true;
-        if(one empty) {
+        if(!piReader.getFirstBallSwitchVal()) {
             balls = 1;
         }
-        else if(two empty) {
+        else if(!piReader.getSecondBallSwitchVal()) {
             balls = 2;
         }
-        else if(three empty) {
+        else if(!piReader.getThirdBallSwitchVal()) {
             balls = 3;
         }
-        else if(four empty) {
+        else if(!piReader.getFourthBallSwitchVal()) {
             balls = 4;
         }
         else {
@@ -39,39 +60,39 @@ public class PowerCell {
     public void ballsPeriodic() {
         if(haveBall = true) {
             if(balls==4) {
-                if(limit 4 notactive) {
-                    run motor 5
+                if(!piReader.getFourthBallSwitchVal()) {
+                    //run motor 5
                 }
                 else {
                     haveBall = false;
-                    turn off motors
+                    //turn off motors
                 }
             }    
             else if(balls==3) {
-                if(limit 3 notactive) {
-                    run motor 4,5
+                if(!piReader.getThirdBallSwitchVal()) {
+                    //run motor 4,5
                 }
                 else {
                     haveBall = false;
-                    turn off motors
+                    //turn off motors
                 }
             }
             else if(balls==2) {
-                if(limit 2 notactive) {
-                    run motor 3,4,5
+                if(!piReader.getSecondBallSwitchVal()) {
+                    //run motor 3,4,5
                 }
                 else {
                     haveBall = false;
-                    turn off motors
+                    //turn off motors
                 }
             }
             else if(balls==1) {
-                if(limit 1 notactive) {
-                    run motor 2,3,4,5
+                if(!piReader.getFirstBallSwitchVal()) {
+                    //run motor 2,3,4,5
                 }
                 else {
                     haveBall = false;
-                    turn off motors
+                    //turn off motors
                 }
             }
             else if(balls==5) {

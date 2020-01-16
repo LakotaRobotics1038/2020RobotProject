@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
+import frc.subsystem.PowerCell;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,6 +37,9 @@ public class Robot extends TimedRobot {
    // Pi Reader 
     private final PiReader piReader = PiReader.getInstance();
 
+   // Powercell
+    private final PowerCell powerCell = PowerCell.getInstance();
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -59,6 +63,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     piReader.readpi();
+    powerCell.ballsPeriodic();
   }
 
   /**
@@ -100,35 +105,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    /*
-    if haveBall = true
-      if balls = 4
-        if limit 4 notactive
-          run motor 5
-        else
-          haveBall = false
-          turn off motors
-      elif balls = 3
-        if limit 3 notactive
-          run motor 4,5
-        else
-          haveBall = false
-          turn off motors
-      elif balls = 2
-        if limit 2 notactive
-          run motor 3,4,5
-        else
-          haveBall = false
-          turn off motors
-      elif balls = 1
-        if limit 1 notactive
-          run motor 2,3,4,5
-        else
-          haveBall = false
-          turn off motors
-      elif balls = 5
-        haveBall = false
-    */
+    
   }
 
   /**
