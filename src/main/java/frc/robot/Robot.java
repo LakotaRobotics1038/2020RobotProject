@@ -12,6 +12,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.Spinner;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.I2C;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatch;
+
+import com.revrobotics.ColorSensorV3;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,31 +31,41 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+  private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+  private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+  private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+  private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
   // Drive
 //   private final DriveTrain driveTrain = DriveTrain.getInstance();
   //public Compressor c = new Compressor();
 
    // Joystick
-   private final Joystick1038 driverJoystick = new Joystick1038(0);
-   private final Joystick1038 operatorJoystick = new Joystick1038(1);
-   public double multiplyer;
+//    private final Joystick1038 driverJoystick = new Joystick1038(0);
+//    private final Joystick1038 operatorJoystick = new Joystick1038(1);
+//    public double multiplyer;
 
-   // Pi Reader 
-    private final PiReader piReader = PiReader.getInstance();
+//    // Pi Reader 
+//     private final PiReader piReader = PiReader.getInstance();
 
     //Spinner
-    private final Spinner spinner = Spinner.getInstance();
+ //   private final Spinner spinner = Spinner.getInstance();
+    private final ColorSensorV3 colorSensor = new ColorSensor1038(i2cPort);
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    piReader.initialize();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    // piReader.initialize();
+    // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    // m_chooser.addOption("My Auto", kCustomAuto);
+    // SmartDashboard.putData("Auto choices", m_chooser);
+    m_colorMatcher.addColorMatch(kBlueTarget);
+    m_colorMatcher.addColorMatch(kGreenTarget);
+    m_colorMatcher.addColorMatch(kRedTarget);
+    m_colorMatcher.addColorMatch(kYellowTarget); 
   }
 
   /**
@@ -62,7 +78,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    piReader.readpi();
+    //piReader.readpi();
+
+    Color detectedColor = colorSensor.getColor();
+    System.out.println(detectedColor);
   }
 
   /**
@@ -78,9 +97,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    // m_autoSelected = m_chooser.getSelected();
+    // // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    // System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /**
@@ -128,13 +147,13 @@ public class Robot extends TimedRobot {
 //         break;
 //     }
 //   } 
-public void operator() {
-    if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
-        spinner.setRotationEnabled();
-    }
-    else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
-        spinner.setcolorEnabled();   
-    }
-}
+// public void operator() {
+//     if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
+//         spinner.setRotationEnabled();
+//     }
+//     else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
+//         spinner.setcolorEnabled();   
+//     }
+// }
 }
 

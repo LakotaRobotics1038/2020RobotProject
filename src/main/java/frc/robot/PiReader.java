@@ -79,117 +79,117 @@ public class PiReader {
     /**
      * Updates pi values and reads pi serial port
      */
-    public void readpi() {
-        try {
-            piPort.writeString("silly");
-            while (piPort.getBytesReceived() != 0) {
-                piOutput = piPort.readString();
-                if (piOutput != "") {
-                    piDataMap = piOutput.split(",");
-                    gyro = Integer.parseInt(piDataMap[0]);
-                    leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
-                    rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
-                    colorSensor = String.parseString(piDataMap[3]);
-                    firstBallSwitch = Boolean.parseBoolean(piDataMap[4]);
-                    secondBallSwitch = Boolean.parseBoolean(piDataMap[5]);
-                    thirdBallSwitch = Boolean.parseBoolean(piDataMap[6]);
-                    fourthBallSwitch = Boolean.parseBoolean(piDataMap[7]);
+   // public void readpi() {
+    //     try {
+    //         piPort.writeString("silly");
+    //         while (piPort.getBytesReceived() != 0) {
+    //             piOutput = piPort.readString();
+    //             if (piOutput != "") {
+    //                 piDataMap = piOutput.split(",");
+    //                 gyro = Integer.parseInt(piDataMap[0]);
+    //                 leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
+    //                 rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
+    //                 colorSensor = String.parseString(piDataMap[3]);
+    //                 firstBallSwitch = Boolean.parseBoolean(piDataMap[4]);
+    //                 secondBallSwitch = Boolean.parseBoolean(piDataMap[5]);
+    //                 thirdBallSwitch = Boolean.parseBoolean(piDataMap[6]);
+    //                 fourthBallSwitch = Boolean.parseBoolean(piDataMap[7]);
 
-                }
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        } catch (UncleanStatusException e) {
-            System.out.println(e);
-        }
-    }
+    //             }
+    //         }
+    //     } catch (NumberFormatException e) {
+    //         System.out.println(e);
+    //     } catch (UncleanStatusException e) {
+    //         System.out.println(e);
+    //     }
+    // }
 
-    /**
-     * Closes serial port listener
-     */
-    public void stopSerialPort() {
-        System.out.println("im gonna close it");
-        piPort.close();
-    }
+    // /**
+    //  * Closes serial port listener
+    //  */
+    // public void stopSerialPort() {
+    //     System.out.println("im gonna close it");
+    //     piPort.close();
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static int getGyroVal() {
-        return gyro;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static int getGyroVal() {
+    //     return gyro;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static boolean getLeftEndgameSwitchVal() {
-        return leftEndgameSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static boolean getLeftEndgameSwitchVal() {
+    //     return leftEndgameSwitch;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getRightEndgameSwitchVal() {
-        return rightEndgameSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static Boolean getRightEndgameSwitchVal() {
+    //     return rightEndgameSwitch;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static String getColorSensorVal() {
-        return colorSensor;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static String getColorSensorVal() {
+    //     return colorSensor;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getFirstBallSwitchVal() {
-        return firstBallSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static Boolean getFirstBallSwitchVal() {
+    //     return firstBallSwitch;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getSecondBallSwitchVal() {
-        return secondBallSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static Boolean getSecondBallSwitchVal() {
+    //     return secondBallSwitch;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getThirdBallSwitchVal() {
-        return thirdBallSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static Boolean getThirdBallSwitchVal() {
+    //     return thirdBallSwitch;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getFourthBallSwitchVal() {
-        return fourthBallSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static Boolean getFourthBallSwitchVal() {
+    //     return fourthBallSwitch;
+    // }
 
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getFifthBallSwitchVal() {
-        return fifthBallSwitch;
-    }
+    // /**
+    //  * The front left laser looking forwards
+    //  * 
+    //  * @return Distance to object from front left in cm
+    //  */
+    // public static Boolean getFifthBallSwitchVal() {
+    //     return fifthBallSwitch;
+    // }
 }

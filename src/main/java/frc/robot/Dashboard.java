@@ -76,15 +76,15 @@ public class Dashboard {
             // Code for no data received yet
         }
 
-        SmartDashboard.putBoolean("First ball", piReader.getFirstBallSwitchVal());
+        // SmartDashboard.putBoolean("First ball", piReader.getFirstBallSwitchVal());
 
-        SmartDashboard.putBoolean("Second ball", piReader.getFirstBallSwitchVal());
+        // SmartDashboard.putBoolean("Second ball", piReader.getFirstBallSwitchVal());
 
-        SmartDashboard.putBoolean("Third ball", piReader.getFirstBallSwitchVal());
+        // SmartDashboard.putBoolean("Third ball", piReader.getFirstBallSwitchVal());
 
-        SmartDashboard.putBoolean("Fourth ball", piReader.getFirstBallSwitchVal());
+        // SmartDashboard.putBoolean("Fourth ball", piReader.getFirstBallSwitchVal());
 
-        SmartDashboard.putBoolean("Fifth ball", piReader.getFirstBallSwitchVal());
+        // SmartDashboard.putBoolean("Fifth ball", piReader.getFirstBallSwitchVal());
 
     }
 
