@@ -79,11 +79,11 @@ public class Limelight {
         // they still have not noticed              -Shawn Tomas
 
 
-        return 0;
+        return x;
     }
 
     public double getYOffset() {
-        return 0;
+        return y;
     }
     
 
