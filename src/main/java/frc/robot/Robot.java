@@ -10,8 +10,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
+import frc.subsystem.Acquisition;
+import frc.robot.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,24 +37,31 @@ public class Robot extends TimedRobot {
 
    // Joystick
    private final Joystick1038 driverJoystick = new Joystick1038(0);
+   private final Joystick1038 operatorJoystick = new Joystick1038(1);
    public double multiplyer;
 
-   // Pi Reader 
-    private final PiReader piReader = PiReader.getInstance();
+  //  // Pi Reader 
+  //   private final PiReader piReader = PiReader.getInstance();
 
-   // Powercell
-    private final PowerCell powerCell = PowerCell.getInstance();
+  //  // Powercell
+  //   private final PowerCell powerCell = PowerCell.getInstance();
 
+  //   //Aquisition
+  //   private final Acquisition acquisition = Acquisition.getInstance();
+
+    //limelight
+    private final Limelight limelight = Limelight.getInstance();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    piReader.initialize();
+    //piReader.initialize();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    limelight.initialize();
   }
 
   /**
@@ -62,8 +74,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    piReader.readpi();
-    powerCell.ballsPeriodic();
+    //piReader.readpi();
+    //powerCell.ballsPeriodic();
+    limelight.read();
+
   }
 
   /**
@@ -130,5 +144,20 @@ public class Robot extends TimedRobot {
 //         break;
 //     }
 //   } 
-}
+//   public void operator() {
+//     if(operatorJoystick.getRightButton()) {
+//       acquisition.runBeaterBarFwd();
+//     }
+//     else if(operatorJoystick.getRightTrigger() > .5) {
+//       acquisition.runBeaterBarRev();
+//     }
+//     else {
+//       acquisition.stopBeaterBar();
+//     }
+
+//     if(operatorJoystick.getYButton()) {
+//       acquisition.toggleAcquisitionPosition();
+//     }
+//   }
+ }
 
