@@ -2,30 +2,30 @@ package frc.subsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.I2C;
-
-import frc.robot.ColorSensor1038;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.CANSpark1038;
-import frc.robot.Encoder1038;
-import frc.robot.PiReader;
+import frc.robot.ColorSensor1038;
 
 public class Spinner implements Subsystem {
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 colorSensor = new ColorSensor1038(i2cPort);
     private final ColorMatch colorMatcher = new ColorMatch();
-    private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-    private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-    private final String colorString = "Unknown";
+    private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
+    private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5, 0.2);
+    private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
+    private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
+    private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
+    private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
+    private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
+    private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
+    private final String colorString = "Unknown"; 
     Color detectedColor = colorSensor.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
 
@@ -100,16 +100,16 @@ public class Spinner implements Subsystem {
     }
 
     public String getCurrentColor(){
-        if (match.color == kBlueTarget){
+        if (kBlueMaximumTarget => colorSensor.getColor() => kBlueMinimumTarget){
             return "Blue";
         }
-        else if (match.color == kRedTarget){
+        else if (kRedMaximumTarget => colorSensor.getColor() > kRedMinimumTarget){
             return "Red";
         }
-        else if (match.color == kGreenTarget) {
+        else if (kGreenMaximumTarget => colorSensor.getColor() => kGreenMinimumTarget) {
             return "Green";
         }
-        else if (match.color == kYellowTarget){
+        else if (kYellowMaximumTarget => colorSensor.getColor() => kYellowMinimumTarget){
             return "Yellow";
         }
         else {
