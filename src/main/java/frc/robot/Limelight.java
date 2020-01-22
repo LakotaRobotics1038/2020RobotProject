@@ -78,11 +78,12 @@ public class Limelight {
         // i won the war over the yard stick
         // they still have not noticed              -Shawn Tomas
 
-
+        x = tx.getDouble(0);
         return x;
     }
 
     public double getYOffset() {
+        y = ty.getDouble(0);
         return y;
     }
     

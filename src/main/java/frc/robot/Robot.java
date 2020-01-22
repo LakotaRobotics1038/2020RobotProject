@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
 import frc.robot.Limelight;
+import frc.subsystem.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -46,11 +47,14 @@ public class Robot extends TimedRobot {
   //  // Powercell
   //   private final PowerCell powerCell = PowerCell.getInstance();
 
-  //   //Aquisition
-  //   private final Acquisition acquisition = Acquisition.getInstance();
+     //Aquisition
+     private final Acquisition acquisition = Acquisition.getInstance();
 
     //limelight
     private final Limelight limelight = Limelight.getInstance();
+
+    //shooter
+    private final Shooter shooter = Shooter.getInstance();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -119,7 +123,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    
+    shooter.executeAimPID();
   }
 
   /**
@@ -144,20 +148,36 @@ public class Robot extends TimedRobot {
 //         break;
 //     }
 //   } 
-//   public void operator() {
-//     if(operatorJoystick.getRightButton()) {
-//       acquisition.runBeaterBarFwd();
-//     }
-//     else if(operatorJoystick.getRightTrigger() > .5) {
-//       acquisition.runBeaterBarRev();
-//     }
-//     else {
-//       acquisition.stopBeaterBar();
-//     }
+   public void operator() {
+    if(operatorJoystick.getRightButton()) {
+      acquisition.runBeaterBarFwd();
+    }
+    else if(operatorJoystick.getRightTrigger() > .5) {
+      acquisition.runBeaterBarRev();
+    }
+    else {
+      acquisition.stopBeaterBar();
+    }
 
-//     if(operatorJoystick.getYButton()) {
-//       acquisition.toggleAcquisitionPosition();
-//     }
-//   }
+    if(operatorJoystick.getYButton()) {
+      acquisition.toggleAcquisitionPosition();
+    }
+
+    if(operatorJoystick.getLeftButton()) {
+      shooter.executeSpeedPID();
+    }
+    else {
+      shooter.disablePID();
+    }
+
+    if(operatorJoystick.getLeftTrigger() > .5) {
+      shooter.feedBall();
+    }
+    else {
+      shooter.noFeedBall();
+    }
+
+
+   }
  }
 
