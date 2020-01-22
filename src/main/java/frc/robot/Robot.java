@@ -34,10 +34,14 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private final ColorMatch colorMatcher = new ColorMatch();
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-  private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-  private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-  private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+  private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
+  private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5, 0.2);
+  private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
+  private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
+  private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
+  private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
+  private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
+  private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
   private final Spinner spinner = Spinner.getInstance();
 
   // Drive
@@ -65,10 +69,15 @@ public class Robot extends TimedRobot {
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
-    colorMatcher.addColorMatch(kBlueTarget);
-    colorMatcher.addColorMatch(kGreenTarget);
-    colorMatcher.addColorMatch(kRedTarget);
-    colorMatcher.addColorMatch(kYellowTarget); 
+    colorMatcher.addColorMatch(kBlueMinimumTarget);
+    colorMatcher.addColorMatch(kGreenMinimumTarget);
+    colorMatcher.addColorMatch(kRedMinimumTarget);
+    colorMatcher.addColorMatch(kYellowMinimumTarget);
+    colorMatcher.addColorMatch(kBlueMaximumTarget);
+    colorMatcher.addColorMatch(kGreenMaximumTarget);
+    colorMatcher.addColorMatch(kRedMaximumTarget);
+    colorMatcher.addColorMatch(kYellowMaximumTarget);
+
   }
 
   /**

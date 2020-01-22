@@ -100,16 +100,16 @@ public class Spinner implements Subsystem {
     }
 
     public String getCurrentColor(){
-        if (kBlueMaximumTarget => colorSensor.getColor() => kBlueMinimumTarget){
+        if (0.07 < colorSensor.getRed() && colorSensor.getRed() < 0.17){
             return "Blue";
         }
-        else if (kRedMaximumTarget => colorSensor.getColor() > kRedMinimumTarget){
+        else if (0.5 < colorSensor.getRed() && colorSensor.getRed() < 0.6){
             return "Red";
         }
-        else if (kGreenMaximumTarget => colorSensor.getColor() => kGreenMinimumTarget) {
+        else if (0.22 < colorSensor.getRed() && colorSensor.getRed() < 0.32) {
             return "Green";
         }
-        else if (kYellowMaximumTarget => colorSensor.getColor() => kYellowMinimumTarget){
+        else if (0.35 < colorSensor.getRed() && colorSensor.getRed() < 0.45){
             return "Yellow";
         }
         else {
