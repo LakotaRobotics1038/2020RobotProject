@@ -17,14 +17,14 @@ public class Spinner implements Subsystem {
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 colorSensor = new ColorSensor1038(i2cPort);
     private final ColorMatch colorMatcher = new ColorMatch();
-    private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
-    private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5, 0.2);
-    private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
-    private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
-    private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
-    private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
-    private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
-    private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
+    // private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
+    // private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.70, 1.75, 0.49);
+    // private final Color kRedMinimumTarget = ColorMatch.makeColor(1.87, 0.24, 0.21);
+    // private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
+    // private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
+    // private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.76, 1.81, 0.55);
+    // private final Color kRedMaximumTarget = ColorMatch.makeColor(1.93, 0.3, 0.27);
+    // private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
     private final String colorString = "Unknown"; 
     Color detectedColor = colorSensor.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
@@ -37,6 +37,10 @@ public class Spinner implements Subsystem {
     private boolean colorEnabled = false;
     private static Spinner spinner;
     private double startingSpinnerCount = spinnerEncoder.getPosition();
+    double r = (double)colorSensor.getRed();
+    double g = (double)colorSensor.getGreen();
+    double b = (double)colorSensor.getBlue();
+    double mag = r + g + b;
     private double currentCounts;
     private double currentRevolutions;
 
@@ -100,17 +104,17 @@ public class Spinner implements Subsystem {
     }
 
     public String getCurrentColor(){
-        if (0.07 < colorSensor.getRed() && colorSensor.getRed() < 0.17){
-            return "Blue";
-        }
-        else if (0.5 < colorSensor.getRed() && colorSensor.getRed() < 0.6){
+        if (0.666 < r/mag && r/mag < 0.745){
             return "Red";
         }
-        else if (0.22 < colorSensor.getRed() && colorSensor.getRed() < 0.32) {
+        else if (0.529 < r/mag && r/mag < 0.647){
+            return "Yellow";
+        }
+        else if (0.412 < r/mag && r/mag < 0.471) {
             return "Green";
         }
-        else if (0.35 < colorSensor.getRed() && colorSensor.getRed() < 0.45){
-            return "Yellow";
+        else if (0.388 < r/mag && r/mag < 0.314){
+            return "Blue";
         }
         else {
             return "Unknown";

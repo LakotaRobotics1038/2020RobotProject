@@ -69,14 +69,14 @@ public class Robot extends TimedRobot {
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
-    colorMatcher.addColorMatch(kBlueMinimumTarget);
-    colorMatcher.addColorMatch(kGreenMinimumTarget);
-    colorMatcher.addColorMatch(kRedMinimumTarget);
-    colorMatcher.addColorMatch(kYellowMinimumTarget);
-    colorMatcher.addColorMatch(kBlueMaximumTarget);
-    colorMatcher.addColorMatch(kGreenMaximumTarget);
-    colorMatcher.addColorMatch(kRedMaximumTarget);
-    colorMatcher.addColorMatch(kYellowMaximumTarget);
+    // colorMatcher.addColorMatch(kBlueMinimumTarget);
+    // colorMatcher.addColorMatch(kGreenMinimumTarget);
+    // colorMatcher.addColorMatch(kRedMinimumTarget);
+    // colorMatcher.addColorMatch(kYellowMinimumTarget);
+    // colorMatcher.addColorMatch(kBlueMaximumTarget);
+    // colorMatcher.addColorMatch(kGreenMaximumTarget);
+    // colorMatcher.addColorMatch(kRedMaximumTarget);
+    // colorMatcher.addColorMatch(kYellowMaximumTarget);
 
   }
 
