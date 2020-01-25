@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.I2C;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
-import frc.subsystem.Spinner;
 
 import com.revrobotics.ColorSensorV3;
 
@@ -32,17 +31,6 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private final ColorMatch colorMatcher = new ColorMatch();
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
-  private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5, 0.2);
-  private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
-  private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
-  private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
-  private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
-  private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
-  private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
-  private final Spinner spinner = Spinner.getInstance();
 
   // Drive
 //   private final DriveTrain driveTrain = DriveTrain.getInstance();
@@ -57,8 +45,8 @@ public class Robot extends TimedRobot {
 //     private final PiReader piReader = PiReader.getInstance();
 
     //Spinner
- //   private final Spinner spinner = Spinner.getInstance();
-    private final ColorSensorV3 colorSensor = new ColorSensor1038(i2cPort);
+    private final Spinner spinner = Spinner.getInstance();
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -91,9 +79,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     //piReader.readpi();
-
-    Color detectedColor = colorSensor.getColor();
-    System.out.println(spinner.getCurrentColor());
   }
 
   /**
