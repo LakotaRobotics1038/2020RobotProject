@@ -21,13 +21,12 @@ public class PowerCell {
     private static PowerCell powerCell;
     private boolean haveBall = false;
     private int balls = 5;
-    private CANSpark1038 motor1 = new CANSpark1038(0, MotorType.kBrushed);
+    //private CANSpark1038 motor1 = new CANSpark1038(0, MotorType.kBrushed);
     private CANSpark1038 motor2 = new CANSpark1038(0, MotorType.kBrushed);
     private CANSpark1038 motor3 = new CANSpark1038(0, MotorType.kBrushed);
     private CANSpark1038 motor4 = new CANSpark1038(0, MotorType.kBrushed);
     private CANSpark1038 motor5 = new CANSpark1038(0, MotorType.kBrushed);
-    private PiReader piReader = PiReader.getInstance();
-    //TODO make motors work please
+    //private PiReader piReader = PiReader.getInstance();
 
     public static PowerCell getInstance() {
         if(powerCell == null) {
@@ -39,16 +38,16 @@ public class PowerCell {
     
     public void haveFiveBall() {
         haveBall = true;
-        if(!piReader.getFirstBallSwitchVal()) {
+        if(!PiReader.getFirstBallSwitchVal()) {
             balls = 1;
         }
-        else if(!piReader.getSecondBallSwitchVal()) {
+        else if(!PiReader.getSecondBallSwitchVal()) {
             balls = 2;
         }
-        else if(!piReader.getThirdBallSwitchVal()) {
+        else if(!PiReader.getThirdBallSwitchVal()) {
             balls = 3;
         }
-        else if(!piReader.getFourthBallSwitchVal()) {
+        else if(!PiReader.getFourthBallSwitchVal()) {
             balls = 4;
         }
         else {
@@ -60,39 +59,57 @@ public class PowerCell {
     public void ballsPeriodic() {
         if(haveBall = true) {
             if(balls==4) {
-                if(!piReader.getFourthBallSwitchVal()) {
+                if(!PiReader.getFourthBallSwitchVal()) {
                     //run motor 5
+                    motor5.set(.5);
                 }
                 else {
                     haveBall = false;
-                    //turn off motors
+                    motor5.set(0);
                 }
             }    
             else if(balls==3) {
-                if(!piReader.getThirdBallSwitchVal()) {
+                if(!PiReader.getThirdBallSwitchVal()) {
                     //run motor 4,5
+                    motor4.set(.5);
+                    motor5.set(.5);
                 }
                 else {
                     haveBall = false;
-                    //turn off motors
+                    motor4.set(0);
+                    motor5.set(0);
                 }
             }
             else if(balls==2) {
-                if(!piReader.getSecondBallSwitchVal()) {
+                if(!PiReader.getSecondBallSwitchVal()) {
                     //run motor 3,4,5
+                    motor3.set(.5);
+                    motor4.set(.5);
+                    motor5.set(.5);
                 }
                 else {
                     haveBall = false;
                     //turn off motors
+                    motor3.set(0);
+                    motor4.set(0);
+                    motor5.set(0);
                 }
             }
             else if(balls==1) {
-                if(!piReader.getFirstBallSwitchVal()) {
+                if(!PiReader.getFirstBallSwitchVal()) {
                     //run motor 2,3,4,5
+                    motor2.set(.5);
+                    motor3.set(.5);
+                    motor4.set(.5);
+                    motor5.set(.5);
                 }
                 else {
                     haveBall = false;
                     //turn off motors
+                    motor2.set(0);
+                    motor3.set(0);
+                    motor4.set(0);
+                    motor5.set(0);
                 }
             }
             else if(balls==5) {

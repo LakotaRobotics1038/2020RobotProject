@@ -2,7 +2,7 @@ package frc.subsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Joystick1038;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.CANSpark1038;
@@ -35,6 +35,8 @@ public class Shooter implements Subsystem {
     private final static double speedP = 0.0;
     private final static double speedI = 0.0;
     private final static double speedD = 0.0;
+    // Servos for testing
+    private Servo angleServo = new Servo(1);
 
 
     public static Shooter getInstance() {
@@ -82,7 +84,8 @@ public class Shooter implements Subsystem {
 
 	
 	public void executeAimPID() {
-        turretTurningMotor.set(positionPID.calculate(limelight.getXOffset()));	
+        //turretTurningMotor.set(positionPID.calculate(limelight.getXOffset()));
+        angleServo.set(angleServo.get() + limelight.getXOffset());	
     }
 
     public void executeSpeedPID() {
