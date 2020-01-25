@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.CANSpark1038;
 import frc.robot.ColorSensor1038;
@@ -17,13 +18,15 @@ public class Spinner implements Subsystem {
 
     private final int SPINNER_MOTOR_PORT = 50;
     private final double SPINNER_MOTOR_SPEED = .5;
-    private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
+    //private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
+    private Spark spinnerMotor = new Spark(2);
     // private CANEncoder spinnerEncoder = spinnerMotor.getEncoder();
     private boolean rotationEnabled = false;
     private boolean colorEnabled = false;
     private static Spinner spinner;
     private int colorCount = 0;
     private Colors intialColor;
+    private final String desiredColor = "R";
 
     public static Spinner getInstance() {
         if (spinner == null) {
@@ -73,17 +76,17 @@ public class Spinner implements Subsystem {
 
         } else if (colorEnabled) {
             String gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-            if (gameData == "R" && colorSensor.getClosestColor() == Colors.Red) {
+            //TODO Replace desiredColor with gameData
+            if (desiredColor == "R" && colorSensor.getClosestColor() == Colors.Red) {
                 spinnerMotor.set(0);
             }
-            else if (gameData == "G" && colorSensor.getClosestColor() == Colors.Green) {
+            else if (desiredColor == "G" && colorSensor.getClosestColor() == Colors.Green) {
                 spinnerMotor.set(0);
             }
-            else if (gameData == "B" && colorSensor.getClosestColor() == Colors.Blue) {
+            else if (desiredColor == "B" && colorSensor.getClosestColor() == Colors.Blue) {
                 spinnerMotor.set(0);
             }
-            else if (gameData == "Y" && colorSensor.getClosestColor() == Colors.Yellow) {
+            else if (desiredColor == "Y" && colorSensor.getClosestColor() == Colors.Yellow) {
                 spinnerMotor.set(0);
             }
             else {
