@@ -1,7 +1,5 @@
 package frc.subsystem;
 
-import java.awt.Color;
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -18,19 +16,21 @@ public class Spinner implements Subsystem {
 
     private final int SPINNER_MOTOR_PORT = 50;
     private final double SPINNER_MOTOR_SPEED = .5;
-    //private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
+    // private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT,
+    // MotorType.kBrushless);
     private Spark spinnerMotor = new Spark(2);
     // private CANEncoder spinnerEncoder = spinnerMotor.getEncoder();
     private boolean rotationEnabled = false;
     private boolean colorEnabled = false;
     private static Spinner spinner;
     private int colorCount = 0;
-    private Colors intialColor;
+    private Colors initialColor;
+    private Colors lastColor;
     private final String desiredColor = "R";
 
     public static Spinner getInstance() {
         if (spinner == null) {
-            System.out.println("creating a new spinner");
+            System.out.println("Creating a new spinner");
             spinner = new Spinner();
         }
         return spinner;
@@ -42,8 +42,9 @@ public class Spinner implements Subsystem {
 
     public void setRotationEnabled() {
         if (!colorEnabled) {
+            System.out.println("here");
             rotationEnabled = true;
-            intialColor = colorSensor.getClosestColor();
+            initialColor = colorSensor.getClosestColor();
             spinnerMotor.set(SPINNER_MOTOR_SPEED);
         }
     }
@@ -66,33 +67,31 @@ public class Spinner implements Subsystem {
         if (rotationEnabled) {
             // if current color is startcolor, += counter
             // if counter < 8, stop motor
-            if (intialColor == colorSensor.getClosestColor()) {
+            Colors current = colorSensor.getClosestColor();
+            boolean condition = initialColor == current && current != lastColor;
+            System.out.println("init" + initialColor + " current " + current + " last " + lastColor + " count " + colorCount);
+            if (condition) {
                 colorCount += 1;
-
-                if (colorCount >= 8) {
-                    spinnerMotor.set(0);
-                }
             }
-
+            
+            if (colorCount >= 8) {
+                spinnerMotor.set(0);
+            }
+            lastColor = current;
         } else if (colorEnabled) {
             String gameData = DriverStation.getInstance().getGameSpecificMessage();
-            //TODO Replace desiredColor with gameData
+            // TODO Replace desiredColor with gameData
             if (desiredColor == "R" && colorSensor.getClosestColor() == Colors.Red) {
                 spinnerMotor.set(0);
-            }
-            else if (desiredColor == "G" && colorSensor.getClosestColor() == Colors.Green) {
+            } else if (desiredColor == "G" && colorSensor.getClosestColor() == Colors.Green) {
                 spinnerMotor.set(0);
-            }
-            else if (desiredColor == "B" && colorSensor.getClosestColor() == Colors.Blue) {
+            } else if (desiredColor == "B" && colorSensor.getClosestColor() == Colors.Blue) {
                 spinnerMotor.set(0);
-            }
-            else if (desiredColor == "Y" && colorSensor.getClosestColor() == Colors.Yellow) {
+            } else if (desiredColor == "Y" && colorSensor.getClosestColor() == Colors.Yellow) {
                 spinnerMotor.set(0);
-            }
-            else {
+            } else {
                 spinnerMotor.set(SPINNER_MOTOR_SPEED);
             }
-
 
         }
     }
