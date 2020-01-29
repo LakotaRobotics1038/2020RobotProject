@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import frc.robot.CANSpark1038;
 import frc.robot.ColorSensor1038;
 import frc.robot.ColorSensor1038.Colors;
@@ -15,9 +16,8 @@ public class Spinner implements Subsystem {
     private final ColorSensor1038 colorSensor = new ColorSensor1038(I2C.Port.kOnboard);
 
     private final int SPINNER_MOTOR_PORT = 50;
-    private final double SPINNER_MOTOR_SPEED = .5;
-    // private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT,
-    // MotorType.kBrushless);
+    private final double SPINNER_MOTOR_SPEED = .8;
+    // private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
     private Spark spinnerMotor = new Spark(2);
     // private CANEncoder spinnerEncoder = spinnerMotor.getEncoder();
     private boolean rotationEnabled = false;
@@ -42,7 +42,7 @@ public class Spinner implements Subsystem {
 
     public void setRotationEnabled() {
         if (!colorEnabled) {
-            System.out.println("here");
+            colorCount = 0;
             rotationEnabled = true;
             initialColor = colorSensor.getClosestColor();
             spinnerMotor.set(SPINNER_MOTOR_SPEED);
@@ -65,16 +65,15 @@ public class Spinner implements Subsystem {
 
     public void spinnerPeriodic() {
         if (rotationEnabled) {
-            // if current color is startcolor, += counter
-            // if counter < 8, stop motor
+            // To find the current color
+            // Color c = colorSensor.getColor();
+            // System.out.println(c.red + " " + c.green + " " + c.green);
             Colors current = colorSensor.getClosestColor();
-            boolean condition = initialColor == current && current != lastColor;
-            System.out.println("init" + initialColor + " current " + current + " last " + lastColor + " count " + colorCount);
-            if (condition) {
+            if (initialColor == current && current != lastColor) {
                 colorCount += 1;
             }
-            
-            if (colorCount >= 8) {
+
+            if (colorCount > 8) {
                 spinnerMotor.set(0);
             }
             lastColor = current;

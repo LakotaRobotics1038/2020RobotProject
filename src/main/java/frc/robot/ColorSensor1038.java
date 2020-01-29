@@ -12,14 +12,11 @@ public class ColorSensor1038 extends ColorSensorV3 {
 
     private final Color BLUE_TARGET = ColorMatch.makeColor(0.143, 0.427, 0.429);
     private final Color GREEN_TARGET = ColorMatch.makeColor(0.197, 0.561, 0.240);
-    private final Color RED_TARGET = ColorMatch.makeColor(0.561, 0.232, 0.114);
-    private final Color YELLOW_TARGET = ColorMatch.makeColor(0.361, 0.524, 0.113);
+    private final Color RED_TARGET = ColorMatch.makeColor(0.413, 0.398, 0.189);
+    private final Color YELLOW_TARGET = ColorMatch.makeColor(0.309, 0.542, 0.150);
+
     public enum Colors {
-        Red,
-        Blue,
-        Green,
-        Yellow,
-        Unknown
+        Red, Blue, Green, Yellow, Unknown
     }
 
     public ColorSensor1038(Port port) {
