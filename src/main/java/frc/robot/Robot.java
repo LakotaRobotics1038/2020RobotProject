@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
   //   private final PowerCell powerCell = PowerCell.getInstance();
 
      //Aquisition
-     private final Acquisition acquisition = Acquisition.getInstance();
+     // private final Acquisition acquisition = Acquisition.getInstance();
 
     //limelight
     private final Limelight limelight = Limelight.getInstance();
@@ -118,6 +118,13 @@ public class Robot extends TimedRobot {
     }
   }
 
+  @Override
+  public void teleopInit() {
+    // TODO Auto-generated method stub
+    super.teleopInit();
+    shooter.positionSpeedPIDAdjustment();
+    shooter.initialize();
+  }
   /**
    * This function is called periodically during operator control.
    */
@@ -149,19 +156,19 @@ public class Robot extends TimedRobot {
 //     }
 //   } 
    public void operator() {
-    if(operatorJoystick.getRightButton()) {
-      acquisition.runBeaterBarFwd();
-    }
-    else if(operatorJoystick.getRightTrigger() > .5) {
-      acquisition.runBeaterBarRev();
-    }
-    else {
-      acquisition.stopBeaterBar();
-    }
+    // if(operatorJoystick.getRightButton()) {
+    //   acquisition.runBeaterBarFwd();
+    // }
+    // else if(operatorJoystick.getRightTrigger() > .5) {
+    //   acquisition.runBeaterBarRev();
+    // }
+    // else {
+    //   acquisition.stopBeaterBar();
+    // }
 
-    if(operatorJoystick.getYButton()) {
-      acquisition.toggleAcquisitionPosition();
-    }
+    // if(operatorJoystick.getYButton()) {
+    //   acquisition.toggleAcquisitionPosition();
+    // }
 
     if(operatorJoystick.getLeftButton()) {
       shooter.executeSpeedPID();

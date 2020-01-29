@@ -2,7 +2,7 @@ package frc.subsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.Servo;
+//import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.CANSpark1038;
@@ -13,13 +13,13 @@ public class Shooter implements Subsystem {
     private final int SHOOTER_MOTOR_1_PORT = 0; 
     private final int SHOOTER_MOTOR_2_PORT = 1; 
     private final int SHOOTER_MOTOR_3_PORT = 3; 
-    private final int TURRET_TURNING = 2;
-    private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushless);
-    private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushless);
-    private CANSpark1038 shooterMotor3 = new CANSpark1038(SHOOTER_MOTOR_3_PORT, MotorType.kBrushless);
-    private CANEncoder shooterEncoder1 = shooterMotor1.getEncoder();
-    private CANEncoder shooterEncoder2 = shooterMotor2.getEncoder();
-    private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING, MotorType.kBrushless);
+    private final int TURRET_TURNING = 57;
+    // private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushless);
+    // private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushless);
+    // private CANSpark1038 shooterMotor3 = new CANSpark1038(SHOOTER_MOTOR_3_PORT, MotorType.kBrushless);
+    // private CANEncoder shooterEncoder1 = shooterMotor1.getEncoder();
+    // private CANEncoder shooterEncoder2 = shooterMotor2.getEncoder();
+    private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING, MotorType.kBrushed);
     private static Shooter shooter;
     private PIDController positionPID;
     private PIDController speedPID;
@@ -29,14 +29,14 @@ public class Shooter implements Subsystem {
     private final double speedTolerance = 0.0;
     private final double positionSetpoint = 0.0;
     private final double speedSetpoint = 0.0;
-    private final static double positionP = 0.0;
+    private final static double positionP = 0.001;
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private final static double speedP = 0.0;
     private final static double speedI = 0.0;
     private final static double speedD = 0.0;
     // Servos for testing
-    private Servo angleServo = new Servo(1);
+    //private Servo angleServo = new Servo(5);
 
 
     public static Shooter getInstance() {
@@ -63,17 +63,17 @@ public class Shooter implements Subsystem {
     }
 
     public void feedBall() {
-        shooterMotor3.set(.5);
+        // shooterMotor3.set(.5);
     }
 
     public void noFeedBall() {
-        shooterMotor3.set(0);
+        // shooterMotor3.set(0);
     }
 
     public void disablePID() {
         //speedPID.calculate(0.0);
-        shooterMotor1.set(0);
-        shooterMotor2.set(0);
+        // shooterMotor1.set(0);
+        // shooterMotor2.set(0);
     }
 
     
@@ -84,13 +84,13 @@ public class Shooter implements Subsystem {
 
 	
 	public void executeAimPID() {
-        //turretTurningMotor.set(positionPID.calculate(limelight.getXOffset()));
-        angleServo.set(angleServo.get() + limelight.getXOffset());	
+        turretTurningMotor.set(positionPID.calculate(limelight.getXOffset()));
+        //angleServo.set(angleServo.get() + limelight.getXOffset());	
     }
 
     public void executeSpeedPID() {
-        shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-        shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+        // shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+        // shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
     }
 
 	public void end(boolean interrupted) {
