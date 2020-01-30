@@ -25,11 +25,11 @@ public class Shooter implements Subsystem {
     private PIDController speedPID;
     private Limelight limelight = Limelight.getInstance();
     // pid values
-    private final double positionTolerance = 0.0;
+    private final double positionTolerance = 3.0;
     private final double speedTolerance = 0.0;
     private final double positionSetpoint = 0.0;
     private final double speedSetpoint = 0.0;
-    private final static double positionP = 0.001;
+    private final static double positionP = 0.01;
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private final static double speedP = 0.0;
