@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
-import frc.subsystem.Spinner;;
+import frc.subsystem.Spinner;
+import frc.robot.Encoder1038;
+import edu.wpi.first.wpilibj.Spark;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,8 +40,16 @@ public class Robot extends TimedRobot {
   // // Pi Reader
   // private final PiReader piReader = PiReader.getInstance();
 
+  //Encoder
+  private final int SPARK_CHANNEL = 93;
+  private final int ENCODER_CHANNEL_A = 4;
+  private final int ENCODER_CHANNEL_B = 5;
+  private final int COUNTS_PER_REVOLUTION = 500;
+  private final int WHEEL_DIAMETER = 4;
+  private final Encoder1038 encoder = new Encoder1038(ENCODER_CHANNEL_A, ENCODER_CHANNEL_B, false, COUNTS_PER_REVOLUTION, WHEEL_DIAMETER);
+  private final Spark encoderMotor = new Spark(SPARK_CHANNEL);
   // Spinner
-  private final Spinner spinner = Spinner.getInstance();
+  //private final Spinner spinner = Spinner.getInstance();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -65,6 +75,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // piReader.readpi();
+    encoderMotor.set(.4);
+    System.out.println(encoder.findDistancePerPulse(COUNTS_PER_REVOLUTION, WHEEL_DIAMETER));
   }
 
   /**
