@@ -30,11 +30,8 @@ public class PiReader {
     private static boolean leftEndgameSwitch;
     private static boolean rightEndgameSwitch;
     private static String colorSensor;
-    private static boolean firstBallSwitch;
-    private static boolean secondBallSwitch;
-    private static boolean thirdBallSwitch;
-    private static boolean fourthBallSwitch;
-    private static boolean fifthBallSwitch;
+    private static boolean firstBallSensor;
+    private static boolean lastBallSensor;
 
     // Objects
     private static SerialPort piPort;
@@ -90,10 +87,8 @@ public class PiReader {
                     leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
                     rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
                     colorSensor = (piDataMap[3]);
-                    firstBallSwitch = Boolean.parseBoolean(piDataMap[4]);
-                    secondBallSwitch = Boolean.parseBoolean(piDataMap[5]);
-                    thirdBallSwitch = Boolean.parseBoolean(piDataMap[6]);
-                    fourthBallSwitch = Boolean.parseBoolean(piDataMap[7]);
+                    firstBallSensor = Boolean.parseBoolean(piDataMap[4]);
+                    lastBallSensor = Boolean.parseBoolean(piDataMap[5]);
 
                 }
             }
@@ -109,7 +104,7 @@ public class PiReader {
     }
 
     public void resetGyro() {
-        piPort.writeString("Reset that saucy boi, bitch");
+        piPort.writeString("Reset dat saucy boi, bitch");
     }
 
     /**
@@ -161,43 +156,15 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public static Boolean getFirstBallSwitchVal() {
-        return firstBallSwitch;
+    public static Boolean isFirstBall() {
+        return firstBallSensor;
     }
-
     /**
      * The front left laser looking forwards
      * 
      * @return Distance to object from front left in cm
      */
-    public static Boolean getSecondBallSwitchVal() {
-        return secondBallSwitch;
-    }
-
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getThirdBallSwitchVal() {
-        return thirdBallSwitch;
-    }
-
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getFourthBallSwitchVal() {
-        return fourthBallSwitch;
-    }
-
-    /**
-     * The front left laser looking forwards
-     * 
-     * @return Distance to object from front left in cm
-     */
-    public static Boolean getFifthBallSwitchVal() {
-        return fifthBallSwitch;
+    public static Boolean isLastBall() {
+        return lastBallSensor;
     }
 }

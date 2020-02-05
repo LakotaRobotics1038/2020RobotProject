@@ -44,8 +44,8 @@ public class Robot extends TimedRobot {
   //  // Pi Reader 
   //   private final PiReader piReader = PiReader.getInstance();
 
-  //  // Powercell
-  //   private final PowerCell powerCell = PowerCell.getInstance();
+    // Powercell
+    // private final PowerCell powerCell = PowerCell.getInstance();
 
      //Aquisition
      // private final Acquisition acquisition = Acquisition.getInstance();
@@ -170,19 +170,19 @@ public class Robot extends TimedRobot {
     //   acquisition.toggleAcquisitionPosition();
     // }
 
-    if(operatorJoystick.getLeftButton()) {
-      shooter.executeSpeedPID();
-    }
-    else {
-      shooter.disablePID();
-    }
+    // if(operatorJoystick.getLeftButton()) {
+    //   shooter.executeSpeedPID();
+    // }
+    // else {
+    //   shooter.disablePID();
+    // }
 
-    if(operatorJoystick.getLeftTrigger() > .5) {
-      shooter.feedBall();
-    }
-    else {
-      shooter.noFeedBall();
-    }
+    // if(operatorJoystick.getLeftTrigger() > .5) {
+    //   powerCell.feedShooter(.5);
+    // }
+    // else {
+    //   powerCell.feedShooter(0);
+    // }
 
 
    }
