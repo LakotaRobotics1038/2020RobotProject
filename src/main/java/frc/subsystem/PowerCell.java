@@ -7,27 +7,26 @@
 
 package frc.subsystem;
 
-import javax.lang.model.util.ElementScanner6;
-
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import frc.robot.PiReader;
 import frc.robot.CANSpark1038;
 
-/**
- * Add your docs here.
- */
 public class PowerCell {
+    // ports
+    private final int shuttleMotorPort = 0;
+    
+    // shuttle motor and speed
+    private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushed);
+    private final static double shuttleMotorSpeed = 0.5;
+    
+    //declares powercell
     private static PowerCell powerCell;
-    private boolean haveBall = false;
-    private int balls = 5;
-    //private CANSpark1038 motor1 = new CANSpark1038(0, MotorType.kBrushed);
-    //private CANSpark1038 motor2 = new CANSpark1038(0, MotorType.kBrushed);
-    //private CANSpark1038 motor3 = new CANSpark1038(0, MotorType.kBrushed);
-    private CANSpark1038 shuttleMotor = new CANSpark1038(0, MotorType.kBrushed);
-    //private CANSpark1038 motor5 = new CANSpark1038(0, MotorType.kBrushed);
-    private PiReader piReader = PiReader.getInstance();
 
+    /**
+     * returns the powercell instance when the robot starts
+     * 
+     * @return powercell instance
+     */
     public static PowerCell getInstance() {
         if(powerCell == null) {
             System.out.println("creating a new powercell");
@@ -36,12 +35,15 @@ public class PowerCell {
         return powerCell;
     }
 
+    /**
+     * runs the ball storage
+     */
     public void ballsPeriodic() {
-        if(PiReader./*get boi*/isFirstBall())//see ball at start sensor
+        if(PiReader.isFirstBall())//see ball at start sensor
         {
             if(PiReader.isLastBall())//dont see ball at end sensor
             {
-                shuttleMotor.set(.5);
+                shuttleMotor.set(shuttleMotorSpeed);
             }
         }
         else
@@ -50,6 +52,12 @@ public class PowerCell {
         }
       
     }
+
+    /**
+     * feeds the shooter
+     * 
+     * @param power how fast to feed the shooter
+     */
     public void feedShooter(double power){
         shuttleMotor.set(power);
     }
