@@ -13,20 +13,32 @@ import frc.robot.ColorSensor1038;
 import frc.robot.ColorSensor1038.Colors;
 
 public class Spinner implements Subsystem {
-    private final ColorSensor1038 colorSensor = new ColorSensor1038(I2C.Port.kOnboard);
-
-    private final int SPINNER_MOTOR_PORT = 50;
+    
+    //Variables
+    private static Spinner spinner;
+    private final int SPINNER_MOTOR_PORT = 2;
     private final double SPINNER_MOTOR_SPEED = .8;
-    // private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
-    private Spark spinnerMotor = new Spark(2);
-    // private CANEncoder spinnerEncoder = spinnerMotor.getEncoder();
     private boolean rotationEnabled = false;
     private boolean colorEnabled = false;
-    private static Spinner spinner;
+
+    //Color Sensor
+    private final ColorSensor1038 colorSensor = new ColorSensor1038(I2C.Port.kOnboard);
+
+    //Motors
+    private Spark spinnerMotor = new Spark(SPINNER_MOTOR_PORT);
+
+    //Color Variables
     private int colorCount = 0;
     private Colors initialColor;
     private Colors lastColor;
     private final String desiredColor = "R";
+
+
+    /***
+     * Returns the spinner instance created when the robot starts
+     * 
+     * @return Spinner instance
+     */
 
     public static Spinner getInstance() {
         if (spinner == null) {
@@ -36,10 +48,16 @@ public class Spinner implements Subsystem {
         return spinner;
     }
 
+    /**
+    * Constructs a Spinner Object
+    */
+
     private Spinner() {
 
     }
-
+    /**
+     * Sets rotationEnabled to true and sets other variables necessary to rotate the spinner
+     */
     public void setRotationEnabled() {
         if (!colorEnabled) {
             colorCount = 0;
@@ -49,20 +67,42 @@ public class Spinner implements Subsystem {
         }
     }
 
+    /**
+     * Sets colorEnabled to true
+     */
+
     public void setcolorEnabled() {
         if (!rotationEnabled) {
             colorEnabled = true;
         }
     }
 
+    /**
+     * Returns whether rotation is enabled
+     * 
+     * @return Current value of rotationEnabled
+     */
+
     public Boolean getRotationEnabled() {
         return rotationEnabled;
     }
+
+    /**
+     * Returns whether color is enabled
+     * 
+     * @return Current value of colorEnabled
+     */
 
     public Boolean getColorEnabled() {
         return colorEnabled;
     }
 
+    /**
+     * If rotation is enabled, spin the color wheel 3-5 full revolutions
+     * 
+     * If color enabled, spin the color wheel to the game specific color
+     */
+    
     public void spinnerPeriodic() {
         if (rotationEnabled) {
             // To find the current color

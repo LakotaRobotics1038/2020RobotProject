@@ -28,6 +28,12 @@ public class ColorSensor1038 extends ColorSensorV3 {
         colorMatcher.addColorMatch(YELLOW_TARGET);
     }
 
+    /**
+     * Match the detected color with blue, red, green, yellow, or unknown
+     * 
+     * @return The closest of the four colors to the detected color
+     */
+    
     public Colors getClosestColor() {
         Color detectedColor = this.getColor();
 
