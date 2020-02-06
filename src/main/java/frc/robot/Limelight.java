@@ -15,28 +15,33 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * Add your docs here.
  */
 public class Limelight {
+    //LimeLight instance
     private static Limelight limelight;
 
+    //network table
     private static NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
     private static NetworkTable table = tableInstance.getTable("limelight");
-    // NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-
+    
+    //network table values
     NetworkTableEntry tv = table.getEntry("tv");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
-
-    // std::shared_ptr<NetworkTable> table = NetworkTable::GetTable("limelight");
-    // float tx = table->GetNumber("tx");
-    // float ty = table->GetNumber("ty");
-
     private double valid_target;
     private double x;
     private double y;
+
+    //offset default value
+    private int defaultOffset = 0;
     
     public Limelight() {
 
     }
-    
+
+    /**
+     * returns limelight instance when robot is turned on
+     * 
+     * @return the limelight instance
+     */
     public static Limelight getInstance() {
         if (limelight == null) {
             System.out.println("Creating limelight");
@@ -52,13 +57,21 @@ public class Limelight {
     public void initialize() {
     }
 
+    /**
+     * reads the values from the network table
+     */
     public void read() {
-        valid_target = tv.getDouble(0);
-        x = tx.getDouble(0);
-        y = ty.getDouble(0);
+        valid_target = tv.getDouble(defaultOffset);
+        x = tx.getDouble(defaultOffset);
+        y = ty.getDouble(defaultOffset);
         System.out.println(valid_target + ", " + x + ", " + y);
     }
 
+    /**
+     * tells if robot has acquired the target
+     * 
+     * @return whether or not the robot has a target
+     */
     public boolean isTarget() {
         if (valid_target == 1) {
             return true;
@@ -68,6 +81,9 @@ public class Limelight {
         }
     }
 
+    /**
+     * how far off center horizontally the robot is
+     */
     public double getXOffset() {
         // if they tell me what to do i wont do it
         // it ha been 5 minutes since they told me to do something
@@ -78,12 +94,16 @@ public class Limelight {
         // i won the war over the yard stick
         // they still have not noticed              -Shawn Tomas
 
-        x = tx.getDouble(0);
+        x = tx.getDouble(defaultOffset);
         return x;
     }
 
+    /**
+     * returns how far from center vertically the robot is
+     * @return distance from center vertically
+     */
     public double getYOffset() {
-        y = ty.getDouble(0);
+        y = ty.getDouble(defaultOffset);
         return y;
     }
     
