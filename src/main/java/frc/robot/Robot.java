@@ -11,11 +11,14 @@ import frc.auton.AutonSelector;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import frc.subsystem.*;
+import javax.lang.model.util.ElementScanner6;
+
+import edu.wpi.first.wpilibj.Compressor;
+import frc.subsystem.PowerCell;
+import frc.subsystem.Acquisition;
+import frc.robot.Limelight;
+import frc.subsystem.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,27 +38,40 @@ public class Robot extends TimedRobot {
   private AutonSelector autonSelector = AutonSelector.getInstance();
   private CommandScheduler schedule = CommandScheduler.getInstance();
   // Drive
-  public static DriveTrain driveTrain = DriveTrain.getInstance();
-  public Compressor c = new Compressor();
+   private final DriveTrain driveTrain = DriveTrain.getInstance();
+   public Compressor c = new Compressor();
 
    // Joystick
    private final Joystick1038 driverJoystick = new Joystick1038(0);
+   private final Joystick1038 operatorJoystick = new Joystick1038(1);
    public double multiplyer;
+
+  // Pi Reader 
+  private final PiReader piReader = PiReader.getInstance();
+
+  // Powercell
+  private final PowerCell powerCell = PowerCell.getInstance();
+
+  //Aquisition
+  private final Acquisition acquisition = Acquisition.getInstance();
+
+  //limelight
+  private final Limelight limelight = Limelight.getInstance();
+
+  //shooter
+  private final Shooter shooter = Shooter.getInstance();
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    startPosition.setDefaultOption("Center", AutonSelector.CenterPosition);
-		startPosition.addOption("Left", AutonSelector.LeftPosition);
-		startPosition.addOption("Right", AutonSelector.RightPosition);
-
-    autoChooser.setDefaultOption("Forward Auton", AutonSelector.ForwardAuto);
-
-		SmartDashboard.putData("Drivers/Start Position", startPosition);
-		SmartDashboard.putData("Drivers/Auton choices", autoChooser);
-
+    piReader.initialize();
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
+    limelight.initialize();
   }
 
   /**
@@ -68,6 +84,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    piReader.readpi();
+    powerCell.ballsPeriodic();
+    limelight.read();
+
   }
 
   /**
@@ -98,11 +118,19 @@ public class Robot extends TimedRobot {
 		}
   }
 
+  @Override
+  public void teleopInit() {
+    // TODO Auto-generated method stub
+    super.teleopInit();
+    shooter.positionSpeedPIDAdjustment();
+    shooter.initialize();
+  }
   /**
    * This function is called periodically during operator control.
    */
   @Override
   public void teleopPeriodic() {
+    shooter.executeAimPID();
   }
 
   /**
@@ -111,21 +139,47 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-  public void driver() {
-	switch (driveTrain.currentDriveMode) {
-      case tankDrive:
-        driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getRightJoystickVertical() * multiplyer);
-        break;
-      case dualArcadeDrive:
-        driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getRightJoystickHorizontal() * multiplyer);
-        break;
-      case singleArcadeDrive:
-        driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getLeftJoystickHorizontal() * multiplyer);
-        break;
-    }
-  } 
-}
+   public void driver() {
+ 	switch (driveTrain.currentDriveMode) {
+       case tankDrive:
+         driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+             driverJoystick.getRightJoystickVertical() * multiplyer);
+         break;
+       case dualArcadeDrive:
+         driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+             driverJoystick.getRightJoystickHorizontal() * multiplyer);
+         break;
+       case singleArcadeDrive:
+         driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+             driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+         break;
+     }
+   } 
+   public void operator() {
+     if(operatorJoystick.getRightButton()) {
+       acquisition.runBeaterBarFwd();
+     }
+    //  else if(operatorJoystick.getRightTrigger() > .5) {
+    //    acquisition.runBeaterBarRev();
+    //  }
+     else {
+       acquisition.stopBeaterBar();
+     }
+     if(operatorJoystick.getYButton()) {
+       acquisition.toggleAcquisitionPosition();
+     }
+     if(operatorJoystick.getLeftButton()) {
+       shooter.executeSpeedPID();
+     }
+     else {
+       shooter.disablePID();
+     }
+     if(operatorJoystick.getLeftTrigger() > .5) {
+       powerCell.feedShooter(.5);
+     }
+     else {
+       powerCell.feedShooter(0);
+     }
+   }
+ }
 

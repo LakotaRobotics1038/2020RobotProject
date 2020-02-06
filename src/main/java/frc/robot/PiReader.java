@@ -21,18 +21,20 @@ public class PiReader {
     private String piDataMap[];
     private static String inputBuffer = "";
     private String line;
-    private final int BAUD_RATE = 9600;
+    private double number = 0;
+    private final int BAUD_RATE = 115200;
 
     // Sensors
+    private static int gyro;
+    private static boolean leftEndgameSwitch;
+    private static boolean rightEndgameSwitch;
+    private static String colorSensor;
+    private static boolean firstBallSensor;
+    private static boolean lastBallSensor;
 
     // Objects
     private static SerialPort piPort;
     private static PiReader PiReader;
-
-    private String[] sensors = { "gyro", "leftEndgameSwitch", "rightEndgameSwitch", "colorSensor" };
-
-    private Map<String, Double> sensorValues = Map.of("gyro", null, "leftEndgameSwitch", null, "rightEndgameSwitch",
-            null, "colorSensor", null);
 
     /**
      * Returns the pi instance created when the robot starts
@@ -61,43 +63,47 @@ public class PiReader {
         System.out.println("Created new pi reader");
     }
 
+    public void testPi() {
+        try {
+            piPort.writeString("silly");
+            //System.out.println(piPort.readString() + " oops");
+        } catch(UncleanStatusException err) {
+            System.out.println(err);
+        }
+    }
+
     /**
      * Updates pi values and reads pi serial port
      */
     public void readpi() {
         try {
+            piPort.writeString("silly");
             while (piPort.getBytesReceived() != 0) {
                 piOutput = piPort.readString();
-                inputBuffer += piOutput;
-            }
-            line = "";
-            while (inputBuffer.indexOf("\r") != -1) {
-                int point = inputBuffer.indexOf("\r");
-                line = inputBuffer.substring(0, point);
-                if (inputBuffer.length() > point + 1) {
-                    inputBuffer = inputBuffer.substring(point + 2, inputBuffer.length());
-                } else {
-                    inputBuffer = "";
+                if (piOutput != "") {
+                    piDataMap = piOutput.split(",");
+                    gyro = Integer.parseInt(piDataMap[0]);
+                    leftEndgameSwitch = Boolean.parseBoolean(piDataMap[1]);
+                    rightEndgameSwitch = Boolean.parseBoolean(piDataMap[2]);
+                    colorSensor = (piDataMap[3]);
+                    firstBallSensor = Boolean.parseBoolean(piDataMap[4]);
+                    lastBallSensor = Boolean.parseBoolean(piDataMap[5]);
+
                 }
-            }
-            if (line != "") {
-                piDataMap = line.split(",");
-                // TODO does this work?
-                for (int i = 0; i < piDataMap.length; i++) {
-                    sensorValues.put(sensors[i], Double.parseDouble(piDataMap[i]));
-                }
-                // frontLaserSensorData = Integer.parseInt(piDataMap[0]);
-                // rearLaserSensorData = Integer.parseInt(piDataMap[1]);
-                // frontLeftLaserSensorData = Integer.parseInt(piDataMap[2]);
-                // frontRightLaserSensorData = Integer.parseInt(piDataMap[3]);
-                // acquisitionAccelerometerData = Integer.parseInt(piDataMap[4]);
-                // scoringAccelerometerData = Integer.parseInt(piDataMap[5]);
             }
         } catch (NumberFormatException e) {
             System.out.println(e);
         } catch (UncleanStatusException e) {
             System.out.println(e);
         }
+    }
+
+    public void recalibrateGyro() {
+        piPort.writeString("Recalibrate dat saucy boi, bitch");
+    }
+
+    public void resetGyro() {
+        piPort.writeString("Reset dat saucy boi, bitch");
     }
 
     /**
@@ -113,8 +119,8 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getGyroVal() {
-        return (int) Math.round(sensorValues.get("gyro"));
+    public static int getGyroVal() {
+        return gyro;
     }
     public double getAngle(){
         return getGyroVal();
@@ -128,8 +134,8 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getLeftEndgameSwitchVal() {
-        return (int) Math.round(sensorValues.get("leftEndgameSwitch"));
+    public static boolean getLeftEndgameSwitchVal() {
+        return leftEndgameSwitch;
     }
 
     /**
@@ -137,8 +143,8 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getRightEndgameSwitchVal() {
-        return (int) Math.round(sensorValues.get("rightEndgameSwitch"));
+    public static Boolean getRightEndgameSwitchVal() {
+        return rightEndgameSwitch;
     }
 
     /**
@@ -146,7 +152,24 @@ public class PiReader {
      * 
      * @return Distance to object from front left in cm
      */
-    public int getColorSensorVal() {
-        return (int) Math.round(sensorValues.get("colorSensor"));
+    public static String getColorSensorVal() {
+        return colorSensor;
+    }
+
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public static Boolean isFirstBall() {
+        return firstBallSensor;
+    }
+    /**
+     * The front left laser looking forwards
+     * 
+     * @return Distance to object from front left in cm
+     */
+    public static Boolean isLastBall() {
+        return lastBallSensor;
     }
 }
