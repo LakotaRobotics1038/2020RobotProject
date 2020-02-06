@@ -7,13 +7,13 @@ import frc.robot.PiReader;
 
 public class Endgame implements Subsystem {
 
-    //Variables
+    // Variables
     private static Endgame endgame;
     private boolean isExtending = false;
     private boolean isAdjusting = false;
     private boolean isRetracting = false;
 
-    //Motor
+    // Motor
     private final double ENDGAME_LEFT_MOTOR_SPEED = 0.5;
     private final double ENDGAME_RIGHT_MOTOR_SPEED = -0.5;
     private final int ENDGAME_MOTOR_PORT = 58;
@@ -52,12 +52,12 @@ public class Endgame implements Subsystem {
     public void endgamePeriodic() {
         if (isExtending) {
             // TODO Lifts the Robot
-        } 
-        
+        }
+
         else if (isRetracting) {
             // TODO Retracts the Robot
         }
-        
+
         else if (isAdjusting) {
             // TODO Adjust the Robot Position
 
@@ -76,14 +76,14 @@ public class Endgame implements Subsystem {
      */
 
     public void setIsExtending() {
-            isExtending = true;
-        
+        isExtending = true;
+
     }
 
     /**
      * Set the robot to retract the arms
      */
-    
+
     public void setIsRetracting() {
         isRetracting = true;
     }
@@ -96,6 +96,5 @@ public class Endgame implements Subsystem {
         isAdjusting = true;
 
     }
-
 
 }

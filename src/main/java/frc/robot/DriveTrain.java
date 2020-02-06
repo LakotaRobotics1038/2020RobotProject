@@ -8,9 +8,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 public class DriveTrain extends Subsystem {
 
-    //Variables
+    // Variables
     public enum driveModes {
         tankDrive, singleArcadeDrive, dualArcadeDrive
     };
@@ -22,17 +23,17 @@ public class DriveTrain extends Subsystem {
     public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(4, 5);
     public boolean isHighGear = false;
 
-    //Motors
+    // Motors
     public static CANSpark1038 CANSparkRightFront = new CANSpark1038(53, MotorType.kBrushless);
     public static CANSpark1038 CANSparkRightBack = new CANSpark1038(52, MotorType.kBrushless);
     public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(51, MotorType.kBrushless);
     public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(50, MotorType.kBrushless);
 
-    //Sensors
+    // Sensors
     public CANEncoder CANSparkRightEncoder = CANSparkRightBack.getEncoder();
     public CANEncoder CANSparkLeftEncoder = CANSparkLeftBack.getEncoder();
 
-    //Objects
+    // Objects
     private DifferentialDrive differentialDrive;
     private static DriveTrain driveTrain;
 
@@ -182,7 +183,7 @@ public class DriveTrain extends Subsystem {
      * @param leftStickInput  Left joystick input between -1 and 1
      * @param rightStickInput Right joystick input between -1 and 1
      */
-    
+
     public void dualArcadeDrive(double yaxis, double xaxis) {
         differentialDrive.arcadeDrive(yaxis, xaxis, true);
     }

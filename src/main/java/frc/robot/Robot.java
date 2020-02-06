@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.Endgame;
 import frc.robot.PiReader;
 import frc.robot.DriveTrain;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -134,7 +135,7 @@ public class Robot extends TimedRobot {
       endgame.setIsExtending();
     }
 
-    if(driverJoystick.getAButton()) {
+    if (driverJoystick.getAButton()) {
       endgame.setIsRetracting();
     }
 
