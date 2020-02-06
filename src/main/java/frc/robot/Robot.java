@@ -11,14 +11,15 @@ import frc.auton.AutonSelector;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import javax.lang.model.util.ElementScanner6;
-
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
 import frc.robot.Limelight;
 import frc.subsystem.Shooter;
+import frc.subsystem.DriveTrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,8 +29,6 @@ import frc.subsystem.Shooter;
  * project.
  */
 public class Robot extends TimedRobot {
-  //pi and gyro
-  private PiReader piReader = PiReader.getInstance();
 
   //Auton Variables
   public static SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -47,7 +46,6 @@ public class Robot extends TimedRobot {
    public double multiplyer;
 
   // Pi Reader 
-  private final PiReader piReader = PiReader.getInstance();
 
   // Powercell
   private final PowerCell powerCell = PowerCell.getInstance();
@@ -67,10 +65,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    piReader.initialize();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
     limelight.initialize();
   }
 
@@ -84,7 +78,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    piReader.readpi();
+   
     powerCell.ballsPeriodic();
     limelight.read();
 
@@ -104,7 +98,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autonPath = autonSelector.chooseAuton();
-		piReader.reset();
 		schedule.schedule(autonPath);
   }
 
