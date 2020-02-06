@@ -3,21 +3,27 @@ package frc.subsystem;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.CANSpark1038;
-import frc.robot.PiReader;
 
 public class Endgame implements Subsystem {
 
     // Variables
     private static Endgame endgame;
     private boolean isExtending = false;
-    private boolean isAdjusting = false;
+    private boolean isLeftAdjusting = false;
+    private boolean isRightAdjusting = false;
     private boolean isRetracting = false;
 
-    // Motor
+    // Deploying/Retracting Motor
+    private final double ENDGAME_LIFTING_SPEED = 0.5;
+    private final double ENDGAME_RETRACTING_SPEED = -0.5;
+    private final int ENDGAME_LIFTING_MOTOR_PORT = 55;
+    private CANSpark1038 liftingMotor = new CANSpark1038(ENDGAME_LIFTING_MOTOR_PORT, MotorType.kBrushless);
+
+    // Adjusting Motor
     private final double ENDGAME_LEFT_MOTOR_SPEED = 0.5;
     private final double ENDGAME_RIGHT_MOTOR_SPEED = -0.5;
-    private final int ENDGAME_MOTOR_PORT = 58;
-    private CANSpark1038 endgameMotor = new CANSpark1038(ENDGAME_MOTOR_PORT, MotorType.kBrushless);
+    private final int ENDGAME_ADJUSTING_MOTOR_PORT = 58;
+    private CANSpark1038 adjustingMotor = new CANSpark1038(ENDGAME_ADJUSTING_MOTOR_PORT, MotorType.kBrushless);
 
     /**
      * Returns the endgame instance created when the robot starrs
@@ -42,32 +48,33 @@ public class Endgame implements Subsystem {
     }
 
     /**
-     * If isExtending is true, Extend the arms
+     * If isExtending is true, Extend the arms;
      * 
-     * If isRetracting is true, Retract the arms
+     * If isRetracting is true, Retract the arms;
      * 
-     * If isAdjusting is true, Move the robot to balance out the bar
+     * If isLeftAdjusting is true, Move the robot to the Left on the bar
+     * 
+     * If isRightAdjusting is true, Move the robot to the Right on the bar
      */
 
     public void endgamePeriodic() {
         if (isExtending) {
-            // TODO Lifts the Robot
+            // TODO Lifts the Arms when the Driver X Button is Pressed
+            liftingMotor.set(ENDGAME_LIFTING_SPEED);
         }
 
         else if (isRetracting) {
-            // TODO Retracts the Robot
+            // TODO Retracts the Arms when the Driver A Button is Pressed
+            liftingMotor.set(ENDGAME_RETRACTING_SPEED);
         }
 
-        else if (isAdjusting) {
+        else if (isLeftAdjusting) {
             // TODO Adjust the Robot Position
+            adjustingMotor.set(ENDGAME_LEFT_MOTOR_SPEED);
+        }
 
-            if (PiReader.getLeftEndgameSwitchVal() == 1) {
-                endgameMotor.set(ENDGAME_LEFT_MOTOR_SPEED);
-            }
-
-            else if (PiReader.getRightEndgameSwitchVal() == 1) {
-                endgameMotor.set(ENDGAME_RIGHT_MOTOR_SPEED);
-            }
+        else if (isRightAdjusting) {
+            adjustingMotor.set(ENDGAME_RIGHT_MOTOR_SPEED);
         }
     }
 
@@ -92,9 +99,13 @@ public class Endgame implements Subsystem {
      * Set the robot to adjust it's position on the bar
      */
 
-    public void setIsAdjusting() {
-        isAdjusting = true;
+    public void setIsLeftAdjusting() {
+        isLeftAdjusting = true;
 
     }
 
+    public void setIsRightAdjusting() {
+        isRightAdjusting = true;
+
+    }
 }

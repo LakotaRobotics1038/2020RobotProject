@@ -28,9 +28,9 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  // Drive
-  // private final DriveTrain driveTrain = DriveTrain.getInstance();
-  // public Compressor c = new Compressor();
+  //Drive
+  private final DriveTrain driveTrain = DriveTrain.getInstance();
+  public Compressor c = new Compressor();
 
   // Joystick
   private final Joystick1038 driverJoystick = new Joystick1038(0);
@@ -45,7 +45,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    PiReader.initialize();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -140,7 +139,11 @@ public class Robot extends TimedRobot {
     }
 
     if (driverJoystick.getXButton()) {
-      endgame.setIsAdjusting();
+      endgame.setIsLeftAdjusting();
+    }
+
+    if (driverJoystick.getBButton()) {
+      endgame.setIsRightAdjusting();
     }
 
   }
