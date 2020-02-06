@@ -5,6 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+//TODO switch pireader values to digital inputs
 package frc.subsystem;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
