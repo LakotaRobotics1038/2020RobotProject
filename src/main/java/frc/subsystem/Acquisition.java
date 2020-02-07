@@ -24,7 +24,7 @@ public class Acquisition extends Subsystem {
 
     //motor speeds
     private final static double beaterBarFwdSpeed = 0.5;
-    private final static double runBeaterBarRevSpeed = -0.5;
+    //private final static double runBeaterBarRevSpeed = -0.5;
     
     //acquisition instance
     private static Acquisition acquisition;

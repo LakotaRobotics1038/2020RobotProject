@@ -1,6 +1,7 @@
 package frc.subsystem;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -10,16 +11,16 @@ import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
     // motor port numbers
-    private final int SHOOTER_MOTOR_1_PORT = 0;
-    private final int SHOOTER_MOTOR_2_PORT = 1;
-    private final int TURRET_TURNING_PORT = 57;
+    private final int SHOOTER_MOTOR_1_PORT = 55;
+    //private final int SHOOTER_MOTOR_2_PORT = 1;
+    //private final int TURRET_TURNING_PORT =0;
 
     // motors and encoders
-    private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
-    private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushless);
-    private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushless);
-    private CANEncoder shooterEncoder1 = shooterMotor1.getEncoder();
-    private CANEncoder shooterEncoder2 = shooterMotor2.getEncoder();
+    private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushed);
+    //private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushless);
+    //private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
+    private CANEncoder shooterEncoder1 = shooterMotor1.getAlternateEncoder();
+    //private CANEncoder shooterEncoder2 = shooterMotor2.getEncoder();
 
     // Shooter 
     private static Shooter shooter;
@@ -99,7 +100,7 @@ public class Shooter implements Subsystem {
     public void disablePID() {
         speedPID.calculate(0.0);//come back to that
         shooterMotor1.set(0);
-        shooterMotor2.set(0);
+        //shooterMotor2.set(0);
     }
 
     /**
@@ -114,7 +115,7 @@ public class Shooter implements Subsystem {
      * aims turret towards target
      */
     public void executeAimPID() {
-        turretTurningMotor.set(-1 * positionPID.calculate(limelight.getXOffset()));
+        //turretTurningMotor.set(-1 * positionPID.calculate(limelight.getXOffset()));
     }
 
     /**
@@ -122,7 +123,7 @@ public class Shooter implements Subsystem {
      */
     public void executeSpeedPID() {
         shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-        shooterMotor2.set(speedPID.calculate(shooterEncoder2.getVelocity()));
+        //shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
     }
 
     /**
@@ -145,6 +146,14 @@ public class Shooter implements Subsystem {
      */
     public boolean isFinished() {
         return positionPID.atSetpoint() && speedPID.atSetpoint();
+    }
+
+    public void test() {
+        System.out.println("position " + shooterEncoder1.getPosition());
+        //System.out.println("get counts per rev" + shooterEncoder1.getCountsPerRevolution());
+        //System.out.println("get velocity" + shooterEncoder1.getVelocity());
+        // System.out.println("get average depth" + shooterEncoder1.getAverageDepth());
+        // System.out.println("get measurement period" + shooterEncoder1.getMeasurementPeriod());
     }
 
 }
