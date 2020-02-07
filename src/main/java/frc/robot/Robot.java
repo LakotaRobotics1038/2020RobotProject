@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import javax.lang.model.util.ElementScanner6;
 
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
@@ -27,10 +29,12 @@ import frc.subsystem.Shooter;
  * project.
  */
 public class Robot extends TimedRobot {
-  // private static final String kDefaultAuto = "Default";
-  // private static final String kCustomAuto = "My Auto";
-  // private String m_autoSelected;
-  // private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static final String kDefaultAuto = "Default";
+  private static final String kCustomAuto = "My Auto";
+  private String m_autoSelected;
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  //private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
 
   // // Drive
   //  private final DriveTrain driveTrain = DriveTrain.getInstance();
@@ -63,8 +67,8 @@ public class Robot extends TimedRobot {
    @Override
    public void robotInit() {
   //   piReader.initialize();
-  //   m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-  //   m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
   //   SmartDashboard.putData("Auto choices", m_chooser);
   //   limelight.initialize();
    }
@@ -82,7 +86,7 @@ public class Robot extends TimedRobot {
   //   piReader.readpi();
   //   powerCell.ballsPeriodic();
   //   limelight.read();
-       shooter.test();
+       
 
    }
 
@@ -97,50 +101,51 @@ public class Robot extends TimedRobot {
   //  * the switch structure below with additional strings. If using the
   //  * SendableChooser make sure to add them to the chooser code above as well.
   //  */
-  // @Override
-  // public void autonomousInit() {
-  //   m_autoSelected = m_chooser.getSelected();
-  //   m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-  //   System.out.println("Auto selected: " + m_autoSelected);
-  // }
+  @Override
+  public void autonomousInit() {
+    m_autoSelected = m_chooser.getSelected();
+    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    System.out.println("Auto selected: " + m_autoSelected);
+  }
 
   // /**
   //  * This function is called periodically during autonomous.
   //  */
-  // @Override
-  // public void autonomousPeriodic() {
-  //   switch (m_autoSelected) {
-  //     case kCustomAuto:
-  //       // Put custom auto code here
-  //       break;
-  //     case kDefaultAuto:
-  //     default:
-  //       // Put default auto code here
-  //       break;
-  //   }
-  // }
+  @Override
+  public void autonomousPeriodic() {
+    switch (m_autoSelected) {
+      case kCustomAuto:
+        // Put custom auto code here
+        break;
+      case kDefaultAuto:
+      default:
+        // Put default auto code here
+        break;
+    }
+  }
 
-  // @Override
-  // public void teleopInit() {
-  //   // TODO Auto-generated method stub
-  //   super.teleopInit();
-  //   shooter.positionSpeedPIDAdjustment();
-  //   shooter.initialize();
-  // }
+  @Override
+  public void teleopInit() {
+    // TODO Auto-generated method stub
+    super.teleopInit();
+    // shooter.positionSpeedPIDAdjustment();
+    // shooter.initialize();
+  }
   // /**
   //  * This function is called periodically during operator control.
   //  */
    @Override
    public void teleopPeriodic() {
-     shooter.executeAimPID();
+     //shooter.executeAimPID();
+     shooter.test();
   }
 
   // /**
   //  * This function is called periodically during test mode.
   //  */
-  // @Override
-  // public void testPeriodic() {
-  // }
+  @Override
+  public void testPeriodic() {
+  }
   //  public void driver() {
  	// switch (driveTrain.currentDriveMode) {
   //      case tankDrive:

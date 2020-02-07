@@ -11,7 +11,7 @@ import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
     // motor port numbers
-    private final int SHOOTER_MOTOR_1_PORT = 55;
+    private final int SHOOTER_MOTOR_1_PORT = 57;
     //private final int SHOOTER_MOTOR_2_PORT = 1;
     //private final int TURRET_TURNING_PORT =0;
 
@@ -26,10 +26,10 @@ public class Shooter implements Subsystem {
     private static Shooter shooter;
     
     // Limelight instance
-    private Limelight limelight = Limelight.getInstance();
+    //private Limelight limelight = Limelight.getInstance();
     
     // PowerCell instance
-    private PowerCell powerCell = PowerCell.getInstance();
+    //private PowerCell powerCell = PowerCell.getInstance();
     
     // position PID for turret
     private PIDController positionPID;
@@ -84,14 +84,14 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        powerCell.feedShooter(feedSpeed);
+        //powerCell.feedShooter(feedSpeed);
     }
 
     /**
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-        powerCell.feedShooter(0);
+       // powerCell.feedShooter(0);
     }
 
     /**
@@ -122,8 +122,8 @@ public class Shooter implements Subsystem {
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
-        shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-        //shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+         shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+        // shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
     }
 
     /**
@@ -149,11 +149,9 @@ public class Shooter implements Subsystem {
     }
 
     public void test() {
+        shooterMotor1.set(.5);
         System.out.println("position " + shooterEncoder1.getPosition());
-        //System.out.println("get counts per rev" + shooterEncoder1.getCountsPerRevolution());
-        //System.out.println("get velocity" + shooterEncoder1.getVelocity());
-        // System.out.println("get average depth" + shooterEncoder1.getAverageDepth());
-        // System.out.println("get measurement period" + shooterEncoder1.getMeasurementPeriod());
+        
     }
 
 }
