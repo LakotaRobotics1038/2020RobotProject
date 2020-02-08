@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.subsystem.DriveTrain;
-import frc.robot.PiReader;
+import frc.robot.Gyro1038;
 
 //import org.usfirst.frc.team1038.robot.I2CGyro;
 public class DriveStraightCommand extends CommandBase {
@@ -20,7 +20,7 @@ public class DriveStraightCommand extends CommandBase {
 	private final static double tP = 0.200; // .23 proto
 	private final static double tI = 0.001;
 	private final static double tD = 0.000;
-	private PiReader gyroSensor = PiReader.getInstance();
+	private Gyro1038 gyroSensor = Gyro1038.getInstance();
 	private final DriveTrain drive = DriveTrain.getInstance();
 	private PIDController drivePID; 
 	private PIDController turnPID;

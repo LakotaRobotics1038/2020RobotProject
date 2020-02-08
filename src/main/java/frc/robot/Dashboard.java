@@ -64,8 +64,8 @@ public class Dashboard {
                 break;
             }
 
-            position = Robot.startPosition.getSelected();
-            autonChooser = Robot.autoChooser.getSelected();
+           // position = Robot.startPosition.getSelected();
+           // autonChooser = Robot.autoChooser.getSelected();
         } 
         else {
             //Code for no data received yet

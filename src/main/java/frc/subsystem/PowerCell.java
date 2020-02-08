@@ -9,19 +9,25 @@
 package frc.subsystem;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.PiReader;
 import frc.robot.CANSpark1038;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class PowerCell {
     // ports
-    private final int shuttleMotorPort = 0;
+    private final int shuttleMotorPort = 62;
+    private final int photoEyeStartPort = 5;
+    private final int photoEyeEndPort = 6;
     
     // shuttle motor and speed
-    private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushed);
+    private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
     private final static double shuttleMotorSpeed = 0.5;
     
     //declares powercell
     private static PowerCell powerCell;
+
+    //photoeyes
+    private DigitalInput photoEyeStart = new DigitalInput(photoEyeStartPort);
+    private DigitalInput photoEyeEnd = new DigitalInput(photoEyeEndPort);
 
     /**
      * returns the powercell instance when the robot starts
@@ -40,9 +46,9 @@ public class PowerCell {
      * runs the ball storage
      */
     public void ballsPeriodic() {
-        if(PiReader.isFirstBall())//see ball at start sensor
+        if(!photoEyeStart.get())//see ball at start sensor
         {
-            if(PiReader.isLastBall())//dont see ball at end sensor
+            if(photoEyeEnd.get())//dont see ball at end sensor
             {
                 shuttleMotor.set(shuttleMotorSpeed);
             }
@@ -52,6 +58,15 @@ public class PowerCell {
             shuttleMotor.set(0);
         }
       
+    }
+
+    public void test() {
+        if (!photoEyeStart.get()) {
+            System.out.println("has thing");
+        }
+        else {
+            System.out.println("no thing");
+        }
     }
 
     /**

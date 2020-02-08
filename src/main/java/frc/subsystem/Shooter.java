@@ -10,17 +10,17 @@ import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
     // motor port numbers
-    private boolean isEnabled = false;
-    private final int SHOOTER_MOTOR_1_PORT = 0;
-    private final int SHOOTER_MOTOR_2_PORT = 1;
-    private final int TURRET_TURNING_PORT = 57;
+    private static boolean isEnabled = false;
+    private final int SHOOTER_MOTOR_1_PORT = 60;
+    private final int SHOOTER_MOTOR_2_PORT = 61;
+    private final int TURRET_TURNING_PORT = 59;
 
     // motors and encoders
+    private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushed);
+    private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushed);
     private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
-    private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushless);
-    private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushless);
-    private CANEncoder shooterEncoder1 = shooterMotor1.getEncoder();
-    private CANEncoder shooterEncoder2 = shooterMotor2.getEncoder();
+    private CANEncoder shooterEncoder1 = shooterMotor1.getAlternateEncoder();
+    //private CANEncoder turretEncoder = turretTurningMotor.getAlternateEncoder();
 
     // Shooter 
     private static Shooter shooter;
@@ -114,16 +114,17 @@ public class Shooter implements Subsystem {
     /**
      * aims turret towards target
      */
-    public void executeAimPID() {
+    public Boolean executeAimPID() {
         turretTurningMotor.set(-1 * positionPID.calculate(limelight.getXOffset()));
+        return true; //return a boolean that tells us that the turret is positioned
     }
 
     /**
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
-        shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-        shooterMotor2.set(speedPID.calculate(shooterEncoder2.getVelocity()));
+         shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+         shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
     }
 
     public void enable() {
@@ -136,8 +137,8 @@ public class Shooter implements Subsystem {
 
     public void periodic() {
         if(isEnabled) {
-            executeSpeedPID();
             executeAimPID();
+            executeSpeedPID();
         }
     }
     /**
@@ -160,6 +161,12 @@ public class Shooter implements Subsystem {
      */
     public boolean isFinished() {
         return positionPID.atSetpoint() && speedPID.atSetpoint();
+    }
+
+    public void test() {
+        shooterMotor1.set(.5);
+        System.out.println("position " + shooterEncoder1.getPosition());
+        
     }
 
 }

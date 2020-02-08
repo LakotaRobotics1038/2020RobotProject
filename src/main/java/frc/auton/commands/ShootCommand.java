@@ -9,13 +9,12 @@ public class ShootCommand extends CommandBase {
     private Shooter shooterInstance = Shooter.getInstance();
 
     public ShootCommand() {
-        shooterInstance.positionSpeedPIDAdjustment();
         shooterInstance.enable();
     }
 
     @Override
     public void execute() {
-            shooterInstance.feedBall();
+        shooterInstance.periodic();
     }
 
     @Override
