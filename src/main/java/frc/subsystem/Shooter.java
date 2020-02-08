@@ -11,25 +11,25 @@ import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
     // motor port numbers
-    private final int SHOOTER_MOTOR_1_PORT = 57;
-    //private final int SHOOTER_MOTOR_2_PORT = 1;
-    //private final int TURRET_TURNING_PORT =0;
+    private final int SHOOTER_MOTOR_1_PORT = 60;
+    private final int SHOOTER_MOTOR_2_PORT = 61;
+    private final int TURRET_TURNING_PORT = 59;
 
     // motors and encoders
     private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushed);
-    //private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushless);
-    //private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
+    private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushed);
+    private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
     private CANEncoder shooterEncoder1 = shooterMotor1.getAlternateEncoder();
-    //private CANEncoder shooterEncoder2 = shooterMotor2.getEncoder();
+    //private CANEncoder turretEncoder = turretTurningMotor.getAlternateEncoder();
 
     // Shooter 
     private static Shooter shooter;
     
     // Limelight instance
-    //private Limelight limelight = Limelight.getInstance();
+    private Limelight limelight = Limelight.getInstance();
     
     // PowerCell instance
-    //private PowerCell powerCell = PowerCell.getInstance();
+    private PowerCell powerCell = PowerCell.getInstance();
     
     // position PID for turret
     private PIDController positionPID;
@@ -84,14 +84,14 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        //powerCell.feedShooter(feedSpeed);
+        powerCell.feedShooter(feedSpeed);
     }
 
     /**
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-       // powerCell.feedShooter(0);
+        powerCell.feedShooter(0);
     }
 
     /**
@@ -100,7 +100,7 @@ public class Shooter implements Subsystem {
     public void disablePID() {
         speedPID.calculate(0.0);//come back to that
         shooterMotor1.set(0);
-        //shooterMotor2.set(0);
+        shooterMotor2.set(0);
     }
 
     /**
@@ -115,7 +115,7 @@ public class Shooter implements Subsystem {
      * aims turret towards target
      */
     public void executeAimPID() {
-        //turretTurningMotor.set(-1 * positionPID.calculate(limelight.getXOffset()));
+        turretTurningMotor.set(-1 * positionPID.calculate(limelight.getXOffset()));
     }
 
     /**
@@ -123,7 +123,7 @@ public class Shooter implements Subsystem {
      */
     public void executeSpeedPID() {
          shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-        // shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+         shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
     }
 
     /**

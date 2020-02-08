@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class PowerCell {
     // ports
-    private final int shuttleMotorPort = 0;
+    private final int shuttleMotorPort = 62;
     private final int photoEyeStartPort = 0;
     private final int photoEyeEndPort = 0;
     
     // shuttle motor and speed
-    private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushed);
+    private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
     private final static double shuttleMotorSpeed = 0.5;
     
     //declares powercell
