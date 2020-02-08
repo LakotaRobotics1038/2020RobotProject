@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.Endgame;
-import frc.robot.PiReader;
 import frc.robot.DriveTrain;
 
 /**
@@ -115,7 +114,7 @@ public class Robot extends TimedRobot {
   }
 
   public void driver() {
-    switch (driveTrain.currentDriveMode()) {
+    switch (driveTrain.currentDriveMode) {
     case tankDrive:
       driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
           driverJoystick.getRightJoystickVertical() * multiplyer);

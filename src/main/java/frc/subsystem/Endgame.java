@@ -16,14 +16,14 @@ public class Endgame implements Subsystem {
     // Deploying/Retracting Motor
     private final double ENDGAME_LIFTING_SPEED = 0.5;
     private final double ENDGAME_RETRACTING_SPEED = -0.5;
-    private final int ENDGAME_LIFTING_MOTOR_PORT = 55;
+    private final int ENDGAME_LIFTING_MOTOR_PORT = 52;
     private CANSpark1038 liftingMotor = new CANSpark1038(ENDGAME_LIFTING_MOTOR_PORT, MotorType.kBrushless);
 
     // Adjusting Motor
     private final double ENDGAME_LEFT_MOTOR_SPEED = 0.5;
     private final double ENDGAME_RIGHT_MOTOR_SPEED = -0.5;
-    private final int ENDGAME_ADJUSTING_MOTOR_PORT = 58;
-    private CANSpark1038 adjustingMotor = new CANSpark1038(ENDGAME_ADJUSTING_MOTOR_PORT, MotorType.kBrushless);
+    private final int ENDGAME_ADJUSTING_MOTOR_PORT = 53;
+    private CANSpark1038 adjustingMotor = new CANSpark1038(ENDGAME_ADJUSTING_MOTOR_PORT, MotorType.kBrushed);
 
     /**
      * Returns the endgame instance created when the robot starrs
