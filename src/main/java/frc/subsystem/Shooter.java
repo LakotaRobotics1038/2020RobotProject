@@ -10,6 +10,7 @@ import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
     // motor port numbers
+    private boolean isEnabled = false;
     private final int SHOOTER_MOTOR_1_PORT = 0;
     private final int SHOOTER_MOTOR_2_PORT = 1;
     private final int TURRET_TURNING_PORT = 57;
@@ -125,6 +126,20 @@ public class Shooter implements Subsystem {
         shooterMotor2.set(speedPID.calculate(shooterEncoder2.getVelocity()));
     }
 
+    public void enable() {
+        isEnabled = true;
+    }
+
+    public void disable() {
+        isEnabled = false;
+    }
+
+    public void periodic() {
+        if(isEnabled) {
+            executeSpeedPID();
+            executeAimPID();
+        }
+    }
     /**
      * stops and resets PID values if interrupted (potentially unnecessary)
      * 
