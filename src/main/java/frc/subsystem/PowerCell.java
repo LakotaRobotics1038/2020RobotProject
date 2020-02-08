@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class PowerCell {
     // ports
     private final int shuttleMotorPort = 62;
-    private final int photoEyeStartPort = 0;
-    private final int photoEyeEndPort = 0;
+    private final int photoEyeStartPort = 5;
+    private final int photoEyeEndPort = 6;
     
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
@@ -47,7 +47,7 @@ public class PowerCell {
      * runs the ball storage
      */
     public void ballsPeriodic() {
-        if(photoEyeStart.get())//see ball at start sensor
+        if(!photoEyeStart.get())//see ball at start sensor
         {
             if(photoEyeEnd.get())//dont see ball at end sensor
             {
@@ -59,6 +59,15 @@ public class PowerCell {
             shuttleMotor.set(0);
         }
       
+    }
+
+    public void test() {
+        if (!photoEyeStart.get()) {
+            System.out.println("has thing");
+        }
+        else {
+            System.out.println("no thing");
+        }
     }
 
     /**
