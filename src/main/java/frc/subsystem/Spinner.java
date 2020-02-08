@@ -16,7 +16,7 @@ public class Spinner implements Subsystem {
     
     //Variables
     private static Spinner spinner;
-    private final int SPINNER_MOTOR_PORT = 2;
+    private final int SPINNER_MOTOR_PORT = 51;
     private final double SPINNER_MOTOR_SPEED = .8;
     private boolean rotationEnabled = false;
     private boolean colorEnabled = false;
