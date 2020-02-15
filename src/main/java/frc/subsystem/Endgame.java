@@ -69,11 +69,12 @@ public class Endgame implements Subsystem {
         }
 
         else if (isLeftAdjusting) {
-            // TODO Adjust the Robot Position
+            // TODO Adjust the Robot Left Position when the Driver X Button is Pressed
             adjustingMotor.set(ENDGAME_LEFT_MOTOR_SPEED);
         }
 
         else if (isRightAdjusting) {
+            //TODO Adjust the Robot Right Position when the Driver B Button is Pressed
             adjustingMotor.set(ENDGAME_RIGHT_MOTOR_SPEED);
         }
     }
@@ -84,6 +85,9 @@ public class Endgame implements Subsystem {
 
     public void setIsExtending() {
         isExtending = true;
+        isRetracting = false;
+        isLeftAdjusting = false;
+        isRightAdjusting = false;
 
     }
 
@@ -93,19 +97,32 @@ public class Endgame implements Subsystem {
 
     public void setIsRetracting() {
         isRetracting = true;
+        isExtending = false;
+        isLeftAdjusting = false;
+        isRightAdjusting = false;
     }
 
     /**
-     * Set the robot to adjust it's position on the bar
+     * Set the robot to adjust it's left position on the bar
      */
 
     public void setIsLeftAdjusting() {
         isLeftAdjusting = true;
+        isExtending = false;
+        isRetracting = false;
+        isRightAdjusting = false;
 
     }
 
+    /**
+     * Set the robot to adjust it's right position on the bar
+     */
+
     public void setIsRightAdjusting() {
         isRightAdjusting = true;
+        isExtending = false;
+        isRetracting = false;
+        isLeftAdjusting = false;
 
     }
 }
