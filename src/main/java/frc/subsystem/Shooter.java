@@ -1,10 +1,13 @@
 package frc.subsystem;
 
+import javax.lang.model.util.ElementScanner6;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.CANSpark1038;
 import frc.robot.Limelight;
 import frc.subsystem.PowerCell;
@@ -14,23 +17,30 @@ public class Shooter implements Subsystem {
     private final int SHOOTER_MOTOR_1_PORT = 60;
     private final int SHOOTER_MOTOR_2_PORT = 61;
     private final int TURRET_TURNING_PORT = 59;
+    private final int hardStopPort = 0;
 
-    // motors and encoders
+    // motors and encoders and sensors
     private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushed);
     private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushed);
     private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
     private CANEncoder shooterEncoder1 = shooterMotor1.getAlternateEncoder();
-    //private CANEncoder turretEncoder = turretTurningMotor.getAlternateEncoder();
+    private CANEncoder turretEncoder = turretTurningMotor.getAlternateEncoder();
+    private DigitalInput hardStop = new DigitalInput(hardStopPort);
 
-    // Shooter 
+    // Shooter
     private static Shooter shooter;
-    
+
+    // swerves
+    private boolean leftMost = false;
+    private static int rightStop = 0;
+    private static double swivelSpeed = 0.5;
+
     // Limelight instance
     private Limelight limelight = Limelight.getInstance();
-    
+
     // PowerCell instance
     private PowerCell powerCell = PowerCell.getInstance();
-    
+
     // position PID for turret
     private PIDController positionPID;
     private final double positionSetpoint = 0.0;
@@ -38,7 +48,7 @@ public class Shooter implements Subsystem {
     private final static double positionP = 0.005;
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
-    
+
     // speed PID for shooter
     private PIDController speedPID;
     private final double speedSetpoint = 0.0;
@@ -52,7 +62,7 @@ public class Shooter implements Subsystem {
 
     /**
      * Returns the Shooter instance created when the robot starts
-     *  
+     * 
      * @return Shooter instance
      */
     public static Shooter getInstance() {
@@ -62,6 +72,7 @@ public class Shooter implements Subsystem {
         }
         return shooter;
     }
+
     /**
      * sets initial PID values
      */
@@ -98,7 +109,7 @@ public class Shooter implements Subsystem {
      * disables speed motors and pid
      */
     public void disablePID() {
-        speedPID.calculate(0.0);//come back to that
+        speedPID.calculate(0.0);// come back to that
         shooterMotor1.set(0);
         shooterMotor2.set(0);
     }
@@ -122,8 +133,8 @@ public class Shooter implements Subsystem {
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
-         shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-         shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+        shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+        shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
     }
 
     /**
@@ -151,7 +162,41 @@ public class Shooter implements Subsystem {
     public void test() {
         shooterMotor1.set(.5);
         System.out.println("position " + shooterEncoder1.getPosition());
-        
+
     }
 
+    /**
+     * limits shooter turn radius
+     */
+    public void swivelEy() {
+        if (leftMost) {
+            turretTurningMotor.set(swivelSpeed);
+        } else {
+            turretTurningMotor.set(-swivelSpeed);
+        }
+    }
+
+    public void move() {
+        if (!hardStop.get()) {
+            leftMost = true;
+            turretEncoder.setCounts(0);
+            swivelEy();
+        }
+        else if(turretEncoder.getCounts() >= rightStop)
+        {
+            leftMost = false;
+            swivelEy();
+        }
+        else if (limelight.isTarget()) {
+            executeAimPID();
+        } 
+        else {
+            swivelEy();
+        }
+
+
+
+    }
+
+    
 }

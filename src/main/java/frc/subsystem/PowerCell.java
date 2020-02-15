@@ -9,7 +9,6 @@
 package frc.subsystem;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.PiReader;
 import frc.robot.CANSpark1038;
 import edu.wpi.first.wpilibj.DigitalInput;
 

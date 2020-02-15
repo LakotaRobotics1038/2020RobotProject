@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
   // private final Limelight limelight = Limelight.getInstance();
 
   //shooter
-  // private final Shooter shooter = Shooter.getInstance();
+  private final Shooter shooter = Shooter.getInstance();
 
   // /**
   //  * This function is run when the robot is first started up and should be
@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
   //  */
    @Override
    public void teleopPeriodic() {
-     //shooter.executeAimPID();
+     shooter.move();
      powerCell.test();
   }
 
