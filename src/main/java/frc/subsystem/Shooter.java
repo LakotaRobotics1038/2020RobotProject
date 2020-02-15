@@ -179,10 +179,10 @@ public class Shooter implements Subsystem {
     public void move() {
         if (!hardStop.get()) {
             leftMost = true;
-            turretEncoder.setCounts(0);
+            turretEncoder.setPosition(0);
             swivelEy();
         }
-        else if(turretEncoder.getCounts() >= rightStop)
+        else if(turretEncoder.getPosition() >= rightStop)
         {
             leftMost = false;
             swivelEy();

@@ -20,7 +20,7 @@ public class PowerCell {
     
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
-    private final static double shuttleMotorSpeed = 0.5;
+    private final static double shuttleMotorSpeed = -0.4; //negative is forward
     
     //declares powercell
     private static PowerCell powerCell;
