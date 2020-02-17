@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
   // private final PiReader piReader = PiReader.getInstance();
 
   // // Powercell
-  private final PowerCell powerCell = PowerCell.getInstance();
+  //private final PowerCell powerCell = PowerCell.getInstance();
 
   // //Aquisition
   // private final Acquisition acquisition = Acquisition.getInstance();
@@ -128,6 +128,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // TODO Auto-generated method stub
     super.teleopInit();
+    shooter.positionSpeedPIDAdjustment();
     // shooter.positionSpeedPIDAdjustment();
     // shooter.initialize();
   }
@@ -137,7 +138,7 @@ public class Robot extends TimedRobot {
    @Override
    public void teleopPeriodic() {
      shooter.move();
-     powerCell.test();
+    // powerCell.test();
   }
 
   // /**
