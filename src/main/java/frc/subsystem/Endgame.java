@@ -1,6 +1,8 @@
 package frc.subsystem;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.CANSpark1038;
 
@@ -17,13 +19,23 @@ public class Endgame implements Subsystem {
     private final double ENDGAME_LIFTING_SPEED = 0.5;
     private final double ENDGAME_RETRACTING_SPEED = -0.5;
     private final int ENDGAME_LIFTING_MOTOR_PORT = 52;
+    private final int ENDGAME_RETRACTING_PORT = 53;
     private CANSpark1038 liftingMotor = new CANSpark1038(ENDGAME_LIFTING_MOTOR_PORT, MotorType.kBrushless);
+    private CANSpark1038 retractingMotor = new CANSpark1038(ENDGAME_RETRACTING_PORT, MotorType.kBrushless);
 
     // Adjusting Motor
     private final double ENDGAME_LEFT_MOTOR_SPEED = 0.5;
     private final double ENDGAME_RIGHT_MOTOR_SPEED = -0.5;
     private final int ENDGAME_ADJUSTING_MOTOR_PORT = 53;
     private CANSpark1038 adjustingMotor = new CANSpark1038(ENDGAME_ADJUSTING_MOTOR_PORT, MotorType.kBrushed);
+
+    //Solenoid Channels
+    private final int ENDGAME_SOLENOID_FORWARD_CHANNEL = 6;
+    private final int ENDGAME_SOLENOID_REVERSE_CHANNEL = 7;
+
+    //Solenoids
+    private DoubleSolenoid endgameLock = new DoubleSolenoid(ENDGAME_SOLENOID_FORWARD_CHANNEL, ENDGAME_SOLENOID_REVERSE_CHANNEL);
+    private boolean endgameLockOut = false;
 
     /**
      * Returns the endgame instance created when the robot starrs
@@ -60,12 +72,16 @@ public class Endgame implements Subsystem {
     public void endgamePeriodic() {
         if (isExtending) {
             // TODO Lifts the Arms when the Driver X Button is Pressed
+            endgameLock.set(Value.kReverse);
             liftingMotor.set(ENDGAME_LIFTING_SPEED);
+            endgameLockOut = false;
         }
 
         else if (isRetracting) {
             // TODO Retracts the Arms when the Driver A Button is Pressed
-            liftingMotor.set(ENDGAME_RETRACTING_SPEED);
+            endgameLock.set(Value.kForward);
+            retractingMotor.set(ENDGAME_RETRACTING_SPEED);
+            endgameLockOut = true;
         }
 
         else if (isLeftAdjusting) {
@@ -76,6 +92,21 @@ public class Endgame implements Subsystem {
         else if (isRightAdjusting) {
             //TODO Adjust the Robot Right Position when the Driver B Button is Pressed
             adjustingMotor.set(ENDGAME_RIGHT_MOTOR_SPEED);
+        }
+    }
+
+    /**
+     * Don't Know if this will be needed, but it seems like it would be pretty important
+     */
+
+    public void toggleEndgameLockPosition() {
+        if(endgameLockOut){
+            endgameLock.set(Value.kReverse);
+            endgameLockOut = false;
+        }
+        else if(!endgameLockOut){
+            endgameLock.set(Value.kForward);
+            endgameLockOut = true;
         }
     }
 
