@@ -61,13 +61,13 @@ public class Endgame implements Subsystem {
     }
 
     /**
-     * If isExtending is true, Extend the arms;
+     * If the boolean isExtending is true, Extend the arms;
      * 
-     * If isRetracting is true, Retract the arms;
+     * If the boolean isRetracting is true, Retract the arms;
      * 
-     * If isLeftAdjusting is true, Move the robot to the Left on the bar
+     * If the boolean isLeftAdjusting is true, Move the robot to the Left on the bar
      * 
-     * If isRightAdjusting is true, Move the robot to the Right on the bar
+     * If the boolean isRightAdjusting is true, Move the robot to the Right on the bar
      */
 
     public void endgamePeriodic() {
