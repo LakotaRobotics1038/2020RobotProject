@@ -14,6 +14,7 @@ public class Endgame implements Subsystem {
     private boolean isLeftAdjusting = false;
     private boolean isRightAdjusting = false;
     private boolean isRetracting = false;
+    private boolean endgameLockOut = false;
 
     // Deploying/Retracting Motor
     private final double ENDGAME_LIFTING_SPEED = 0.5;
@@ -35,7 +36,7 @@ public class Endgame implements Subsystem {
 
     //Solenoids
     private DoubleSolenoid endgameLock = new DoubleSolenoid(ENDGAME_SOLENOID_FORWARD_CHANNEL, ENDGAME_SOLENOID_REVERSE_CHANNEL);
-    private boolean endgameLockOut = false;
+    
 
     /**
      * Returns the endgame instance created when the robot starrs
@@ -72,16 +73,20 @@ public class Endgame implements Subsystem {
     public void endgamePeriodic() {
         if (isExtending) {
             // TODO Lifts the Arms when the Driver X Button is Pressed
-            endgameLock.set(Value.kReverse);
+            if (endgameLockOut){
+                endgameLock.set(Value.kReverse);
+                endgameLockOut = false;
+            }
             liftingMotor.set(ENDGAME_LIFTING_SPEED);
-            endgameLockOut = false;
         }
 
         else if (isRetracting) {
             // TODO Retracts the Arms when the Driver A Button is Pressed
-            endgameLock.set(Value.kForward);
+            if (!endgameLockOut){
+                endgameLock.set(Value.kForward);
+                endgameLockOut = true;
+            }
             retractingMotor.set(ENDGAME_RETRACTING_SPEED);
-            endgameLockOut = true;
         }
 
         else if (isLeftAdjusting) {
@@ -93,6 +98,11 @@ public class Endgame implements Subsystem {
             //TODO Adjust the Robot Right Position when the Driver B Button is Pressed
             adjustingMotor.set(ENDGAME_RIGHT_MOTOR_SPEED);
         }
+    }
+
+
+    public final Value getCurrentEndgameLockPosition(){
+        return endgameLock.get();
     }
 
     /**
