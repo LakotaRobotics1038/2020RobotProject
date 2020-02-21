@@ -11,7 +11,7 @@ public class Shooter implements Subsystem {
     // motor port numbers
     private final int SHOOTER_MOTOR_1_PORT = 60;
     private final int SHOOTER_MOTOR_2_PORT = 61;
-    private final int TURRET_TURNING_PORT = 57;
+    private final int TURRET_TURNING_PORT = 59;
     private final int hardStopPort = 0;
 
     // motors and encoders and sensors
