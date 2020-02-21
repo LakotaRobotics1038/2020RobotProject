@@ -1,15 +1,10 @@
 package frc.subsystem;
 
-import javax.lang.model.util.ElementScanner6;
-
-import com.revrobotics.CANEncoder;
-import com.revrobotics.EncoderType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.CANSpark1038;
 import frc.robot.Limelight;
+import frc.robot.TalonSRX1038;
 import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
@@ -20,11 +15,9 @@ public class Shooter implements Subsystem {
     private final int hardStopPort = 0;
 
     // motors and encoders and sensors
-    // private CANSpark1038 shooterMotor1 = new CANSpark1038(SHOOTER_MOTOR_1_PORT, MotorType.kBrushed);
-    // private CANSpark1038 shooterMotor2 = new CANSpark1038(SHOOTER_MOTOR_2_PORT, MotorType.kBrushed);
-    private CANSpark1038 turretTurningMotor = new CANSpark1038(TURRET_TURNING_PORT, MotorType.kBrushed);
-   // private CANEncoder shooterEncoder1 = shooterMotor1.getAlternateEncoder();
-    //private CANEncoder turretEncoder = turretTurningMotor.getAlternateEncoder();
+    private TalonSRX1038 shooterMotor1 = new TalonSRX1038(SHOOTER_MOTOR_1_PORT);
+    private TalonSRX1038 shooterMotor2 = new TalonSRX1038(SHOOTER_MOTOR_2_PORT);
+    private TalonSRX1038 turretTurningMotor = new TalonSRX1038(TURRET_TURNING_PORT);
     private DigitalInput hardStop = new DigitalInput(hardStopPort);
 
     // Shooter
@@ -39,7 +32,7 @@ public class Shooter implements Subsystem {
     private Limelight limelight = Limelight.getInstance();
 
     // PowerCell instance
-    //private PowerCell powerCell = PowerCell.getInstance();
+    private PowerCell powerCell = PowerCell.getInstance();
 
     // position PID for turret
     private PIDController positionPID;
@@ -95,14 +88,14 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        //powerCell.feedShooter(feedSpeed);
+        powerCell.feedShooter(feedSpeed);
     }
 
     /**
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-        //powerCell.feedShooter(0);
+        powerCell.feedShooter(0);
     }
 
     /**
@@ -110,8 +103,8 @@ public class Shooter implements Subsystem {
      */
     public void disablePID() {
         speedPID.calculate(0.0);// come back to that
-        //shooterMotor1.set(0);
-        //shooterMotor2.set(0);
+        shooterMotor1.set(0);
+        shooterMotor2.set(0);
     }
 
     /**
@@ -134,8 +127,8 @@ public class Shooter implements Subsystem {
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
-        // shooterMotor1.set(speedPID.calculate(shooterEncoder1.getVelocity()));
-        // shooterMotor2.set(speedPID.calculate(shooterEncoder1.getVelocity()));
+        shooterMotor1.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
+        shooterMotor2.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
     }
 
     /**
@@ -160,21 +153,15 @@ public class Shooter implements Subsystem {
         return positionPID.atSetpoint() && speedPID.atSetpoint();
     }
 
-    public void test() {
-        // shooterMotor1.set(.5);
-        // System.out.println("position " + shooterEncoder1.getPosition());
-
-    }
-
     /**
      * limits shooter turn radius
      */
     public void swivelEy() {
-        // if (leftMost) {
-        //     turretTurningMotor.set(swivelSpeed);
-        // } else {
-        //     turretTurningMotor.set(-swivelSpeed);
-        // }
+        if (leftMost) {
+            turretTurningMotor.set(swivelSpeed);
+        } else {
+            turretTurningMotor.set(-swivelSpeed);
+        }
     }
 
     public void move() {
@@ -182,7 +169,7 @@ public class Shooter implements Subsystem {
         System.out.println(limelight.getXOffset());
         if (hardStop.get()) {
             leftMost = true;
-            //turretEncoder.setPosition(0);
+            // turretEncoder.setPosition(0);
             swivelEy();
         }
         // else if(turretEncoder.getPosition() >= rightStop)
@@ -197,10 +184,5 @@ public class Shooter implements Subsystem {
         else {
             swivelEy();
         }
-
-
-
-    }
-
-    
+    }  
 }
