@@ -17,21 +17,25 @@ public class PowerCell {
     private final int shuttleMotorPort = 62;
     private final int laserStartPort = 6;
     private final int laserEndPort = 5;
-    
+
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
-    private final static double shuttleMotorSpeed = -0.4; //negative is forward
-    
-    //declares powercell
+    private final static double shuttleMotorSpeed = -0.4; // negative is forward
+
+    // declares powercell
     private static PowerCell powerCell;
 
-    //photoeyes
+    // photoeyes
     private DigitalInput laserStart = new DigitalInput(laserStartPort);
     private DigitalInput laserEnd = new DigitalInput(laserEndPort);
 
-    //manual drive
+    // manual drive
     private boolean manualStorageForward = false;
     private boolean manualStorageReverse = false;
+
+    public enum ManualStorageModes {
+        Forward, Reverse
+    }
 
     /**
      * returns the powercell instance when the robot starts
@@ -39,57 +43,27 @@ public class PowerCell {
      * @return powercell instance
      */
     public static PowerCell getInstance() {
-        if(powerCell == null) {
+        if (powerCell == null) {
             System.out.println("creating a new powercell");
             powerCell = new PowerCell();
         }
         return powerCell;
     }
 
-    /**
-     * runs the ball storage
-     */
-    public void periodic() {
-        if(!manualStorageForward && !manualStorageReverse){
-            // if(!photoEyeStart.get())//see ball at start sensor
-            // {
-            //     if(photoEyeEnd.get())//dont see ball at end sensor
-            //     {
-            //         shuttleMotor.set(shuttleMotorSpeed);
-            //     }
-            // }
-            // else
-            // {
-                shuttleMotor.set(0);
-            // }
-        }
-        else if(manualStorageForward) {
-            shuttleMotor.set(shuttleMotorSpeed);
-        }
-        else{
-            shuttleMotor.set(-shuttleMotorSpeed);
-        }
-    }
-
-    // public void test() {
-    //     if (!photoEyeStart.get()) {
-    //         System.out.println("has thing");
-    //     }
-    //     else {
-    //         System.out.println("no thing");
-    //     }
-    // }
-
-    public void enableManualStorage(boolean forward){
-        if(forward) {
+    public void enableManualStorage(ManualStorageModes mode) {
+        switch (mode) {
+        case Forward:
             manualStorageForward = true;
-        }
-        else {
+            break;
+        case Reverse:
             manualStorageReverse = true;
+            break;
+        default:
+            break;
         }
     }
-    
-    public void disableManualStorage(){
+
+    public void disableManualStorage() {
         manualStorageReverse = false;
         manualStorageForward = false;
     }
@@ -99,7 +73,28 @@ public class PowerCell {
      * 
      * @param power how fast to feed the shooter
      */
-    public void feedShooter(double power){
+    public void feedShooter(double power) {
         shuttleMotor.set(power);
+    }
+
+    /**
+     * runs the ball storage
+     */
+    public void periodic() {
+        if (!manualStorageForward && !manualStorageReverse) {
+            if (laserStart.get())// see ball at start sensor
+            {
+                if (!laserEnd.get())// dont see ball at end sensor
+                {
+                    shuttleMotor.set(shuttleMotorSpeed);
+                }
+            } else {
+                shuttleMotor.set(0);
+            }
+        } else if (manualStorageForward) {
+            shuttleMotor.set(shuttleMotorSpeed);
+        } else if (manualStorageReverse) {
+            shuttleMotor.set(-shuttleMotorSpeed);
+        }
     }
 }

@@ -96,9 +96,9 @@ public class Shooter implements Subsystem {
     /**
      * stops feeding balls into shooter
      */
-    public void noFeedBall() {
-        powerCell.feedShooter(0);
-    }
+    // public void noFeedBall() {
+    //     powerCell.feedShooter(0);
+    // }
 
     /**
      * disables speed motors and pid
