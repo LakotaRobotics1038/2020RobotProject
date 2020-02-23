@@ -35,20 +35,20 @@ public class Shooter implements Subsystem {
     private PowerCell powerCell = PowerCell.getInstance();
 
     // position PID for turret
-    private PIDController positionPID;
     private final double positionSetpoint = 0.0;
     private final double positionTolerance = .05;
     private final static double positionP = 0.15;
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
+    private PIDController positionPID = new PIDController(positionP, positionI, positionD);
 
     // speed PID for shooter
-    private PIDController speedPID;
     private final double speedSetpoint = 0.0;
     private final double speedTolerance = 0.0;
     private final static double speedP = 0.0;
     private final static double speedI = 0.0;
     private final static double speedD = 0.0;
+    private PIDController speedPID = new PIDController(speedP, speedI, speedD);
 
     // motor speed for shooter feeder
     private final static double feedSpeed = 0.5;
@@ -70,10 +70,8 @@ public class Shooter implements Subsystem {
      * sets initial PID values
      */
     public void positionSpeedPIDAdjustment() {
-        positionPID = new PIDController(positionP, positionI, positionD);
-        speedPID = new PIDController(speedP, speedI, speedD);
 
-        positionPID.setPID(positionP, positionI, positionD);
+       positionPID.setPID(positionP, positionI, positionD);
         positionPID.setSetpoint(positionSetpoint);
         positionPID.setTolerance(positionTolerance);
         positionPID.disableContinuousInput();
@@ -88,7 +86,7 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        if(speedPID.atSetpoint()){
+        if (speedPID.atSetpoint()) {
             powerCell.feedShooter(feedSpeed);
         }
     }
@@ -97,7 +95,7 @@ public class Shooter implements Subsystem {
      * stops feeding balls into shooter
      */
     // public void noFeedBall() {
-    //     powerCell.feedShooter(0);
+    // powerCell.feedShooter(0);
     // }
 
     /**
@@ -185,15 +183,14 @@ public class Shooter implements Subsystem {
         }
         // else if(turretEncoder.getPosition() >= rightStop)
         // {
-        //     leftMost = false;
-        //     swivelEy();
+        // leftMost = false;
+        // swivelEy();
         // }
         if (!limelight.isTarget()) {
             executeAimPID();
             System.out.println("lemon");
-        } 
-        else {
+        } else {
             swivelEy();
         }
-    }  
+    }
 }

@@ -197,9 +197,9 @@ public class Robot extends TimedRobot {
     if (operatorJoystick.getLeftTrigger() > .5) {
       shooter.feedBall();
     } else if (operatorJoystick.getBButton()) {
-      powerCell.enableManualStorage(ManualStorageModes.Reverse);
-    } else if (operatorJoystick.getXButton()) {
       powerCell.enableManualStorage(ManualStorageModes.Forward);
+    } else if (operatorJoystick.getXButton()) {
+      powerCell.enableManualStorage(ManualStorageModes.Reverse);
     } else {
       powerCell.disableManualStorage();
     }

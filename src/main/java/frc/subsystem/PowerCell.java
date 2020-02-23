@@ -5,9 +5,9 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-//TODO switch pireader values to digital inputs
 package frc.subsystem;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.CANSpark1038;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,9 +17,11 @@ public class PowerCell {
     private final int shuttleMotorPort = 62;
     private final int laserStartPort = 6;
     private final int laserEndPort = 5;
+    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = -45;
 
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
+    private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
     private final static double shuttleMotorSpeed = -0.4; // negative is forward
 
     // declares powercell
@@ -48,6 +50,10 @@ public class PowerCell {
             powerCell = new PowerCell();
         }
         return powerCell;
+    }
+
+    private PowerCell() {
+        shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {
@@ -81,20 +87,24 @@ public class PowerCell {
      * runs the ball storage
      */
     public void periodic() {
+        System.out.println("kas" + laserStart.get() + " " + laserEnd.get());
+        System.out.println("sto" + manualStorageForward + " " + manualStorageReverse);
+        System.out.println(shuttleMotorEncoder.getPosition());
         if (!manualStorageForward && !manualStorageReverse) {
-            if (laserStart.get())// see ball at start sensor
+            if (shuttleMotorEncoder.getPosition() > SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())// see ball at start sensor
             {
-                if (!laserEnd.get())// dont see ball at end sensor
-                {
-                    shuttleMotor.set(shuttleMotorSpeed);
-                }
+                shuttleMotor.set(shuttleMotorSpeed);
+            } else if (laserStart.get()) {
+                shuttleMotorEncoder.setPosition(0);
             } else {
                 shuttleMotor.set(0);
             }
         } else if (manualStorageForward) {
             shuttleMotor.set(shuttleMotorSpeed);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS - 500);
         } else if (manualStorageReverse) {
             shuttleMotor.set(-shuttleMotorSpeed);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS - 500);
         }
     }
 }
