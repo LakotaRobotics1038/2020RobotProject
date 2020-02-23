@@ -26,8 +26,12 @@ public class PowerCell {
     private static PowerCell powerCell;
 
     //photoeyes
-    private DigitalInput photoEyeStart = new DigitalInput(photoEyeStartPort);
-    private DigitalInput photoEyeEnd = new DigitalInput(photoEyeEndPort);
+    // private DigitalInput photoEyeStart = new DigitalInput(photoEyeStartPort);
+    // private DigitalInput photoEyeEnd = new DigitalInput(photoEyeEndPort);
+
+    //manual drive
+    private boolean manualStorageForward = false;
+    private boolean manualStorageReverse = false;
 
     /**
      * returns the powercell instance when the robot starts
@@ -46,27 +50,48 @@ public class PowerCell {
      * runs the ball storage
      */
     public void ballsPeriodic() {
-        if(!photoEyeStart.get())//see ball at start sensor
-        {
-            if(photoEyeEnd.get())//dont see ball at end sensor
-            {
-                shuttleMotor.set(shuttleMotorSpeed);
-            }
+        if(!manualStorageForward && !manualStorageReverse){
+            // if(!photoEyeStart.get())//see ball at start sensor
+            // {
+            //     if(photoEyeEnd.get())//dont see ball at end sensor
+            //     {
+            //         shuttleMotor.set(shuttleMotorSpeed);
+            //     }
+            // }
+            // else
+            // {
+                shuttleMotor.set(0);
+            // }
         }
-        else
-        {
-            shuttleMotor.set(0);
+        else if(manualStorageForward) {
+            shuttleMotor.set(shuttleMotorSpeed);
         }
-      
+        else{
+            shuttleMotor.set(-shuttleMotorSpeed);
+        }
     }
 
-    public void test() {
-        if (!photoEyeStart.get()) {
-            System.out.println("has thing");
+    // public void test() {
+    //     if (!photoEyeStart.get()) {
+    //         System.out.println("has thing");
+    //     }
+    //     else {
+    //         System.out.println("no thing");
+    //     }
+    // }
+
+    public void enableManualStorage(boolean forward){
+        if(forward) {
+            manualStorageForward = true;
         }
         else {
-            System.out.println("no thing");
+            manualStorageReverse = true;
         }
+    }
+    
+    public void disableManualStorage(){
+        manualStorageReverse = false;
+        manualStorageForward = false;
     }
 
     /**

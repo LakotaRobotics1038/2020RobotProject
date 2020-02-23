@@ -88,7 +88,9 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        powerCell.feedShooter(feedSpeed);
+        if(speedPID.atSetpoint()){
+            powerCell.feedShooter(feedSpeed);
+        }
     }
 
     /**
@@ -129,6 +131,15 @@ public class Shooter implements Subsystem {
     public void executeSpeedPID() {
         shooterMotor1.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
         shooterMotor2.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
+    }
+
+    public boolean speedOnTarget() {
+        return speedPID.atSetpoint();
+    }
+
+    public void shootManually(double speed) {
+        shooterMotor1.set(speed);
+        shooterMotor2.set(-speed);
     }
 
     /**

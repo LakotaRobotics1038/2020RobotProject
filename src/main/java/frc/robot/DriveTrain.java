@@ -17,13 +17,13 @@ public class DriveTrain extends Subsystem {
 
     public final double WHEEL_DIAMETER = 4;
 
-    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(4, 5);
+    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(0, 1);
     public boolean isHighGear = false;
 
-    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(53, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(52, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(51, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(50, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(57, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(58, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(55, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
 
     public CANEncoder CANSparkRightEncoder = CANSparkRightBack.getEncoder();
     public CANEncoder CANSparkLeftEncoder = CANSparkLeftBack.getEncoder();

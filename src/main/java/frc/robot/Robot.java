@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,6 +17,7 @@ import javax.lang.model.util.ElementScanner6;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
 import frc.robot.Limelight;
@@ -37,28 +39,31 @@ public class Robot extends TimedRobot {
   //private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
 
   // // Drive
-  //  private final DriveTrain driveTrain = DriveTrain.getInstance();
-  //  public Compressor c = new Compressor();
+  private final DriveTrain driveTrain = DriveTrain.getInstance();
+  public Compressor c = new Compressor();
 
   //  // Joystick
-  //  private final Joystick1038 driverJoystick = new Joystick1038(0);
-  //  private final Joystick1038 operatorJoystick = new Joystick1038(1);
-  //  public double multiplyer;
+  private final Joystick1038 driverJoystick = new Joystick1038(0);
+  private final Joystick1038 operatorJoystick = new Joystick1038(1);
+  public double multiplyer = .8;
 
   // // Pi Reader 
   // private final PiReader piReader = PiReader.getInstance();
 
-  // // Powercell
-  //private final PowerCell powerCell = PowerCell.getInstance();
+  // Powercell
+  private final PowerCell powerCell = PowerCell.getInstance();
 
-  // //Aquisition
-  // private final Acquisition acquisition = Acquisition.getInstance();
+  //Aquisition
+  private final Acquisition acquisition = Acquisition.getInstance();
+  private boolean prevButtonState = false;
 
   // //limelight
   // private final Limelight limelight = Limelight.getInstance();
 
-  //shooter
+  // shooter
   private final Shooter shooter = Shooter.getInstance();
+
+  private final Dashboard dashboard = Dashboard.getInstance();
 
   // /**
   //  * This function is run when the robot is first started up and should be
@@ -128,17 +133,20 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // TODO Auto-generated method stub
     super.teleopInit();
-    shooter.positionSpeedPIDAdjustment();
+    //shooter.positionSpeedPIDAdjustment();
     // shooter.positionSpeedPIDAdjustment();
     // shooter.initialize();
+    c.setClosedLoopControl(true);
   }
   // /**
   //  * This function is called periodically during operator control.
   //  */
    @Override
    public void teleopPeriodic() {
-     shooter.move();
-    // powerCell.test();
+     operator();
+     driver();
+     //shooter.move();
+    // powerCell.ballsPeriodic();
   }
 
   // /**
@@ -147,47 +155,66 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-  //  public void driver() {
- 	// switch (driveTrain.currentDriveMode) {
-  //      case tankDrive:
-  //        driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-  //            driverJoystick.getRightJoystickVertical() * multiplyer);
-  //        break;
-  //      case dualArcadeDrive:
-  //        driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-  //            driverJoystick.getRightJoystickHorizontal() * multiplyer);
-  //        break;
-  //      case singleArcadeDrive:
-  //        driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-  //            driverJoystick.getLeftJoystickHorizontal() * multiplyer);
-  //        break;
-  //    }
-  //  } 
-  //  public void operator() {
-  //    if(operatorJoystick.getRightButton()) {
-  //      acquisition.runBeaterBarFwd();
-  //    }
-  //   //  else if(operatorJoystick.getRightTrigger() > .5) {
-  //   //    acquisition.runBeaterBarRev();
-  //   //  }
-  //    else {
-  //      acquisition.stopBeaterBar();
-  //    }
-  //    if(operatorJoystick.getYButton()) {
-  //      acquisition.toggleAcquisitionPosition();
-  //    }
-  //    if(operatorJoystick.getLeftButton()) {
-  //      shooter.executeSpeedPID();
-  //    }
-  //    else {
-  //      shooter.disablePID();
-  //    }
-  //    if(operatorJoystick.getLeftTrigger() > .5) {
-  //      powerCell.feedShooter(.5);
-  //    }
-  //    else {
-  //      powerCell.feedShooter(0);
-  //    }
-  //  }
+   public void driver() {
+ 	switch (driveTrain.currentDriveMode) {
+       case tankDrive:
+         driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+             driverJoystick.getRightJoystickVertical() * multiplyer);
+         break;
+       case dualArcadeDrive:
+         driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+             driverJoystick.getRightJoystickHorizontal() * multiplyer);
+         break;
+       case singleArcadeDrive:
+         driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+             driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+         break;
+     }
+   } 
+   public void operator() {
+     if(operatorJoystick.getRightButton()) {
+       acquisition.runBeaterBarFwd();
+     }
+     else if(operatorJoystick.getRightTrigger() > .5) {
+       acquisition.runBeaterBarRev();
+     }
+     else {
+       acquisition.stopBeaterBar();
+     }
+     if(operatorJoystick.getYButton() && !prevButtonState) {
+       acquisition.toggleAcquisitionPosition();
+       prevButtonState = true;
+     }
+     if(!operatorJoystick.getYButton()) {
+       prevButtonState = false;
+     }
+     if(operatorJoystick.getLeftButton()) {
+      //  shooter.executeSpeedPID();
+      shooter.shootManually(-SmartDashboard.getNumber("Shooter Speed", 0.5));
+     }
+     else {
+      shooter.shootManually(0);
+     }
+    //  if(shooter.speedOnTarget()){
+    //    operatorJoystick.setLeftRumble(1);
+    //    operatorJoystick.setRightRumble(1);
+    //  }
+    //  else {
+    //    operatorJoystick.setRightRumble(0);
+    //    operatorJoystick.setLeftRumble(0);
+    //  }
+     if(operatorJoystick.getLeftTrigger() > .5) {
+       powerCell.feedShooter(-1);
+     }
+     else if(operatorJoystick.getBButton()) {
+      powerCell.feedShooter(-1);
+    }
+     else if(operatorJoystick.getXButton()) {
+      powerCell.feedShooter(1);
+    }
+     else {
+      powerCell.feedShooter(0);
+    }
+   }
  }
 
