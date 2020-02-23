@@ -12,12 +12,13 @@ public class Acquisition extends Subsystem {
     private final int beaterBarPort = 54;
     
     //Solenoid channels
-    private final int solenoidChannel1 = 2;
-    private final int solenoidChannel2 = 3;
+    private final int RAISE_ACQUISITION_CHANNEL = 2;
+    private final int LOWER_ACUQUISITION_CHANNEL = 3;
 
     //Solenoid
-    private DoubleSolenoid acquisitionOut = new DoubleSolenoid(solenoidChannel1, solenoidChannel2);
-    private boolean acquisitionPositionOut = false;
+    private DoubleSolenoid acquisitionOut = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
+    // TODO: make an enum
+    private boolean acquisitionPositionOut = true;
 
     //motor
     private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless); //beatDatBoi or lashingLad

@@ -33,8 +33,8 @@ public class Limelight {
     //offset default value
     private int defaultOffset = 0;
     
-    public Limelight() {
-
+    private Limelight() {
+        turnLEDsOff();
     }
 
     /**
@@ -54,9 +54,6 @@ public class Limelight {
         return limelight;
     }
 
-    public void initialize() {
-    }
-
     /**
      * reads the values from the network table
      */
@@ -64,7 +61,7 @@ public class Limelight {
         valid_target = tv.getDouble(defaultOffset);
         x = tx.getDouble(defaultOffset);
         y = ty.getDouble(defaultOffset);
-        System.out.println(valid_target + ", " + x + ", " + y);
+        // System.out.println(valid_target + ", " + x + ", " + y);
     }
 
     /**
@@ -72,7 +69,7 @@ public class Limelight {
      * 
      * @return whether or not the robot has a target
      */
-    public boolean isTarget() {
+    public boolean canSeeTarget() {
         if (valid_target == 1) {
             return true;
         }
@@ -106,6 +103,13 @@ public class Limelight {
         y = ty.getDouble(defaultOffset);
         return y;
     }
+
+    public void turnLEDsOff() {
+        table.getEntry("ledMode").setDouble(1);
+    }
     
+    public void turnLEDsOn() {
+        table.getEntry("ledMode").setDouble(0);
+    }
 
 }

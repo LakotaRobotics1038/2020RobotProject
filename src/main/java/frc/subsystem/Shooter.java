@@ -2,8 +2,9 @@ package frc.subsystem;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
+
 import frc.robot.Limelight;
+import frc.robot.Prox;
 import frc.robot.TalonSRX1038;
 import frc.subsystem.PowerCell;
 
@@ -12,21 +13,22 @@ public class Shooter implements Subsystem {
     private final int SHOOTER_MOTOR_1_PORT = 60;
     private final int SHOOTER_MOTOR_2_PORT = 61;
     private final int TURRET_TURNING_PORT = 59;
-    private final int hardStopPort = 0;
+    private final int HARD_STOP_PORT = 0;
 
     // motors and encoders and sensors
     private TalonSRX1038 shooterMotor1 = new TalonSRX1038(SHOOTER_MOTOR_1_PORT);
     private TalonSRX1038 shooterMotor2 = new TalonSRX1038(SHOOTER_MOTOR_2_PORT);
     private TalonSRX1038 turretTurningMotor = new TalonSRX1038(TURRET_TURNING_PORT);
-    private DigitalInput hardStop = new DigitalInput(hardStopPort);
+    private Prox hardStop = new Prox(HARD_STOP_PORT);
 
     // Shooter
     private static Shooter shooter;
 
     // swerves
     private boolean leftMost = false;
-    private static int rightStop = 0;
-    private static double swivelSpeed = 0.5;
+    private final static int RIGHT_STOP = 114500; // 114500
+    private final static int LEFT_STOP = -14200;
+    private static double swivelSpeed = 0.2;
 
     // Limelight instance
     private Limelight limelight = Limelight.getInstance();
@@ -37,7 +39,7 @@ public class Shooter implements Subsystem {
     // position PID for turret
     private final double positionSetpoint = 0.0;
     private final double positionTolerance = .05;
-    private final static double positionP = 0.15;
+    private final static double positionP = 0.10; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
@@ -66,17 +68,14 @@ public class Shooter implements Subsystem {
         return shooter;
     }
 
-    /**
-     * sets initial PID values
-     */
-    public void positionSpeedPIDAdjustment() {
-
-       positionPID.setPID(positionP, positionI, positionD);
+    private Shooter() {
+        // turretTurningMotor.setSelectedSensorPosition(0);
+        // positionPID.setPID(positionP, positionI, positionD);
         positionPID.setSetpoint(positionSetpoint);
         positionPID.setTolerance(positionTolerance);
         positionPID.disableContinuousInput();
 
-        speedPID.setPID(speedP, speedI, speedD);
+        // speedPID.setPID(speedP, speedI, speedD);
         speedPID.setSetpoint(speedSetpoint);
         speedPID.setTolerance(speedTolerance);
         speedPID.disableContinuousInput();
@@ -86,9 +85,9 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        if (speedPID.atSetpoint()) {
-            powerCell.feedShooter(feedSpeed);
-        }
+        // if (speedPID.atSetpoint()) {
+        powerCell.feedShooter(feedSpeed);
+        // }
     }
 
     /**
@@ -119,8 +118,9 @@ public class Shooter implements Subsystem {
      * aims turret towards target
      */
     public void executeAimPID() {
-        System.out.println("PID");
-        turretTurningMotor.set(-1 * positionPID.calculate(limelight.getXOffset()));
+        // System.out.println("PID");
+        double power = positionPID.calculate(limelight.getXOffset());
+        turretTurningMotor.set(power * 0.5);
     }
 
     /**
@@ -138,6 +138,10 @@ public class Shooter implements Subsystem {
     public void shootManually(double speed) {
         shooterMotor1.set(speed);
         shooterMotor2.set(-speed);
+    }
+
+    public void setLeftMost(boolean value) {
+        leftMost = value;
     }
 
     /**
@@ -173,22 +177,51 @@ public class Shooter implements Subsystem {
         }
     }
 
-    public void move() {
-        System.out.println(limelight.isTarget());
-        System.out.println(limelight.getXOffset());
-        if (hardStop.get()) {
+    public int getTurretEncoder() {
+        return turretTurningMotor.getSelectedSensorPosition();
+    }
+
+    public boolean getHardStop() {
+        return hardStop.get();
+    }
+
+    public void resetTurretEncoder() {
+        turretTurningMotor.setSelectedSensorPosition(0);
+    }
+
+    private void stopTurret() {
+        turretTurningMotor.set(0);
+    }
+
+    public boolean getLeftMost() {
+        return leftMost;
+    }
+
+    public void goToCrashPosition() {
+        if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 500) {
+            stopTurret();
+        } else if (turretTurningMotor.getSelectedSensorPosition() > 0) {
+            leftMost = false;
+            swivelEy();
+        } else if (turretTurningMotor.getSelectedSensorPosition() < 0) {
             leftMost = true;
-            // turretEncoder.setPosition(0);
             swivelEy();
         }
-        // else if(turretEncoder.getPosition() >= rightStop)
-        // {
-        // leftMost = false;
-        // swivelEy();
+    }
+
+    public void move() {
+        // if (hardStop.get()) {
+        // turretTurningMotor.setSelectedSensorPosition(0);
         // }
-        if (!limelight.isTarget()) {
+        if (turretTurningMotor.getSelectedSensorPosition() <= LEFT_STOP) {
+            leftMost = true;
+            swivelEy();
+        } else if (turretTurningMotor.getSelectedSensorPosition() >= RIGHT_STOP) {
+            leftMost = false;
+            swivelEy();
+        } else if (limelight.canSeeTarget()) {
             executeAimPID();
-            System.out.println("lemon");
+            // System.out.println("lemon");
         } else {
             swivelEy();
         }

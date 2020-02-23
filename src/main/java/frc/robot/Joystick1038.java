@@ -120,7 +120,16 @@ public class Joystick1038 extends Joystick {
 	 */
 	public boolean getRightJoystickClick() {
 		return getRawButton(RIGHT_JOYSTICK_CLICK);
-    }
+	}
+	
+	/**
+	 * Returns the joystick axis value or 0 if less than deadband
+	 * 
+	 * @return value of input axis, after deadband
+	 */
+	private double deadbandAxis(double value) {
+		return Math.abs(value) < 0.10 ? 0 : -value;
+	}
     
     /**
 	 * Returns the state of the left joystick on its vertical axis
@@ -129,7 +138,7 @@ public class Joystick1038 extends Joystick {
 	 *         are joystick up
 	 */
 	public double getLeftJoystickVertical() {
-		return getRawAxis(LEFT_STICK_VERTICAL) * -1;
+		return deadbandAxis(getRawAxis(LEFT_STICK_VERTICAL));
 	}
 
 	/**
@@ -138,7 +147,7 @@ public class Joystick1038 extends Joystick {
 	 * @return value of the left joystick horizontal axis
 	 */
 	public double getLeftJoystickHorizontal() {
-		return getRawAxis(LEFT_STICK_HORIZONTAL);
+		return deadbandAxis(getRawAxis(LEFT_STICK_HORIZONTAL));
 	}
 
 	/**
@@ -148,7 +157,7 @@ public class Joystick1038 extends Joystick {
 	 *         values are joystick up
 	 */
 	public double getRightJoystickVertical() {
-		return getRawAxis(RIGHT_STICK_VERTICAL) * -1;
+		return deadbandAxis(getRawAxis(RIGHT_STICK_VERTICAL));
 	}
 
 	/**
@@ -157,7 +166,7 @@ public class Joystick1038 extends Joystick {
 	 * @return value of the right joystick horizontal axis
 	 */
 	public double getRightJoystickHorizontal() {
-		return getRawAxis(RIGHT_STICK_HORIZONTAL);
+		return deadbandAxis(getRawAxis(RIGHT_STICK_HORIZONTAL));
 	}
 
     /**
@@ -199,6 +208,4 @@ public class Joystick1038 extends Joystick {
 		setRumble(GenericHID.RumbleType.kRightRumble, speed);
 		return speed;
 	}
-
-
 }

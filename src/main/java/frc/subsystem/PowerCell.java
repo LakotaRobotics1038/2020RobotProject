@@ -17,12 +17,12 @@ public class PowerCell {
     private final int shuttleMotorPort = 62;
     private final int laserStartPort = 6;
     private final int laserEndPort = 5;
-    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = -45;
+    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;
 
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
     private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
-    private final static double shuttleMotorSpeed = -0.4; // negative is forward
+    private final static double shuttleMotorSpeed = 1.0;
 
     // declares powercell
     private static PowerCell powerCell;
@@ -53,7 +53,8 @@ public class PowerCell {
     }
 
     private PowerCell() {
-        shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS);
+        shuttleMotor.setInverted(true);
+        shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {
@@ -87,12 +88,14 @@ public class PowerCell {
      * runs the ball storage
      */
     public void periodic() {
-        System.out.println("kas" + laserStart.get() + " " + laserEnd.get());
-        System.out.println("sto" + manualStorageForward + " " + manualStorageReverse);
-        System.out.println(shuttleMotorEncoder.getPosition());
+        // System.out.println("kas" + laserStart.get() + " " + laserEnd.get());
+        // System.out.println("sto" + manualStorageForward + " " +
+        // manualStorageReverse);
+        // System.out.println(shuttleMotorEncoder.getPosition());
         if (!manualStorageForward && !manualStorageReverse) {
-            if (shuttleMotorEncoder.getPosition() > SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())// see ball at start sensor
+            if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())// see ball at start                                                                                   // sensor
             {
+                // System.out.println(shuttleMotorEncoder.getPosition());
                 shuttleMotor.set(shuttleMotorSpeed);
             } else if (laserStart.get()) {
                 shuttleMotorEncoder.setPosition(0);
@@ -101,10 +104,10 @@ public class PowerCell {
             }
         } else if (manualStorageForward) {
             shuttleMotor.set(shuttleMotorSpeed);
-            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS - 500);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
         } else if (manualStorageReverse) {
             shuttleMotor.set(-shuttleMotorSpeed);
-            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS - 500);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
         }
     }
 }

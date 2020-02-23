@@ -42,15 +42,13 @@ public class Robot extends TimedRobot {
   private final Joystick1038 operatorJoystick = new Joystick1038(1);
   public double multiplyer = .8;
 
-  // // Pi Reader
-  // private final PiReader piReader = PiReader.getInstance();
-
   // Powercell
   private final PowerCell powerCell = PowerCell.getInstance();
 
   // Aquisition
   private final Acquisition acquisition = Acquisition.getInstance();
-  private boolean prevButtonState = false;
+  private boolean prevOperatorYState = false;
+  private boolean prevOperatorAState = false;
 
   // //limelight
   private final Limelight limelight = Limelight.getInstance();
@@ -66,7 +64,6 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void robotInit() {
-    // piReader.initialize();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -83,7 +80,7 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void robotPeriodic() {
-
+    dashboard.update();
   }
 
   // /**
@@ -137,31 +134,41 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     operator();
     driver();
-    // shooter.move();
+    limelight.read();
     powerCell.periodic();
-  }
-
-  // /**
-  // * This function is called periodically during test mode.
-  // */
-  @Override
-  public void testPeriodic() {
   }
 
   public void driver() {
     switch (driveTrain.currentDriveMode) {
-    case tankDrive:
-      driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-          driverJoystick.getRightJoystickVertical() * multiplyer);
-      break;
-    case dualArcadeDrive:
-      driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-          driverJoystick.getRightJoystickHorizontal() * multiplyer);
-      break;
-    case singleArcadeDrive:
-      driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-          driverJoystick.getLeftJoystickHorizontal() * multiplyer);
-      break;
+      case tankDrive:
+        driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+            driverJoystick.getRightJoystickVertical() * multiplyer);
+        break;
+      case dualArcadeDrive:
+        driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+            driverJoystick.getRightJoystickHorizontal() * multiplyer);
+        break;
+      case singleArcadeDrive:
+        driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+            driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+        break;
+    }
+
+    if(driverJoystick.getRightButton() && driverJoystick.getRightTrigger() > .5) {
+      multiplyer = 1;
+      driveTrain.highGear();
+    }
+    else if(driverJoystick.getRightButton()) {
+      multiplyer = 1;
+      driveTrain.lowGear();
+    }
+    else if(driverJoystick.getRightTrigger() > .5) {
+      multiplyer = .8;
+      driveTrain.highGear();
+    }
+    else {
+      multiplyer = .8;
+      driveTrain.lowGear();
     }
   }
 
@@ -173,16 +180,18 @@ public class Robot extends TimedRobot {
     } else {
       acquisition.stopBeaterBar();
     }
-    if (operatorJoystick.getYButton() && !prevButtonState) {
+
+    if (operatorJoystick.getYButton() && !prevOperatorYState) {
       acquisition.toggleAcquisitionPosition();
-      prevButtonState = true;
+      prevOperatorYState = true;
+    } else if (!operatorJoystick.getYButton()) {
+      prevOperatorYState = false;
     }
-    if (!operatorJoystick.getYButton()) {
-      prevButtonState = false;
-    }
+
     if (operatorJoystick.getLeftButton()) {
       // shooter.executeSpeedPID();
-      shooter.shootManually(-SmartDashboard.getNumber("Shooter Speed", 0.5));
+      //TODO: invert shooter motors
+      shooter.shootManually(-SmartDashboard.getNumber("Shooter Speed", 0.6));
     } else {
       shooter.shootManually(0);
     }
@@ -194,6 +203,7 @@ public class Robot extends TimedRobot {
     // operatorJoystick.setRightRumble(0);
     // operatorJoystick.setLeftRumble(0);
     // }
+
     if (operatorJoystick.getLeftTrigger() > .5) {
       shooter.feedBall();
     } else if (operatorJoystick.getBButton()) {
@@ -202,6 +212,20 @@ public class Robot extends TimedRobot {
       powerCell.enableManualStorage(ManualStorageModes.Reverse);
     } else {
       powerCell.disableManualStorage();
+    }
+
+    if(operatorJoystick.getAButton()) {
+      if (!prevOperatorAState) {
+        // TODO: make an enum
+        shooter.setLeftMost(true);
+        prevOperatorAState = true;
+      }
+      limelight.turnLEDsOn();
+      shooter.move();
+    } else {
+      shooter.goToCrashPosition();
+      limelight.turnLEDsOff();
+      prevOperatorAState = false;
     }
   }
 }
