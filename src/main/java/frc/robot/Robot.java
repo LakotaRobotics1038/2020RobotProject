@@ -88,11 +88,7 @@ public class Robot extends TimedRobot {
   //  */
    @Override
    public void robotPeriodic() {
-  //   piReader.readpi();
-  //   powerCell.ballsPeriodic();
-  //   limelight.read();
        
-
    }
 
   // /**
@@ -146,7 +142,7 @@ public class Robot extends TimedRobot {
      operator();
      driver();
      //shooter.move();
-    // powerCell.ballsPeriodic();
+    powerCell.periodic();
   }
 
   // /**
