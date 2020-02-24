@@ -127,8 +127,8 @@ public class Joystick1038 extends Joystick {
 	 * 
 	 * @return value of input axis, after deadband
 	 */
-	private double deadbandAxis(double value) {
-		return Math.abs(value) < 0.10 ? 0 : -value;
+	public double deadband(double value) {
+		return Math.abs(value) < 0.10 ? 0 : value;
 	}
     
     /**
@@ -138,7 +138,7 @@ public class Joystick1038 extends Joystick {
 	 *         are joystick up
 	 */
 	public double getLeftJoystickVertical() {
-		return deadbandAxis(getRawAxis(LEFT_STICK_VERTICAL));
+		return deadband(-getRawAxis(LEFT_STICK_VERTICAL));
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class Joystick1038 extends Joystick {
 	 * @return value of the left joystick horizontal axis
 	 */
 	public double getLeftJoystickHorizontal() {
-		return deadbandAxis(getRawAxis(LEFT_STICK_HORIZONTAL));
+		return deadband(getRawAxis(LEFT_STICK_HORIZONTAL));
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Joystick1038 extends Joystick {
 	 *         values are joystick up
 	 */
 	public double getRightJoystickVertical() {
-		return deadbandAxis(getRawAxis(RIGHT_STICK_VERTICAL));
+		return deadband(-getRawAxis(RIGHT_STICK_VERTICAL));
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Joystick1038 extends Joystick {
 	 * @return value of the right joystick horizontal axis
 	 */
 	public double getRightJoystickHorizontal() {
-		return deadbandAxis(getRawAxis(RIGHT_STICK_HORIZONTAL));
+		return deadband(getRawAxis(RIGHT_STICK_HORIZONTAL));
 	}
 
     /**
