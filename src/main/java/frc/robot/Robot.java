@@ -36,6 +36,12 @@ public class Robot extends TimedRobot {
   // // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
   public Compressor c = new Compressor();
+  private double prevStickValue = 0;
+  private double currentStickValue = 0;
+  private double normalIncrement = .1;
+  private double brakeIncrement = .1;
+  private double drivePower = 0;
+  private int isAccelerating = 0;
 
   // // Joystick
   private final Joystick1038 driverJoystick = new Joystick1038(0);
@@ -139,34 +145,53 @@ public class Robot extends TimedRobot {
   }
 
   public void driver() {
+    normalIncrement = SmartDashboard.getNumber("normal Increment", .1);
+    brakeIncrement = SmartDashboard.getNumber("brake increment", .1);
     switch (driveTrain.currentDriveMode) {
-      case tankDrive:
-        driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getRightJoystickVertical() * multiplyer);
-        break;
-      case dualArcadeDrive:
-        driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getRightJoystickHorizontal() * multiplyer);
-        break;
-      case singleArcadeDrive:
-        driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-            driverJoystick.getLeftJoystickHorizontal() * multiplyer);
-        break;
+    case tankDrive:
+      driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+          driverJoystick.getRightJoystickVertical() * multiplyer);
+      break;
+    case dualArcadeDrive:
+      prevStickValue = currentStickValue;
+      currentStickValue = driverJoystick.getLeftJoystickVertical();
+      if (driverJoystick.deadband(currentStickValue) == 0) {
+        if (drivePower > 0) {
+          drivePower -= brakeIncrement;
+        } else if (drivePower < 0) {
+          drivePower += brakeIncrement;
+        }
+      } else if (currentStickValue > prevStickValue && drivePower < currentStickValue) {
+        drivePower += normalIncrement;
+        isAccelerating = 1;
+      } else if (currentStickValue < prevStickValue && drivePower > currentStickValue) {
+        drivePower -= normalIncrement;
+        isAccelerating = -1;
+      } else if (Math.abs(drivePower - currentStickValue) < .05) {
+        isAccelerating = 0;
+      } else if(isAccelerating == 1) {
+        drivePower += normalIncrement;
+      } else if (isAccelerating == -1) {
+        drivePower -= normalIncrement;
+      } 
+      driveTrain.dualArcadeDrive(drivePower * multiplyer, driverJoystick.getRightJoystickHorizontal() * multiplyer);
+      break;
+    case singleArcadeDrive:
+      driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+          driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+      break;
     }
 
-    if(driverJoystick.getRightButton() && driverJoystick.getRightTrigger() > .5) {
+    if (driverJoystick.getRightButton() && driverJoystick.getRightTrigger() > .5) {
       multiplyer = 1;
       driveTrain.highGear();
-    }
-    else if(driverJoystick.getRightButton()) {
+    } else if (driverJoystick.getRightButton()) {
       multiplyer = 1;
       driveTrain.lowGear();
-    }
-    else if(driverJoystick.getRightTrigger() > .5) {
+    } else if (driverJoystick.getRightTrigger() > .5) {
       multiplyer = .8;
       driveTrain.highGear();
-    }
-    else {
+    } else {
       multiplyer = .8;
       driveTrain.lowGear();
     }
@@ -190,7 +215,7 @@ public class Robot extends TimedRobot {
 
     if (operatorJoystick.getLeftButton()) {
       // shooter.executeSpeedPID();
-      //TODO: invert shooter motors
+      // TODO: invert shooter motors
       shooter.shootManually(-SmartDashboard.getNumber("Shooter Speed", 0.6));
     } else {
       shooter.shootManually(0);
@@ -214,7 +239,7 @@ public class Robot extends TimedRobot {
       powerCell.disableManualStorage();
     }
 
-    if(operatorJoystick.getAButton()) {
+    if (operatorJoystick.getAButton()) {
       if (!prevOperatorAState) {
         // TODO: make an enum
         shooter.setLeftMost(true);
