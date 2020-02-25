@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
 
   // private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
 
-  // // Drive
+  // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
   public Compressor c = new Compressor();
   private double prevStickValue = 0;
@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
   private double drivePower = 0;
   private int isAccelerating = 0;
 
-  // // Joystick
+  // Joystick
   private final Joystick1038 driverJoystick = new Joystick1038(0);
   private final Joystick1038 operatorJoystick = new Joystick1038(1);
   public double multiplyer = .8;
@@ -56,10 +56,10 @@ public class Robot extends TimedRobot {
   private boolean prevOperatorYState = false;
   private boolean prevOperatorAState = false;
 
-  // //limelight
+  //limelight
   private final Limelight limelight = Limelight.getInstance();
 
-  // shooter
+  //shooter
   private final Shooter shooter = Shooter.getInstance();
 
   private final Dashboard dashboard = Dashboard.getInstance();
@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void robotPeriodic() {
-    dashboard.update();
+    // dashboard.update();
   }
 
   // /**
@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
     // shooter.positionSpeedPIDAdjustment();
     // shooter.positionSpeedPIDAdjustment();
     // shooter.initialize();
-    c.setClosedLoopControl(true);
+    // c.setClosedLoopControl(true);
   }
 
   // /**
