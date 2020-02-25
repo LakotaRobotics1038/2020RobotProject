@@ -5,9 +5,9 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-//TODO switch pireader values to digital inputs
 package frc.subsystem;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.CANSpark1038;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -15,19 +15,29 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class PowerCell {
     // ports
     private final int shuttleMotorPort = 62;
-    private final int photoEyeStartPort = 5;
-    private final int photoEyeEndPort = 6;
-    
+    private final int laserStartPort = 6;
+    private final int laserEndPort = 5;
+    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;
+
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
-    private final static double shuttleMotorSpeed = 0.5;
-    
-    //declares powercell
+    private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
+    private final static double shuttleMotorSpeed = 1.0;
+
+    // declares powercell
     private static PowerCell powerCell;
 
-    //photoeyes
-    private DigitalInput photoEyeStart = new DigitalInput(photoEyeStartPort);
-    private DigitalInput photoEyeEnd = new DigitalInput(photoEyeEndPort);
+    // photoeyes
+    private DigitalInput laserStart = new DigitalInput(laserStartPort);
+    private DigitalInput laserEnd = new DigitalInput(laserEndPort);
+
+    // manual drive
+    private boolean manualStorageForward = false;
+    private boolean manualStorageReverse = false;
+
+    public enum ManualStorageModes {
+        Forward, Reverse
+    }
 
     /**
      * returns the powercell instance when the robot starts
@@ -35,38 +45,34 @@ public class PowerCell {
      * @return powercell instance
      */
     public static PowerCell getInstance() {
-        if(powerCell == null) {
+        if (powerCell == null) {
             System.out.println("creating a new powercell");
             powerCell = new PowerCell();
         }
         return powerCell;
     }
 
-    /**
-     * runs the ball storage
-     */
-    public void ballsPeriodic() {
-        if(!photoEyeStart.get())//see ball at start sensor
-        {
-            if(photoEyeEnd.get())//dont see ball at end sensor
-            {
-                shuttleMotor.set(shuttleMotorSpeed);
-            }
-        }
-        else
-        {
-            shuttleMotor.set(0);
-        }
-      
+    private PowerCell() {
+        shuttleMotor.setInverted(true);
+        shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
     }
 
-    public void test() {
-        if (!photoEyeStart.get()) {
-            System.out.println("has thing");
+    public void enableManualStorage(ManualStorageModes mode) {
+        switch (mode) {
+        case Forward:
+            manualStorageForward = true;
+            break;
+        case Reverse:
+            manualStorageReverse = true;
+            break;
+        default:
+            break;
         }
-        else {
-            System.out.println("no thing");
-        }
+    }
+
+    public void disableManualStorage() {
+        manualStorageReverse = false;
+        manualStorageForward = false;
     }
 
     /**
@@ -74,7 +80,34 @@ public class PowerCell {
      * 
      * @param power how fast to feed the shooter
      */
-    public void feedShooter(double power){
+    public void feedShooter(double power) {
         shuttleMotor.set(power);
+    }
+
+    /**
+     * runs the ball storage
+     */
+    public void periodic() {
+        // System.out.println("kas" + laserStart.get() + " " + laserEnd.get());
+        // System.out.println("sto" + manualStorageForward + " " +
+        // manualStorageReverse);
+        // System.out.println(shuttleMotorEncoder.getPosition());
+        if (!manualStorageForward && !manualStorageReverse) {
+            if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())// see ball at start                                                                                   // sensor
+            {
+                // System.out.println(shuttleMotorEncoder.getPosition());
+                shuttleMotor.set(shuttleMotorSpeed);
+            } else if (laserStart.get()) {
+                shuttleMotorEncoder.setPosition(0);
+            } else {
+                shuttleMotor.set(0);
+            }
+        } else if (manualStorageForward) {
+            shuttleMotor.set(shuttleMotorSpeed);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
+        } else if (manualStorageReverse) {
+            shuttleMotor.set(-shuttleMotorSpeed);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
+        }
     }
 }

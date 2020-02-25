@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.auton.AutonSelector;
 import frc.auton.ForwardAuton;
 
-
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
 import frc.robot.Limelight;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
+import frc.subsystem.PowerCell.ManualStorageModes;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,42 +39,48 @@ public class Robot extends TimedRobot {
   private AutonSelector autonSelector = AutonSelector.getInstance();
   private CommandGroup autonPath;
 
-  //private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
+  // private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
 
   // // Drive
-    private final DriveTrain driveTrain = DriveTrain.getInstance();
-    public Compressor c = new Compressor();
+  private final DriveTrain driveTrain = DriveTrain.getInstance();
+  public Compressor c = new Compressor();
+  private double prevStickValue = 0;
+  private double currentStickValue = 0;
+  private double normalIncrement = .1;
+  private double brakeIncrement = .1;
+  private double drivePower = 0;
+  private int isAccelerating = 0;
 
-  //  // Joystick
-    private final Joystick1038 driverJoystick = new Joystick1038(0);
-    private final Joystick1038 operatorJoystick = new Joystick1038(1);
-    public double multiplyer;
+  // // Joystick
+  private final Joystick1038 driverJoystick = new Joystick1038(0);
+  private final Joystick1038 operatorJoystick = new Joystick1038(1);
+  public double multiplyer = .8;
 
-
-  // // Powercell
+  // Powercell
   private final PowerCell powerCell = PowerCell.getInstance();
 
-  // //Aquisition
-   private final Acquisition acquisition = Acquisition.getInstance();
+  // Aquisition
+  private final Acquisition acquisition = Acquisition.getInstance();
+  private boolean prevOperatorYState = false;
+  private boolean prevOperatorAState = false;
 
   // //limelight
-   private final Limelight limelight = Limelight.getInstance();
+  private final Limelight limelight = Limelight.getInstance();
 
-  //shooter
-   private final Shooter shooter = Shooter.getInstance();
+  // shooter
+  private final Shooter shooter = Shooter.getInstance();
+
+  private final Dashboard dashboard = Dashboard.getInstance();
 
   // /**
-  //  * This function is run when the robot is first started up and should be
-  //  * used for any initialization code.
-  //  */
-   @Override
-   public void robotInit() {
-  //   piReader.initialize();
+  // * This function is run when the robot is first started up and should be
+  // * used for any initialization code.
+  // */
+  @Override
+  public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Drive Straight Without Shooting", kCustomAuto);
      SmartDashboard.putData("Auto choices", m_chooser);
-     limelight.initialize();
-
 
    }
 
@@ -88,23 +94,22 @@ public class Robot extends TimedRobot {
   //  */
    @Override
    public void robotPeriodic() {
-    powerCell.ballsPeriodic();
     limelight.read();
-       
+    dashboard.update();
 
    }
 
   // /**
-  //  * This autonomous (along with the chooser code above) shows how to select
-  //  * between different autonomous modes using the dashboard. The sendable
-  //  * chooser code works with the Java SmartDashboard. If you prefer the
-  //  * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-  //  * getString line to get the auto name from the text box below the Gyro
-  //  *
-  //  * <p>You can add additional auto modes by adding additional comparisons to
-  //  * the switch structure below with additional strings. If using the
-  //  * SendableChooser make sure to add them to the chooser code above as well.
-  //  */
+  // * This autonomous (along with the chooser code above) shows how to select
+  // * between different autonomous modes using the dashboard. The sendable
+  // * chooser code works with the Java SmartDashboard. If you prefer the
+  // * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+  // * getString line to get the auto name from the text box below the Gyro
+  // *
+  // * <p>You can add additional auto modes by adding additional comparisons to
+  // * the switch structure below with additional strings. If using the
+  // * SendableChooser make sure to add them to the chooser code above as well.
+  // */
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
@@ -113,8 +118,8 @@ public class Robot extends TimedRobot {
   }
 
   // /**
-  //  * This function is called periodically during autonomous.
-  //  */
+  // * This function is called periodically during autonomous.
+  // */
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
@@ -137,63 +142,136 @@ public class Robot extends TimedRobot {
     // TODO Auto-generated method stub
     super.teleopInit();
     // shooter.positionSpeedPIDAdjustment();
+    // shooter.positionSpeedPIDAdjustment();
     // shooter.initialize();
-  }
-  // /**
-  //  * This function is called periodically during operator control.
-  //  */
-   @Override
-   public void teleopPeriodic() {
-     //shooter.executeAimPID();
-     powerCell.test();
+    c.setClosedLoopControl(true);
   }
 
   // /**
-  //  * This function is called periodically during test mode.
-  //  */
+  // * This function is called periodically during operator control.
+  // */
   @Override
-  public void testPeriodic() {
+  public void teleopPeriodic() {
+    operator();
+    driver();
+    limelight.read();
+    powerCell.periodic();
   }
-  //  public void driver() {
- 	// switch (driveTrain.currentDriveMode) {
-  //      case tankDrive:
-  //        driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-  //            driverJoystick.getRightJoystickVertical() * multiplyer);
-  //        break;
-  //      case dualArcadeDrive:
-  //        driveTrain.dualArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-  //            driverJoystick.getRightJoystickHorizontal() * multiplyer);
-  //        break;
-  //      case singleArcadeDrive:
-  //        driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-  //            driverJoystick.getLeftJoystickHorizontal() * multiplyer);
-  //        break;
-  //    }
-  //  } 
-  //  public void operator() {
-  //    if(operatorJoystick.getRightButton()) {
-  //      acquisition.runBeaterBarFwd();
-  //    }
-  //   //  else if(operatorJoystick.getRightTrigger() > .5) {
-  //   //    acquisition.runBeaterBarRev();
-  //   //  }
-  //    else {
-  //      acquisition.stopBeaterBar();
-  //    }
-  //    if(operatorJoystick.getYButton()) {
-  //      acquisition.toggleAcquisitionPosition();
-  //    }
-  //    if(operatorJoystick.getLeftButton()) {
-  //      shooter.executeSpeedPID();
-  //    }
-  //    else {
-  //      shooter.disablePID();
-  //    }
-  //    if(operatorJoystick.getLeftTrigger() > .5) {
-  //      powerCell.feedShooter(.5);
-  //    }
-  //    else {
-  //      powerCell.feedShooter(0);
-  //    }
-  //  }
- }
+
+  public void driver() {
+    normalIncrement = SmartDashboard.getNumber("normal Increment", .1);
+    brakeIncrement = SmartDashboard.getNumber("brake increment", .1);
+    switch (driveTrain.currentDriveMode) {
+    case tankDrive:
+      driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+          driverJoystick.getRightJoystickVertical() * multiplyer);
+      break;
+    case dualArcadeDrive:
+    /*  prevStickValue = currentStickValue;
+      currentStickValue = driverJoystick.getLeftJoystickVertical();
+      if (driverJoystick.deadband(currentStickValue) == 0) {
+        if (drivePower > 0) {
+          drivePower -= brakeIncrement;
+        } else if (drivePower < 0) {
+          drivePower += brakeIncrement;
+        }
+      } else if (currentStickValue > prevStickValue && drivePower < currentStickValue) {
+        drivePower += normalIncrement;
+        isAccelerating = 1;
+      } else if (currentStickValue < prevStickValue && drivePower > currentStickValue) {
+        drivePower -= normalIncrement;
+        isAccelerating = -1;
+      } else if (Math.abs(drivePower - currentStickValue) < .05) {
+        isAccelerating = 0;
+      } else if(isAccelerating == 1) {
+        drivePower += normalIncrement;
+      } else if (isAccelerating == -1) {
+        drivePower -= normalIncrement;
+     . } */
+     if(driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) > 0) {
+       drivePower = (driverJoystick.getLeftJoystickVertical() - .1) * (1/.9);
+     } else if(driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) < 0) {
+       drivePower = (driverJoystick.getLeftJoystickVertical() + .1) * (1/.9);
+     } else {
+       drivePower = 0;
+     }
+      driveTrain.dualArcadeDrive(drivePower * multiplyer, driverJoystick.getRightJoystickHorizontal() * multiplyer);
+      break;
+    case singleArcadeDrive:
+      driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
+          driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+      break;
+    }
+
+    if (driverJoystick.getRightButton() && driverJoystick.getRightTrigger() > .5) {
+      multiplyer = 1;
+      driveTrain.highGear();
+    } else if (driverJoystick.getRightButton()) {
+      multiplyer = 1;
+      driveTrain.lowGear();
+    } else if (driverJoystick.getRightTrigger() > .5) {
+      multiplyer = .8;
+      driveTrain.highGear();
+    } else {
+      multiplyer = .8;
+      driveTrain.lowGear();
+    }
+  }
+
+  public void operator() {
+    if (operatorJoystick.getRightButton()) {
+      acquisition.runBeaterBarFwd();
+    } else if (operatorJoystick.getRightTrigger() > .5) {
+      acquisition.runBeaterBarRev();
+    } else {
+      acquisition.stopBeaterBar();
+    }
+
+    if (operatorJoystick.getYButton() && !prevOperatorYState) {
+      acquisition.toggleAcquisitionPosition();
+      prevOperatorYState = true;
+    } else if (!operatorJoystick.getYButton()) {
+      prevOperatorYState = false;
+    }
+
+    if (operatorJoystick.getLeftButton()) {
+      // shooter.executeSpeedPID();
+      // TODO: invert shooter motors
+      shooter.shootManually(-SmartDashboard.getNumber("Shooter Speed", 0.6));
+    } else {
+      shooter.shootManually(0);
+    }
+    // if(shooter.speedOnTarget()){
+    // operatorJoystick.setLeftRumble(1);
+    // operatorJoystick.setRightRumble(1);
+    // }
+    // else {
+    // operatorJoystick.setRightRumble(0);
+    // operatorJoystick.setLeftRumble(0);
+    // }
+
+    if (operatorJoystick.getLeftTrigger() > .5) {
+      shooter.feedBall();
+    } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
+      powerCell.enableManualStorage(ManualStorageModes.Forward);
+    } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {
+      powerCell.enableManualStorage(ManualStorageModes.Reverse);
+    } else {
+      powerCell.disableManualStorage();
+    }
+
+    if (operatorJoystick.getAButton()) {
+      if (!prevOperatorAState) {
+        // TODO: make an enum
+        shooter.setLeftMost(true);
+        prevOperatorAState = true;
+      }
+      limelight.turnLEDsOn();
+      shooter.move();
+    } else {
+      shooter.goToCrashPosition();
+      limelight.turnLEDsOff();
+      prevOperatorAState = false;
+    }
+  }
+}

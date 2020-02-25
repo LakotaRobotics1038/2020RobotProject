@@ -16,18 +16,16 @@ public class DriveTrain implements Subsystem {
     public driveModes currentDriveMode = driveModes.dualArcadeDrive;
 
     public final double WHEEL_DIAMETER = 4;
-    private final int RIGHT_FRONT_SPARK_PORT = 58;
-    private final int LEFT_FRONT_SPARK_PORT = 52;
-    private final int RIGHT_BACK_SPARK_PORT = 57;
-    private final int LEFT_BACK_SPARK_PORT = 56;
+    private final int HIGH_GEAR_PORT = 0;
+    private final int LOW_GEAR_PORT = 1;
 
-    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(1, 0);
+    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(LOW_GEAR_PORT, HIGH_GEAR_PORT);
     public boolean isHighGear = false;
 
-    public CANSpark1038 CANSparkRightFront = new CANSpark1038(RIGHT_FRONT_SPARK_PORT, MotorType.kBrushless);
-    public CANSpark1038 CANSparkRightBack = new CANSpark1038(RIGHT_BACK_SPARK_PORT, MotorType.kBrushless);
-    public CANSpark1038 CANSparkLeftFront = new CANSpark1038(LEFT_FRONT_SPARK_PORT, MotorType.kBrushless);
-    public CANSpark1038 CANSparkLeftBack = new CANSpark1038(LEFT_BACK_SPARK_PORT, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(57, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(58, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);//previously 55
+    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
 
     public CANEncoder CANSparkRightEncoder = CANSparkRightBack.getEncoder();
     public CANEncoder CANSparkLeftEncoder = CANSparkLeftBack.getEncoder();
@@ -48,18 +46,21 @@ public class DriveTrain implements Subsystem {
         CANSparkLeftFront.restoreFactoryDefaults();
         CANSparkRightBack.restoreFactoryDefaults();
         CANSparkRightFront.restoreFactoryDefaults();
+
         CANSparkLeftBack.setInverted(true);
         CANSparkLeftFront.setInverted(true);
         CANSparkRightBack.setInverted(true);
         CANSparkRightFront.setInverted(true);
-        CANSparkLeftBack.setIdleMode(IdleMode.kBrake);
-        CANSparkLeftFront.setIdleMode(IdleMode.kBrake);
-        CANSparkRightBack.setIdleMode(IdleMode.kBrake);
-        CANSparkRightFront.setIdleMode(IdleMode.kBrake);
+
+        CANSparkLeftBack.setIdleMode(IdleMode.kCoast);
+        CANSparkLeftFront.setIdleMode(IdleMode.kCoast);
+        CANSparkRightBack.setIdleMode(IdleMode.kCoast);
+        CANSparkRightFront.setIdleMode(IdleMode.kCoast);
+
         CANSparkRightFront.follow(CANSparkRightBack);
         CANSparkLeftFront.follow(CANSparkLeftBack);
+        
         differentialDrive = new DifferentialDrive(CANSparkLeftBack, CANSparkRightBack);
-
     }
 
     // Get and return distance driven by the left of the robot in inches
@@ -96,7 +97,6 @@ public class DriveTrain implements Subsystem {
 
     // Switch between drive modes
     public void driveModeToggler() {
-
         switch (currentDriveMode) {
         case tankDrive:
             currentDriveMode = driveModes.singleArcadeDrive;
