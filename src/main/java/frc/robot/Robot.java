@@ -8,13 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import edu.wpi.first.wpilibj.command.CommandGroup;
+// import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.auton.AutonSelector;
-import frc.auton.ForwardAuton;
-
+// import frc.auton.AutonSelector;
+// import frc.auton.ForwardAuton;
+// import frc.auton.ShootingAuton;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private CommandScheduler schedule = CommandScheduler.getInstance();
-  private AutonSelector autonSelector = AutonSelector.getInstance();
-  private CommandGroup autonPath;
+//   private CommandScheduler schedule = CommandScheduler.getInstance();
+//   private AutonSelector autonSelector = AutonSelector.getInstance();
+//   private CommandGroup autonPath;
 
   // private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
 
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("Drive Straight Without Shooting", kCustomAuto);
+    m_chooser.addOption("Drive Straight With Shooting", kCustomAuto);
      SmartDashboard.putData("Auto choices", m_chooser);
 
    }
@@ -115,6 +115,15 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+    // switch (m_autoSelected) {
+    //     case kCustomAuto:
+    //     schedule.schedule(ShootingAuton.select());
+    //       break;
+    //     case kDefaultAuto:
+    //     default:
+    //     schedule.schedule(ForwardAuton.select());
+    //     break;
+    //   }
   }
 
   // /**
@@ -122,19 +131,9 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-            schedule.schedule(ForwardAuton.select());
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
-
-    if(schedule != null) {
-        schedule.run();
-    }
+    // if(schedule != null) {
+    //     schedule.run();
+    // }
   }
 
   @Override
@@ -251,7 +250,7 @@ public class Robot extends TimedRobot {
     // }
 
     if (operatorJoystick.getLeftTrigger() > .5) {
-      shooter.feedBall();
+      powerCell.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
       powerCell.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {

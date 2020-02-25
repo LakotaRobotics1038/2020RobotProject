@@ -54,7 +54,7 @@ public class Shooter implements Subsystem {
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
 
     // motor speed for shooter feeder
-    private final static double feedSpeed = 0.5;
+    private final static double feedSpeed = 1;
 
     /**
      * Returns the Shooter instance created when the robot starts
@@ -196,6 +196,10 @@ public class Shooter implements Subsystem {
         return turretTurningMotor.getSelectedSensorPosition();
     }
 
+    public int getShooterSpeed() {
+        return shooterMotor1.getSelectedSensorVelocity();
+    }
+
     public boolean getHardStop() {
         return hardStop.get();
     }
@@ -227,6 +231,7 @@ public class Shooter implements Subsystem {
     public void move() {
         if (hardStop.get()) {
         turretTurningMotor.setSelectedSensorPosition(0);
+        System.out.println("i see prox");
         }
         if (turretTurningMotor.getSelectedSensorPosition() <= LEFT_STOP) {
             leftMost = true;

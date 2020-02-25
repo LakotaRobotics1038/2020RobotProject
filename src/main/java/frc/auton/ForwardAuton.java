@@ -6,7 +6,7 @@ import frc.auton.commands.DriveStraightCommand;
 
 public class ForwardAuton extends Auton{
 	
-	private static double DIST_TO_BASELINE_FROM_DS_WALL = 11;
+	private static double DIST_TO_BASELINE_FROM_DS_WALL = 2;
 	
 	public ForwardAuton() {
         super();

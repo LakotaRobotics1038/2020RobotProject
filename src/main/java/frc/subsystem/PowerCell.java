@@ -97,7 +97,7 @@ public class PowerCell {
             {
                 // System.out.println(shuttleMotorEncoder.getPosition());
                 shuttleMotor.set(shuttleMotorSpeed);
-            } else if (laserStart.get()) {
+            } else if (laserStart.get() && !laserEnd.get()) {
                 shuttleMotorEncoder.setPosition(0);
             } else {
                 shuttleMotor.set(0);

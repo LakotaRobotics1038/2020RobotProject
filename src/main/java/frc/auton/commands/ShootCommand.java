@@ -1,4 +1,5 @@
 package frc.auton.commands;
+import frc.subsystem.PowerCell;
 import frc.subsystem.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  */
 public class ShootCommand extends CommandBase {
     private Shooter shooterInstance = Shooter.getInstance();
+    private final int SHOOTER_TARGET_SPEED = 0;
 
     public ShootCommand() {
         shooterInstance.enable();
@@ -14,7 +16,10 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void execute() {
-        shooterInstance.periodic();
+        shooterInstance.shootManually(-.6);
+        if(shooterInstance.getShooterSpeed() >= SHOOTER_TARGET_SPEED) {
+            shooterInstance.feedBall();
+        }
     }
 
     @Override
