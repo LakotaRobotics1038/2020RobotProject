@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
           driverJoystick.getRightJoystickVertical() * multiplyer);
       break;
     case dualArcadeDrive:
-      prevStickValue = currentStickValue;
+    /*  prevStickValue = currentStickValue;
       currentStickValue = driverJoystick.getLeftJoystickVertical();
       if (driverJoystick.deadband(currentStickValue) == 0) {
         if (drivePower > 0) {
@@ -173,7 +173,14 @@ public class Robot extends TimedRobot {
         drivePower += normalIncrement;
       } else if (isAccelerating == -1) {
         drivePower -= normalIncrement;
-      } 
+     . } */
+     if(driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) > 0) {
+       drivePower = (driverJoystick.getLeftJoystickVertical() - .1) * (1/.9);
+     } else if(driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) < 0) {
+       drivePower = (driverJoystick.getLeftJoystickVertical() + .1) * (1/.9);
+     } else {
+       drivePower = 0;
+     }
       driveTrain.dualArcadeDrive(drivePower * multiplyer, driverJoystick.getRightJoystickHorizontal() * multiplyer);
       break;
     case singleArcadeDrive:
@@ -231,9 +238,9 @@ public class Robot extends TimedRobot {
 
     if (operatorJoystick.getLeftTrigger() > .5) {
       shooter.feedBall();
-    } else if (operatorJoystick.getBButton()) {
+    } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
       powerCell.enableManualStorage(ManualStorageModes.Forward);
-    } else if (operatorJoystick.getXButton()) {
+    } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {
       powerCell.enableManualStorage(ManualStorageModes.Reverse);
     } else {
       powerCell.disableManualStorage();
