@@ -197,7 +197,8 @@ public class Shooter implements Subsystem {
     }
 
     public int getShooterSpeed() {
-        return shooterMotor1.getSelectedSensorVelocity();
+        return shooterMotor1.getSelectedSensorPosition
+        ();
     }
 
     public boolean getHardStop() {

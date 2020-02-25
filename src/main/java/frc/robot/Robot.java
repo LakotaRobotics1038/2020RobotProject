@@ -96,6 +96,7 @@ public class Robot extends TimedRobot {
    public void robotPeriodic() {
     limelight.read();
     dashboard.update();
+    System.out.println(shooter.getTurretEncoder());
 
    }
 
@@ -267,6 +268,7 @@ public class Robot extends TimedRobot {
       }
       limelight.turnLEDsOn();
       shooter.move();
+      //shooter.getTurretEncoder();
     } else {
       shooter.goToCrashPosition();
       limelight.turnLEDsOff();

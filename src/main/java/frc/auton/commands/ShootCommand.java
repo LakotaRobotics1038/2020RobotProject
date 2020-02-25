@@ -16,6 +16,7 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void execute() {
+        shooterInstance.move();
         shooterInstance.shootManually(-.6);
         if(shooterInstance.getShooterSpeed() >= SHOOTER_TARGET_SPEED) {
             shooterInstance.feedBall();
