@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public abstract class Auton extends SequentialCommandGroup {
 
     protected String position;
-
+    public static SequentialCommandGroup group;
     /**
      * Creates a new auton with data
      * 

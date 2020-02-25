@@ -8,12 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.auton.AutonSelector;
+import frc.auton.ForwardAuton;
 
-import javax.lang.model.util.ElementScanner6;
-
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
@@ -34,6 +35,9 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private CommandScheduler schedule = CommandScheduler.getInstance();
+  private AutonSelector autonSelector = AutonSelector.getInstance();
+  private CommandGroup autonPath;
 
   //private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
 
@@ -67,9 +71,11 @@ public class Robot extends TimedRobot {
    public void robotInit() {
   //   piReader.initialize();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("Drive Straight Without Shooting", kCustomAuto);
      SmartDashboard.putData("Auto choices", m_chooser);
      limelight.initialize();
+
+
    }
 
   // /**
@@ -113,12 +119,16 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+            schedule.schedule(ForwardAuton.select());
         break;
       case kDefaultAuto:
       default:
         // Put default auto code here
         break;
+    }
+
+    if(schedule != null) {
+        schedule.run();
     }
   }
 

@@ -16,12 +16,12 @@ public class DriveTrain implements Subsystem {
     public driveModes currentDriveMode = driveModes.dualArcadeDrive;
 
     public final double WHEEL_DIAMETER = 4;
-    private final int RIGHT_FRONT_SPARK_PORT = 53;
-    private final int LEFT_FRONT_SPARK_PORT = 53;
-    private final int RIGHT_BACK_SPARK_PORT = 53;
-    private final int LEFT_BACK_SPARK_PORT = 53;
+    private final int RIGHT_FRONT_SPARK_PORT = 58;
+    private final int LEFT_FRONT_SPARK_PORT = 52;
+    private final int RIGHT_BACK_SPARK_PORT = 57;
+    private final int LEFT_BACK_SPARK_PORT = 56;
 
-    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(4, 5);
+    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(1, 0);
     public boolean isHighGear = false;
 
     public CANSpark1038 CANSparkRightFront = new CANSpark1038(RIGHT_FRONT_SPARK_PORT, MotorType.kBrushless);
