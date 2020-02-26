@@ -8,13 +8,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-// import edu.wpi.first.wpilibj.command.CommandGroup;
-// import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import frc.auton.AutonSelector;
-// import frc.auton.ForwardAuton;
-// import frc.auton.ShootingAuton;
+import frc.auton.AutonSelector;
+import frc.auton.ForwardAuton;
+import frc.auton.ShootingAuton;
+import frc.auton.commands.DriveStraightCommand;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.PowerCell;
 import frc.subsystem.Acquisition;
@@ -22,7 +26,7 @@ import frc.robot.Limelight;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
 import frc.subsystem.PowerCell.ManualStorageModes;
-
+import frc.auton.Auton;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -35,11 +39,13 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-//   private CommandScheduler schedule = CommandScheduler.getInstance();
-//   private AutonSelector autonSelector = AutonSelector.getInstance();
-//   private CommandGroup autonPath;
+  private CommandScheduler schedule = CommandScheduler.getInstance();
+  private AutonSelector autonSelector = AutonSelector.getInstance();
+  private SequentialCommandGroup autonPath;
 
-  // private CANSpark1038 test = new CANSpark1038(57, MotorType.kBrushed);
+
+  //Driver Camera
+  UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
 
   // // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
@@ -78,10 +84,12 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void robotInit() {
+    DriveStraightCommand.gyroSensor.reset();
+  System.out.print(DriveStraightCommand.gyroSensor.getAngle());
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Drive Straight With Shooting", kCustomAuto);
      SmartDashboard.putData("Auto choices", m_chooser);
-
+     visionCam.setExposureManual(50);
    }
 
   // /**
@@ -94,10 +102,10 @@ public class Robot extends TimedRobot {
   //  */
    @Override
    public void robotPeriodic() {
+    System.out.println(shooter.getTurretEncoder());
     limelight.read();
     dashboard.update();
-    System.out.println(shooter.getTurretEncoder());
-
+    System.out.println(shooter.getShooterSpeed());
    }
 
   // /**
@@ -111,20 +119,25 @@ public class Robot extends TimedRobot {
   // * the switch structure below with additional strings. If using the
   // * SendableChooser make sure to add them to the chooser code above as well.
   // */
+
+
   @Override
   public void autonomousInit() {
+    
     m_autoSelected = m_chooser.getSelected();
     m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
-    // switch (m_autoSelected) {
-    //     case kCustomAuto:
-    //     schedule.schedule(ShootingAuton.select());
-    //       break;
-    //     case kDefaultAuto:
-    //     default:
-    //     schedule.schedule(ForwardAuton.select());
-    //     break;
-    //   }
+     switch (m_autoSelected) {
+         case kCustomAuto:
+            autonPath = new ShootingAuton().select();
+           break;
+         case kDefaultAuto:
+         default:
+          autonPath = new ForwardAuton().select();
+         break;
+    }
+
+    schedule.schedule(autonPath);
   }
 
   // /**
@@ -132,9 +145,9 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void autonomousPeriodic() {
-    // if(schedule != null) {
-    //     schedule.run();
-    // }
+     if(schedule != null) {
+         schedule.run();
+     }
   }
 
   @Override

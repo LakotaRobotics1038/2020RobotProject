@@ -20,7 +20,7 @@ public class DriveStraightCommand extends CommandBase {
 	private final static double tP = 0.200; // .23 proto
 	private final static double tI = 0.001;
 	private final static double tD = 0.000;
-	private Gyro1038 gyroSensor = Gyro1038.getInstance();
+	public static Gyro1038 gyroSensor = Gyro1038.getInstance();
 	private final DriveTrain drive = DriveTrain.getInstance();
 	private PIDController drivePID; 
 	private PIDController turnPID;
@@ -33,6 +33,7 @@ public class DriveStraightCommand extends CommandBase {
 	public DriveStraightCommand(double setpoint) {
 		// Drive
 		
+		gyroSensor.reset();
 		drivePID = new PIDController(dP,dI,dD);
 		turnPID = new PIDController(tP, tI, tD);
 
