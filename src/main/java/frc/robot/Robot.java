@@ -250,7 +250,7 @@ public class Robot extends TimedRobot {
     if (operatorJoystick.getLeftButton()) {
       // shooter.executeSpeedPID();
       // TODO: invert shooter motors
-      shooter.shootManually(-SmartDashboard.getNumber("Shooter Speed", 0.6));
+      shooter.shootManually(-.6);
     } else {
       shooter.shootManually(0);
     }
