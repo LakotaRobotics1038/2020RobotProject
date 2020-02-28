@@ -21,7 +21,7 @@ public class ShootingAuton extends Auton{
         super();
     }
     public SequentialCommandGroup select() {
-        group.addCommands(new DriveStraightCommand(DIST_TO_BASELINE_FROM_DS_WALL), new ShootCommand());
+        group.addCommands(new DriveStraightCommand(65), new ShootCommand());
         return group;
     }
 }

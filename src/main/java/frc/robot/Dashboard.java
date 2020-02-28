@@ -35,11 +35,13 @@ public class Dashboard {
   private Dashboard() {
     SmartDashboard.putNumber("Match Time", -1);
     SmartDashboard.putNumber("Shooter Angle", 0);
+    SmartDashboard.putBoolean("Prox", false);
   }
 
   public void update() {
     SmartDashboard.putNumber("Shooter Angle", shooter.getTurretEncoder());
     SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());
+    SmartDashboard.putBoolean("Prox", shooter.getHardStop());
   }
     
     public String getPosition() {

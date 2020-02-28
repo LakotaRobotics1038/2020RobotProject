@@ -18,7 +18,7 @@ public class Acquisition extends Subsystem {
     //Solenoid
     private DoubleSolenoid acquisitionOut = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
     // TODO: make an enum
-    private boolean acquisitionPositionOut = true;
+    private boolean acquisitionPositionOut = false;
 
     //motor
     private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless); //beatDatBoi or lashingLad
@@ -50,11 +50,13 @@ public class Acquisition extends Subsystem {
         if(acquisitionPositionOut)
         {
             acquisitionOut.set(Value.kForward);
+            System.out.println("Putting acquisiton up");
             acquisitionPositionOut = false;
         }
         else if(!acquisitionPositionOut)
         {
             acquisitionOut.set(Value.kReverse);
+            System.out.println("Putting acquisition down");
             acquisitionPositionOut = true;
         }
     }

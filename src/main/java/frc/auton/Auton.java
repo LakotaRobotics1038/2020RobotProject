@@ -2,7 +2,7 @@ package frc.auton;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public abstract class Auton extends SequentialCommandGroup {
+public class Auton extends SequentialCommandGroup {
 
     protected String position;
     public static SequentialCommandGroup group;
@@ -20,7 +20,7 @@ public abstract class Auton extends SequentialCommandGroup {
      * Creates a new auton without data
      */
     public Auton() {
-       
+       group = new SequentialCommandGroup();
     }
 
     /**

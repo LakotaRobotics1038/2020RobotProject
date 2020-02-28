@@ -69,18 +69,18 @@ public class DriveStraightCommand extends CommandBase {
 		// drivePID.enable();
 		// turnPID.enable();
 		double distancePID = drivePID.calculate(drive.getLeftDriveEncoderDistance());
-		double anglePID = turnPID.calculate(gyroSensor.getAngle());
+		// double anglePID = turnPID.calculate(gyroSensor.getAngle());
 		// TODO incorperate the turnPID calculate.
-		
-		System.out.println("dist out: " + distancePID + " ang out: " + anglePID + " ang sp: " + turnPID.getSetpoint()
+		drive.tankDrive(distancePID, distancePID);
+	
+		System.out.println("dist out: " + distancePID + " ang out: " + " ang sp: " + turnPID.getSetpoint()
 				+ "ang: " + gyroSensor.getAngle());
 		
 	}
 
 	public void usePIDOutput() {
 		//TODO tune pid values.
-		//drive.dualArcadeDrive(drivePID.calculate(), turnPID.calculate());
-	}
+		}
 
 
 	@Override

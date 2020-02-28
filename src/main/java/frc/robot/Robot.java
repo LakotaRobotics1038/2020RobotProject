@@ -41,7 +41,8 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private CommandScheduler schedule = CommandScheduler.getInstance();
   private AutonSelector autonSelector = AutonSelector.getInstance();
-  private SequentialCommandGroup autonPath;
+  public static SequentialCommandGroup autonPath;
+  private Auton auton = new Auton();
 
 
   //Driver Camera
@@ -102,10 +103,8 @@ public class Robot extends TimedRobot {
   //  */
    @Override
    public void robotPeriodic() {
-    System.out.println(shooter.getTurretEncoder());
     limelight.read();
     dashboard.update();
-    System.out.println(shooter.getShooterSpeed());
    }
 
   // /**
@@ -123,21 +122,28 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    
+    System.out.println("Auton started");
     m_autoSelected = m_chooser.getSelected();
     m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
      switch (m_autoSelected) {
          case kCustomAuto:
             autonPath = new ShootingAuton().select();
+            //acquisition.toggleAcquisitionPosition();
+            System.out.println("Selected shoot auton");
            break;
          case kDefaultAuto:
          default:
-          autonPath = new ForwardAuton().select();
+         
+         autonPath = new ShootingAuton().select();
+          //autonPath = new ForwardAuton().select();
+          //acquisition.toggleAcquisitionPosition();
+          System.out.println("Selected drive auton");
          break;
     }
 
     schedule.schedule(autonPath);
+    System.out.println("Scheduled tasks");
   }
 
   // /**
@@ -145,11 +151,11 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void autonomousPeriodic() {
-     if(schedule != null) {
+   if(schedule != null) {
          schedule.run();
-     }
+   }
   }
-
+ 
   @Override
   public void teleopInit() {
     // TODO Auto-generated method stub

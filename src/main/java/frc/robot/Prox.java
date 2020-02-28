@@ -8,6 +8,7 @@ public class Prox extends DigitalInput {
 	}
 	
 	@Override
+
 	public boolean get() {
 		return !super.get();
 	}
