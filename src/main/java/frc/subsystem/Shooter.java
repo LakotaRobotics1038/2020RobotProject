@@ -26,7 +26,7 @@ public class Shooter implements Subsystem {
     private static Shooter shooter;
 
     // swerves
-    private boolean leftMost = false;
+    private boolean leftMost = true;
     private final static int RIGHT_STOP = 111000; // 114500
     private final static int LEFT_STOP = -14200;
     private static double swivelSpeed = 0.2;
