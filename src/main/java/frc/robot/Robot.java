@@ -27,6 +27,14 @@ import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
 import frc.subsystem.PowerCell.ManualStorageModes;
 import frc.auton.Auton;
+import frc.subsystem.Spinner;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.I2C;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatch;
+import frc.subsystem.Spinner;
+import com.revrobotics.ColorSensorV3;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -62,6 +70,17 @@ public class Robot extends TimedRobot {
   private final Joystick1038 driverJoystick = new Joystick1038(0);
   private final Joystick1038 operatorJoystick = new Joystick1038(1);
   public double multiplyer = .8;
+  private final ColorMatch colorMatcher = new ColorMatch();
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+  private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
+  private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5, 0.2);
+  private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
+  private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
+  private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
+  private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
+  private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
+  private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
+  private final Spinner spinner = Spinner.getInstance();
 
   // Powercell
   private final PowerCell powerCell = PowerCell.getInstance();
@@ -77,6 +96,8 @@ public class Robot extends TimedRobot {
   // shooter
   private final Shooter shooter = Shooter.getInstance();
 
+  // spinner
+  private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
   private final Dashboard dashboard = Dashboard.getInstance();
 
   // /**
@@ -91,6 +112,14 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Drive Straight With Shooting", kCustomAuto);
      SmartDashboard.putData("Auto choices", m_chooser);
      visionCam.setExposureManual(50);
+     colorMatcher.addColorMatch(kBlueMinimumTarget);
+     colorMatcher.addColorMatch(kGreenMinimumTarget);
+     colorMatcher.addColorMatch(kRedMinimumTarget);
+     colorMatcher.addColorMatch(kYellowMinimumTarget);
+     colorMatcher.addColorMatch(kBlueMaximumTarget);
+     colorMatcher.addColorMatch(kGreenMaximumTarget);
+     colorMatcher.addColorMatch(kRedMaximumTarget);
+     colorMatcher.addColorMatch(kYellowMaximumTarget);
    }
 
   // /**
@@ -251,6 +280,13 @@ public class Robot extends TimedRobot {
       prevOperatorYState = true;
     } else if (!operatorJoystick.getYButton()) {
       prevOperatorYState = false;
+    }
+
+    if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
+      spinner.setRotationEnabled();
+    }
+    else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
+      spinner.setcolorEnabled();   
     }
 
     if (operatorJoystick.getLeftButton()) {
