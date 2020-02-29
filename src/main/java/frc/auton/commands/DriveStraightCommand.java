@@ -98,5 +98,4 @@ public class DriveStraightCommand extends CommandBase {
 	public boolean isFinished() {
 		return drivePID.atSetpoint() && turnPID.atSetpoint();
 	}
-
 }

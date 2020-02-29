@@ -27,7 +27,7 @@ public class Shooter implements Subsystem {
 
     // swerves
     private boolean leftMost = true;
-    private final static int RIGHT_STOP = 111000; // 114500
+    private final static int RIGHT_STOP = 60000; // 114500
     private final static int LEFT_STOP = -14200;
     private static double swivelSpeed = 0.2;
 
@@ -39,7 +39,7 @@ public class Shooter implements Subsystem {
 
     // position PID for turret
     private final double positionSetpoint = 0.0;
-    private final double positionTolerance = .05;
+    private final double positionTolerance = .5;
     private final static double positionP = 0.055; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
@@ -75,6 +75,7 @@ public class Shooter implements Subsystem {
         positionPID.setSetpoint(positionSetpoint);
         positionPID.setTolerance(positionTolerance);
         positionPID.disableContinuousInput();
+        turretTurningMotor.setSelectedSensorPosition(0);
 
         // speedPID.setPID(speedP, speedI, speedD);
         speedPID.setSetpoint(speedSetpoint);
@@ -178,7 +179,7 @@ public class Shooter implements Subsystem {
      * @return returns if robot is ready to shoot
      */
     public boolean isFinished() {
-        return positionPID.atSetpoint() && speedPID.atSetpoint();
+        return positionPID.atSetpoint(); /* && speedPID.atSetpoint(); */
     }
 
     /**
@@ -197,8 +198,7 @@ public class Shooter implements Subsystem {
     }
 
     public int getShooterSpeed() {
-        return shooterMotor1.getSelectedSensorPosition
-        ();
+        return shooterMotor1.getSelectedSensorVelocity();
     }
 
     public boolean getHardStop() {
@@ -231,19 +231,22 @@ public class Shooter implements Subsystem {
 
     public void move() {
         if (hardStop.get()) {
-        turretTurningMotor.setSelectedSensorPosition(0);
-        System.out.println("i see prox");
+            turretTurningMotor.setSelectedSensorPosition(0);
+            System.out.println("i see prox");
         }
         if (turretTurningMotor.getSelectedSensorPosition() <= LEFT_STOP) {
             leftMost = true;
             swivelEy();
         } else if (turretTurningMotor.getSelectedSensorPosition() >= RIGHT_STOP) {
+            System.out.println("right stop");
             leftMost = false;
             swivelEy();
         } else if (limelight.canSeeTarget()) {
+            System.out.println("Aiming");
             executeAimPID();
             // System.out.println("lemon");
         } else {
+            System.out.println("swivel");
             swivelEy();
         }
     }

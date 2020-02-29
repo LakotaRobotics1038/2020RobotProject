@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 
+
 public class Joystick1038 extends Joystick {
     // Button Locations
 	private final int X_BUTTON = 3;
@@ -30,7 +31,11 @@ public class Joystick1038 extends Joystick {
 	 */
     public Joystick1038(int port) {
         super(port);
-    }
+	}
+	
+	public int getPOV() {
+		return getPOV(0);
+	}
 
     /**
 	 * Returns the state of the X button on the controller

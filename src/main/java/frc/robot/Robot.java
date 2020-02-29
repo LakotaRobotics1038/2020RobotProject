@@ -27,13 +27,13 @@ import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
 import frc.subsystem.PowerCell.ManualStorageModes;
 import frc.auton.Auton;
-import frc.subsystem.Spinner;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.I2C;
-import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorMatch;
-import frc.subsystem.Spinner;
-import com.revrobotics.ColorSensorV3;
+// import frc.subsystem.Spinner;
+// import edu.wpi.first.wpilibj.util.Color;
+// import edu.wpi.first.wpilibj.I2C;
+// import com.revrobotics.ColorMatchResult;
+// import com.revrobotics.ColorMatch;
+// import frc.subsystem.Spinner;
+// import com.revrobotics.ColorSensorV3;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,8 +52,7 @@ public class Robot extends TimedRobot {
   public static SequentialCommandGroup autonPath;
   private Auton auton = new Auton();
 
-
-  //Driver Camera
+  // Driver Camera
   UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
 
   // // Drive
@@ -70,17 +69,21 @@ public class Robot extends TimedRobot {
   private final Joystick1038 driverJoystick = new Joystick1038(0);
   private final Joystick1038 operatorJoystick = new Joystick1038(1);
   public double multiplyer = .8;
-  private final ColorMatch colorMatcher = new ColorMatch();
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
-  private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5, 0.2);
-  private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
-  private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45, 0.05);
-  private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
-  private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
-  private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
-  private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
-  private final Spinner spinner = Spinner.getInstance();
+  // private final ColorMatch colorMatcher = new ColorMatch();
+  // private final I2C.Port i2cPort = I2C.Port.kOnboard;
+  // private final Color kBlueMinimumTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
+  // private final Color kGreenMinimumTarget = ColorMatch.makeColor(0.18, 0.5,
+  // 0.2);
+  // private final Color kRedMinimumTarget = ColorMatch.makeColor(0.5, 0.2, 0.05);
+  // private final Color kYellowMinimumTarget = ColorMatch.makeColor(0.3, 0.45,
+  // 0.05);
+  // private final Color kBlueMaximumTarget = ColorMatch.makeColor(0.2, 0.5, 0.5);
+  // private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6,
+  // 0.3);
+  // private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
+  // private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55,
+  // 0.15);
+  // private final Spinner spinner = Spinner.getInstance();
 
   // Powercell
   private final PowerCell powerCell = PowerCell.getInstance();
@@ -89,15 +92,18 @@ public class Robot extends TimedRobot {
   private final Acquisition acquisition = Acquisition.getInstance();
   private boolean prevOperatorYState = false;
   private boolean prevOperatorAState = false;
+  private boolean prevDUpState = false;
+  private boolean prevDDownState = false;
 
   // //limelight
   private final Limelight limelight = Limelight.getInstance();
 
   // shooter
   private final Shooter shooter = Shooter.getInstance();
+  private double shooterSpeed = -.55;
 
   // spinner
-  private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
+  // private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
   private final Dashboard dashboard = Dashboard.getInstance();
 
   // /**
@@ -107,34 +113,34 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     DriveStraightCommand.gyroSensor.reset();
-  System.out.print(DriveStraightCommand.gyroSensor.getAngle());
+    System.out.print(DriveStraightCommand.gyroSensor.getAngle());
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("Drive Straight With Shooting", kCustomAuto);
-     SmartDashboard.putData("Auto choices", m_chooser);
-     visionCam.setExposureManual(50);
-     colorMatcher.addColorMatch(kBlueMinimumTarget);
-     colorMatcher.addColorMatch(kGreenMinimumTarget);
-     colorMatcher.addColorMatch(kRedMinimumTarget);
-     colorMatcher.addColorMatch(kYellowMinimumTarget);
-     colorMatcher.addColorMatch(kBlueMaximumTarget);
-     colorMatcher.addColorMatch(kGreenMaximumTarget);
-     colorMatcher.addColorMatch(kRedMaximumTarget);
-     colorMatcher.addColorMatch(kYellowMaximumTarget);
-   }
+    SmartDashboard.putData("Auto choices", m_chooser);
+    visionCam.setExposureManual(50);
+    // colorMatcher.addColorMatch(kBlueMinimumTarget);
+    // colorMatcher.addColorMatch(kGreenMinimumTarget);
+    // colorMatcher.addColorMatch(kRedMinimumTarget);
+    // colorMatcher.addColorMatch(kYellowMinimumTarget);
+    // colorMatcher.addColorMatch(kBlueMaximumTarget);
+    // colorMatcher.addColorMatch(kGreenMaximumTarget);
+    // colorMatcher.addColorMatch(kRedMaximumTarget);
+    // colorMatcher.addColorMatch(kYellowMaximumTarget);
+  }
 
   // /**
-  //  * This function is called every robot packet, no matter the mode. Use
-  //  * this for items like diagnostics that you want ran during disabled,
-  //  * autonomous, teleoperated and test.
-  //  *
-  //  * <p>This runs after the mode specific periodic functions, but before
-  //  * LiveWindow and SmartDashboard integrated updating.
-  //  */
-   @Override
-   public void robotPeriodic() {
+  // * This function is called every robot packet, no matter the mode. Use
+  // * this for items like diagnostics that you want ran during disabled,
+  // * autonomous, teleoperated and test.
+  // *
+  // * <p>This runs after the mode specific periodic functions, but before
+  // * LiveWindow and SmartDashboard integrated updating.
+  // */
+  @Override
+  public void robotPeriodic() {
     limelight.read();
     dashboard.update();
-   }
+  }
 
   // /**
   // * This autonomous (along with the chooser code above) shows how to select
@@ -148,27 +154,26 @@ public class Robot extends TimedRobot {
   // * SendableChooser make sure to add them to the chooser code above as well.
   // */
 
-
   @Override
   public void autonomousInit() {
     System.out.println("Auton started");
     m_autoSelected = m_chooser.getSelected();
     m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
-     switch (m_autoSelected) {
-         case kCustomAuto:
-            autonPath = new ShootingAuton().select();
-            //acquisition.toggleAcquisitionPosition();
-            System.out.println("Selected shoot auton");
-           break;
-         case kDefaultAuto:
-         default:
-         
-         autonPath = new ShootingAuton().select();
-          //autonPath = new ForwardAuton().select();
-          //acquisition.toggleAcquisitionPosition();
-          System.out.println("Selected drive auton");
-         break;
+    switch (m_autoSelected) {
+      case kCustomAuto:
+        autonPath = new ShootingAuton();
+        // acquisition.toggleAcquisitionPosition();
+        System.out.println("Selected shoot auton");
+        break;
+      case kDefaultAuto:
+      default:
+      
+        autonPath = new ShootingAuton();
+        // autonPath = new ForwardAuton().select();
+        // acquisition.toggleAcquisitionPosition();
+        System.out.println("Selected drive auton");
+        break;
     }
 
     schedule.schedule(autonPath);
@@ -180,15 +185,14 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void autonomousPeriodic() {
-   if(schedule != null) {
-         schedule.run();
-   }
+    if (schedule != null) {
+      schedule.run();
+    }
   }
- 
+
   @Override
   public void teleopInit() {
     // TODO Auto-generated method stub
-    super.teleopInit();
     // shooter.positionSpeedPIDAdjustment();
     // shooter.positionSpeedPIDAdjustment();
     // shooter.initialize();
@@ -202,8 +206,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     operator();
     driver();
-    limelight.read();
     powerCell.periodic();
+    // System.out.println(shooter.getShooterSpeed());
+    SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
+    System.out.println(shooter.isFinished());
   }
 
   public void driver() {
@@ -215,34 +221,26 @@ public class Robot extends TimedRobot {
           driverJoystick.getRightJoystickVertical() * multiplyer);
       break;
     case dualArcadeDrive:
-    /*  prevStickValue = currentStickValue;
-      currentStickValue = driverJoystick.getLeftJoystickVertical();
-      if (driverJoystick.deadband(currentStickValue) == 0) {
-        if (drivePower > 0) {
-          drivePower -= brakeIncrement;
-        } else if (drivePower < 0) {
-          drivePower += brakeIncrement;
-        }
-      } else if (currentStickValue > prevStickValue && drivePower < currentStickValue) {
-        drivePower += normalIncrement;
-        isAccelerating = 1;
-      } else if (currentStickValue < prevStickValue && drivePower > currentStickValue) {
-        drivePower -= normalIncrement;
-        isAccelerating = -1;
-      } else if (Math.abs(drivePower - currentStickValue) < .05) {
-        isAccelerating = 0;
-      } else if(isAccelerating == 1) {
-        drivePower += normalIncrement;
-      } else if (isAccelerating == -1) {
-        drivePower -= normalIncrement;
-     . } */
-     if(driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) > 0) {
-       drivePower = (driverJoystick.getLeftJoystickVertical() - .1) * (1/.9);
-     } else if(driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) < 0) {
-       drivePower = (driverJoystick.getLeftJoystickVertical() + .1) * (1/.9);
-     } else {
-       drivePower = 0;
-     }
+      /*
+       * prevStickValue = currentStickValue; currentStickValue =
+       * driverJoystick.getLeftJoystickVertical(); if
+       * (driverJoystick.deadband(currentStickValue) == 0) { if (drivePower > 0) {
+       * drivePower -= brakeIncrement; } else if (drivePower < 0) { drivePower +=
+       * brakeIncrement; } } else if (currentStickValue > prevStickValue && drivePower
+       * < currentStickValue) { drivePower += normalIncrement; isAccelerating = 1; }
+       * else if (currentStickValue < prevStickValue && drivePower >
+       * currentStickValue) { drivePower -= normalIncrement; isAccelerating = -1; }
+       * else if (Math.abs(drivePower - currentStickValue) < .05) { isAccelerating =
+       * 0; } else if(isAccelerating == 1) { drivePower += normalIncrement; } else if
+       * (isAccelerating == -1) { drivePower -= normalIncrement; . }
+       */
+      if (driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) > 0) {
+        drivePower = (driverJoystick.getLeftJoystickVertical() - .1) * (1 / .9);
+      } else if (driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) < 0) {
+        drivePower = (driverJoystick.getLeftJoystickVertical() + .1) * (1 / .9);
+      } else {
+        drivePower = 0;
+      }
       driveTrain.dualArcadeDrive(drivePower * multiplyer, driverJoystick.getRightJoystickHorizontal() * multiplyer);
       break;
     case singleArcadeDrive:
@@ -282,17 +280,33 @@ public class Robot extends TimedRobot {
       prevOperatorYState = false;
     }
 
-    if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
-      spinner.setRotationEnabled();
-    }
-    else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
-      spinner.setcolorEnabled();   
-    }
+    // if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
+    // spinner.setRotationEnabled();
+    // }
+    // else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
+    // spinner.setcolorEnabled();
+    // }
+    if (operatorJoystick.getBButton() && !prevDUpState) {
+      shooterSpeed -= .05;
+      prevDUpState = true;
+    } else if (operatorJoystick.getXButton() && !prevDDownState) {
+      shooterSpeed += .05;
 
+
+
+
+
+
+
+      prevDDownState = true;
+    } else if (!operatorJoystick.getXButton() && !operatorJoystick.getBButton()) {
+      prevDUpState = false;
+      prevDDownState = false;
+    }
     if (operatorJoystick.getLeftButton()) {
       // shooter.executeSpeedPID();
       // TODO: invert shooter motors
-      shooter.shootManually(-.6);
+      shooter.shootManually(shooterSpeed);
     } else {
       shooter.shootManually(0);
     }
@@ -323,7 +337,7 @@ public class Robot extends TimedRobot {
       }
       limelight.turnLEDsOn();
       shooter.move();
-      //shooter.getTurretEncoder();
+      // shooter.getTurretEncoder();
     } else {
       shooter.goToCrashPosition();
       limelight.turnLEDsOff();

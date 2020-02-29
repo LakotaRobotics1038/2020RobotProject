@@ -7,21 +7,17 @@
 
 package frc.auton;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.auton.commands.DriveStraightCommand;
 import frc.auton.commands.ShootCommand;
+import frc.auton.commands.AimCommand;
 /**
  * Add your docs here.
  */
 public class ShootingAuton extends Auton{
 
-    private static double DIST_TO_BASELINE_FROM_DS_WALL = 2;
 
     public ShootingAuton() {
         super();
-    }
-    public SequentialCommandGroup select() {
-        group.addCommands(new DriveStraightCommand(65), new ShootCommand());
-        return group;
+        addCommands(new AimCommand(),new ShootCommand(),new DriveStraightCommand(65));
     }
 }

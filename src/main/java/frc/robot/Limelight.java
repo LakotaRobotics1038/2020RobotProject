@@ -59,9 +59,10 @@ public class Limelight {
      */
     public void read() {
         valid_target = tv.getDouble(defaultOffset);
+        System.out.println(valid_target);
         x = tx.getDouble(defaultOffset);
         y = ty.getDouble(defaultOffset);
-        // System.out.println(valid_target + ", " + x + ", " + y);
+        System.out.println(valid_target + ", " + x + ", " + y);
     }
 
     /**
@@ -71,9 +72,11 @@ public class Limelight {
      */
     public boolean canSeeTarget() {
         if (valid_target == 1) {
+           // System.out.println("Target found");
             return true;
         }
         else {
+            //System.out.println("No target seen");
             return false;
         }
     }
