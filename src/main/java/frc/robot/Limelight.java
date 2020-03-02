@@ -59,10 +59,10 @@ public class Limelight {
      */
     public void read() {
         valid_target = tv.getDouble(defaultOffset);
-        System.out.println(valid_target);
+        //System.out.println(valid_target);
         x = tx.getDouble(defaultOffset);
         y = ty.getDouble(defaultOffset);
-        System.out.println(valid_target + ", " + x + ", " + y);
+        //System.out.println(valid_target + ", " + x + ", " + y);
     }
 
     /**

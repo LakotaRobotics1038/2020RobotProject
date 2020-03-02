@@ -27,7 +27,7 @@ public class Shooter implements Subsystem {
 
     // swerves
     private boolean leftMost = true;
-    private final static int RIGHT_STOP = 60000; // 114500
+    private final static int RIGHT_STOP = 110000; // 114500
     private final static int LEFT_STOP = -14200;
     private static double swivelSpeed = 0.2;
 
@@ -95,9 +95,9 @@ public class Shooter implements Subsystem {
     /**
      * stops feeding balls into shooter
      */
-    // public void noFeedBall() {
-    // powerCell.feedShooter(0);
-    // }
+    public void noFeedBall() {
+     powerCell.feedShooter(0);
+    }
 
     /**
      * disables speed motors and pid
@@ -185,6 +185,9 @@ public class Shooter implements Subsystem {
     /**
      * limits shooter turn radius
      */
+    public void turnTurret(double turnSpeed){
+        turretTurningMotor.set(turnSpeed);
+    }
     public void swivelEy() {
         if (leftMost) {
             turretTurningMotor.set(swivelSpeed);

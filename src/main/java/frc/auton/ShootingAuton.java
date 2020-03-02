@@ -18,6 +18,6 @@ public class ShootingAuton extends Auton{
 
     public ShootingAuton() {
         super();
-        addCommands(new AimCommand(),new ShootCommand(),new DriveStraightCommand(65));
+        addCommands(new AimCommand(), new ShootCommand(), new DriveStraightCommand(65)); //new DriveStraightCommand(65)
     }
 }

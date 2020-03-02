@@ -112,6 +112,8 @@ public class Robot extends TimedRobot {
   // */
   @Override
   public void robotInit() {
+    
+    shooter.resetTurretEncoder();
     DriveStraightCommand.gyroSensor.reset();
     System.out.print(DriveStraightCommand.gyroSensor.getAngle());
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -140,6 +142,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     limelight.read();
     dashboard.update();
+    //System.out.println("working");
+    System.out.println(shooter.getTurretEncoder());
   }
 
   // /**

@@ -21,7 +21,6 @@ public class ShootCommand extends CommandBase {
     public void execute() {
         System.out.println(Timer.getMatchTime());
         shooterInstance.feedBall();
-        shooterInstance.shootManually(-.6);
         
       
 
@@ -29,10 +28,9 @@ public class ShootCommand extends CommandBase {
 
     @Override
     public void end(boolean interuppted) {
-
-
-        shooterInstance.goToCrashPosition();
         shooterInstance.shootManually(0);
+        shooterInstance.noFeedBall();
+
     }
 
     @Override
