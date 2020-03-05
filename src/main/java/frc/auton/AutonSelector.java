@@ -1,8 +1,7 @@
 package frc.auton;
 
-// import frc.robot.Dashboard;
-
 import frc.robot.Dashboard;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class AutonSelector {
@@ -28,8 +27,7 @@ public class AutonSelector {
 	}
 	
 	public SequentialCommandGroup chooseAuton() {
-
-        //Dashboard not built in yet.
+        // TODO: Connect auton chooser to dashboard
 		position = Dashboard.getInstance().getPosition(); 
 		autonChooser = Dashboard.getInstance().getAutonChooser(); 
 		

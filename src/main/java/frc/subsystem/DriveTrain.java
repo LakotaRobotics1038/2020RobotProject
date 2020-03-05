@@ -1,19 +1,21 @@
 package frc.subsystem;
 
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.CANSpark1038;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
+import frc.robot.CANSpark1038;
+
 public class DriveTrain implements Subsystem {
-    public enum driveModes {
+    public enum DriveModes {
         tankDrive, singleArcadeDrive, dualArcadeDrive
     };
 
-    public driveModes currentDriveMode = driveModes.dualArcadeDrive;
+    public DriveModes currentDriveMode = DriveModes.dualArcadeDrive;
 
     public final double WHEEL_DIAMETER = 4;
     private final int HIGH_GEAR_PORT = 0;
@@ -27,8 +29,8 @@ public class DriveTrain implements Subsystem {
     public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);//previously 55
     public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
 
-    public CANEncoder CANSparkRightEncoder = CANSparkRightBack.getEncoder();
-    public CANEncoder CANSparkLeftEncoder = CANSparkLeftBack.getEncoder();
+    public CANEncoder CANSparkRightEncoder = new CANEncoder(CANSparkRightBack);
+    public CANEncoder CANSparkLeftEncoder = new CANEncoder(CANSparkLeftBack);
 
     private DifferentialDrive differentialDrive;
     private static DriveTrain driveTrain;
@@ -74,11 +76,11 @@ public class DriveTrain implements Subsystem {
     }
 
     public double getCANSparkRightEncoder() {
-        return CANSparkRightEncoder.getPosition() * -1;
+        return -CANSparkRightEncoder.getPosition();
     }
 
     public double getCANSparkLeftEncoder() {
-        return CANSparkLeftEncoder.getPosition() * -1;
+        return -CANSparkLeftEncoder.getPosition();
     }
 
     // Pneumatics
@@ -93,20 +95,21 @@ public class DriveTrain implements Subsystem {
     }
 
     public void resetEncoders() {
-        
+        CANSparkRightEncoder.setPosition(0);
+        CANSparkLeftEncoder.setPosition(0);
     }
 
     // Switch between drive modes
     public void driveModeToggler() {
         switch (currentDriveMode) {
         case tankDrive:
-            currentDriveMode = driveModes.singleArcadeDrive;
+            currentDriveMode = DriveModes.singleArcadeDrive;
             break;
         case singleArcadeDrive:
-            currentDriveMode = driveModes.dualArcadeDrive;
+            currentDriveMode = DriveModes.dualArcadeDrive;
             break;
         case dualArcadeDrive:
-            currentDriveMode = driveModes.tankDrive;
+            currentDriveMode = DriveModes.tankDrive;
             break;
         default:
             System.out.println("Help I have fallen and I can't get up!");
@@ -128,6 +131,4 @@ public class DriveTrain implements Subsystem {
     public void dualArcadeDrive(double yaxis, double xaxis) {
         differentialDrive.arcadeDrive(yaxis, xaxis, true);
     }
-
-   
 }

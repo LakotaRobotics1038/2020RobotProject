@@ -4,30 +4,32 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import frc.robot.CANSpark1038;
 
-public class Acquisition extends Subsystem {
-    //ports
+public class Acquisition implements Subsystem {
+    // Ports
     private final int beaterBarPort = 54;
     
-    //Solenoid channels
+    // Solenoid channels
     private final int RAISE_ACQUISITION_CHANNEL = 2;
     private final int LOWER_ACUQUISITION_CHANNEL = 3;
 
-    //Solenoid
+    // Solenoid
     private DoubleSolenoid acquisitionOut = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
-    // TODO: make an enum
-    private boolean acquisitionPositionOut = false;
+    private AcquisitionStates acquisitionState = AcquisitionStates.In;
+    private enum AcquisitionStates {
+        In, Out
+    }
 
-    //motor
-    private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless); //beatDatBoi or lashingLad
+    // Motor
+    private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless);
 
-    //motor speeds
-    private final static double beaterBarFwdSpeed = .65;
-    private final static double runBeaterBarRevSpeed = -.65;
+    // Motor speeds
+    private final static double BEATER_BAR_SPEED = .65;
     
-    //acquisition instance
+    // Acquisition instance
     private static Acquisition acquisition;
 
     /**
@@ -47,17 +49,16 @@ public class Acquisition extends Subsystem {
      * sends out and pulls back in the acquisition
      */
     public void toggleAcquisitionPosition() {
-        if(acquisitionPositionOut)
-        {
-            acquisitionOut.set(Value.kForward);
-            System.out.println("Putting acquisiton up");
-            acquisitionPositionOut = false;
-        }
-        else if(!acquisitionPositionOut)
-        {
-            acquisitionOut.set(Value.kReverse);
-            System.out.println("Putting acquisition down");
-            acquisitionPositionOut = true;
+        switch (acquisitionState) {
+            case In:
+                acquisitionOut.set(Value.kReverse);
+                acquisitionState = AcquisitionStates.Out;
+                break;
+
+            case Out:
+                acquisitionOut.set(Value.kForward);
+                acquisitionState = AcquisitionStates.In;
+                break;
         }
     }
 
@@ -65,14 +66,14 @@ public class Acquisition extends Subsystem {
      * sets the speed that the acquistion will pull the balls into storage
      */
     public void runBeaterBarFwd() {
-        beaterBar.set(beaterBarFwdSpeed);
+        beaterBar.set(BEATER_BAR_SPEED);
     }
 
     /**
      * sets the speed that the acquisiont will throw the balls out of storage
      */
     public void runBeaterBarRev() {
-        beaterBar.set(runBeaterBarRevSpeed);
+        beaterBar.set(-BEATER_BAR_SPEED);
     }
 
     /**
@@ -81,10 +82,4 @@ public class Acquisition extends Subsystem {
     public void stopBeaterBar() {
         beaterBar.set(0);
     }
-
-    @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
-    }
-   
 }

@@ -9,14 +9,14 @@ import frc.robot.TalonSRX1038;
 import frc.subsystem.PowerCell;
 
 public class Shooter implements Subsystem {
-    // motor port numbers
+    // Motor port numbers
     private static boolean isEnabled = false;
     private final int SHOOTER_MOTOR_1_PORT = 60;
     private final int SHOOTER_MOTOR_2_PORT = 61;
     private final int TURRET_TURNING_PORT = 59;
     private final int HARD_STOP_PORT = 0;
 
-    // motors and encoders and sensors
+    // Motors and encoders and sensors
     private TalonSRX1038 shooterMotor1 = new TalonSRX1038(SHOOTER_MOTOR_1_PORT);
     private TalonSRX1038 shooterMotor2 = new TalonSRX1038(SHOOTER_MOTOR_2_PORT);
     private TalonSRX1038 turretTurningMotor = new TalonSRX1038(TURRET_TURNING_PORT);
@@ -25,8 +25,13 @@ public class Shooter implements Subsystem {
     // Shooter
     private static Shooter shooter;
 
-    // swerves
-    private boolean leftMost = true;
+    // Turret
+    private TurretDirections currentTurretDirection = TurretDirections.Right;
+
+    public enum TurretDirections {
+        Left, Right
+    }
+
     private final static int RIGHT_STOP = 110000; // 114500
     private final static int LEFT_STOP = -14200;
     private static double swivelSpeed = 0.2;
@@ -37,7 +42,7 @@ public class Shooter implements Subsystem {
     // PowerCell instance
     private PowerCell powerCell = PowerCell.getInstance();
 
-    // position PID for turret
+    // Position PID for turret
     private final double positionSetpoint = 0.0;
     private final double positionTolerance = .5;
     private final static double positionP = 0.055; // .15
@@ -45,7 +50,7 @@ public class Shooter implements Subsystem {
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
 
-    // speed PID for shooter
+    // Speed PID for shooter
     private final double speedSetpoint = 0.0;
     private final double speedTolerance = 0.0;
     private final static double speedP = 0.0;
@@ -53,7 +58,7 @@ public class Shooter implements Subsystem {
     private final static double speedD = 0.0;
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
 
-    // motor speed for shooter feeder
+    // Motor speed for shooter feeder
     private final static double feedSpeed = 1;
 
     /**
@@ -70,14 +75,11 @@ public class Shooter implements Subsystem {
     }
 
     private Shooter() {
-        // turretTurningMotor.setSelectedSensorPosition(0);
-        // positionPID.setPID(positionP, positionI, positionD);
         positionPID.setSetpoint(positionSetpoint);
         positionPID.setTolerance(positionTolerance);
         positionPID.disableContinuousInput();
         turretTurningMotor.setSelectedSensorPosition(0);
 
-        // speedPID.setPID(speedP, speedI, speedD);
         speedPID.setSetpoint(speedSetpoint);
         speedPID.setTolerance(speedTolerance);
         speedPID.disableContinuousInput();
@@ -96,14 +98,15 @@ public class Shooter implements Subsystem {
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-     powerCell.feedShooter(0);
+        powerCell.feedShooter(0);
     }
 
     /**
      * disables speed motors and pid
      */
     public void disablePID() {
-        speedPID.calculate(0.0);// come back to that
+        // TODO: Fix this
+        speedPID.calculate(0.0);
         shooterMotor1.set(0);
         shooterMotor2.set(0);
     }
@@ -142,8 +145,8 @@ public class Shooter implements Subsystem {
         shooterMotor2.set(-speed);
     }
 
-    public void setLeftMost(boolean value) {
-        leftMost = value;
+    public void setTurretDirection(TurretDirections value) {
+        currentTurretDirection = value;
     }
 
     public void enable() {
@@ -155,11 +158,12 @@ public class Shooter implements Subsystem {
     }
 
     public void periodic() {
-        if(isEnabled) {
+        if (isEnabled) {
             executeAimPID();
             executeSpeedPID();
         }
     }
+
     /**
      * stops and resets PID values if interrupted (potentially unnecessary)
      * 
@@ -185,14 +189,18 @@ public class Shooter implements Subsystem {
     /**
      * limits shooter turn radius
      */
-    public void turnTurret(double turnSpeed){
+    public void turnTurret(double turnSpeed) {
         turretTurningMotor.set(turnSpeed);
     }
+
     public void swivelEy() {
-        if (leftMost) {
-            turretTurningMotor.set(swivelSpeed);
-        } else {
-            turretTurningMotor.set(-swivelSpeed);
+        switch (currentTurretDirection) {
+            case Left:
+                turretTurningMotor.set(-swivelSpeed);
+                break;
+            case Right:
+                turretTurningMotor.set(swivelSpeed);
+                break;
         }
     }
 
@@ -216,18 +224,18 @@ public class Shooter implements Subsystem {
         turretTurningMotor.set(0);
     }
 
-    public boolean getLeftMost() {
-        return leftMost;
+    public TurretDirections getTurretDirection() {
+        return currentTurretDirection;
     }
 
     public void goToCrashPosition() {
         if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
             stopTurret();
         } else if (turretTurningMotor.getSelectedSensorPosition() > 0) {
-            leftMost = false;
+            currentTurretDirection = TurretDirections.Left;
             swivelEy();
         } else if (turretTurningMotor.getSelectedSensorPosition() < 0) {
-            leftMost = true;
+            currentTurretDirection = TurretDirections.Right;
             swivelEy();
         }
     }
@@ -235,21 +243,16 @@ public class Shooter implements Subsystem {
     public void move() {
         if (hardStop.get()) {
             turretTurningMotor.setSelectedSensorPosition(0);
-            System.out.println("i see prox");
         }
         if (turretTurningMotor.getSelectedSensorPosition() <= LEFT_STOP) {
-            leftMost = true;
+            currentTurretDirection = TurretDirections.Right;
             swivelEy();
         } else if (turretTurningMotor.getSelectedSensorPosition() >= RIGHT_STOP) {
-            System.out.println("right stop");
-            leftMost = false;
+            currentTurretDirection = TurretDirections.Left;
             swivelEy();
         } else if (limelight.canSeeTarget()) {
-            System.out.println("Aiming");
             executeAimPID();
-            // System.out.println("lemon");
         } else {
-            System.out.println("swivel");
             swivelEy();
         }
     }
