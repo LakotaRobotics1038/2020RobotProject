@@ -69,7 +69,6 @@ public class Spinner implements Subsystem {
 
         } else if (colorEnabled) {
             String gameData = DriverStation.getInstance().getGameSpecificMessage();
-            // TODO pi reader isn't going to read color sensor, a java class will
             if (getCurrentColor() != gameData) {
                 spinnerMotor.set(.5);
             } else {
@@ -115,11 +114,5 @@ public class Spinner implements Subsystem {
         else {
             return "Unknown";
         }
-
     }
-
-    // @Override
-    // protected void initDefaultCommand() {
-    // // TODO Auto-generated method stub
-    // }
 }

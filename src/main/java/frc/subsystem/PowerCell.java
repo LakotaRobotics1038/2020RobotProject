@@ -1,26 +1,23 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.subsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.CANSpark1038;
-import edu.wpi.first.wpilibj.DigitalInput;
 
-public class PowerCell {
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
+import frc.robot.CANSpark1038;
+
+public class PowerCell implements Subsystem {
     // ports
-    private final int shuttleMotorPort = 62;
-    private final int laserStartPort = 6;
-    private final int laserEndPort = 5;
+    private final int SHUTTLE_MOTOR_PORT = 62;
+    private final int START_LASER_PORT = 6;
+    private final int END_LASER_PORT = 5;
     private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;
+    private final int ENCODER_OFFSET = 500;
 
     // shuttle motor and speed
-    private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);
+    private CANSpark1038 shuttleMotor = new CANSpark1038(SHUTTLE_MOTOR_PORT, MotorType.kBrushless);
     private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
     private final static double shuttleMotorSpeed = 1.0;
 
@@ -28,8 +25,8 @@ public class PowerCell {
     private static PowerCell powerCell;
 
     // photoeyes
-    private DigitalInput laserStart = new DigitalInput(laserStartPort);
-    private DigitalInput laserEnd = new DigitalInput(laserEndPort);
+    private DigitalInput laserStart = new DigitalInput(START_LASER_PORT);
+    private DigitalInput laserEnd = new DigitalInput(END_LASER_PORT);
 
     // manual drive
     private boolean manualStorageForward = false;
@@ -54,7 +51,7 @@ public class PowerCell {
 
     private PowerCell() {
         shuttleMotor.setInverted(true);
-        shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
+        shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {
@@ -88,14 +85,9 @@ public class PowerCell {
      * runs the ball storage
      */
     public void periodic() {
-        // System.out.println("kas" + laserStart.get() + " " + laserEnd.get());
-        // System.out.println("sto" + manualStorageForward + " " +
-        // manualStorageReverse);
-        // System.out.println(shuttleMotorEncoder.getPosition());
         if (!manualStorageForward && !manualStorageReverse) {
-            if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())// see ball at start                                                                                   // sensor
+            if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())                                                                                // sensor
             {
-                // System.out.println(shuttleMotorEncoder.getPosition());
                 shuttleMotor.set(shuttleMotorSpeed);
             } else if (laserStart.get() && !laserEnd.get()) {
                 shuttleMotorEncoder.setPosition(0);
@@ -104,10 +96,10 @@ public class PowerCell {
             }
         } else if (manualStorageForward) {
             shuttleMotor.set(shuttleMotorSpeed);
-            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
         } else if (manualStorageReverse) {
             shuttleMotor.set(-shuttleMotorSpeed);
-            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + 500);
+            shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
         }
     }
 }

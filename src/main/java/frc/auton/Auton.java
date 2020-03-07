@@ -21,10 +21,4 @@ public class Auton extends SequentialCommandGroup {
     public Auton() {
        
     }
-
-    /**
-     * Return command group with auton steps
-     * 
-     * @return command group with auton steps
-     */
 }

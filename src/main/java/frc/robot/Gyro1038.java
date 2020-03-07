@@ -30,7 +30,6 @@ public class Gyro1038 extends GyroBase {
 	private Gyro1038() {
 		I2CBus = new I2C(I2C.Port.kOnboard, DEVICE_ADDRESS);
 		calibrate();
-
 	}
 
 	/**
@@ -100,8 +99,5 @@ public class Gyro1038 extends GyroBase {
 	}
 
     @Override
-    public void close() throws Exception {
-        // TODO Auto-generated method stub
-
-    }
+    public void close() throws Exception {}
 }

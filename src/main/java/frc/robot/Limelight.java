@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -15,26 +8,33 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * Add your docs here.
  */
 public class Limelight {
-    //LimeLight instance
+    // LimeLight instance
     private static Limelight limelight;
 
-    //network table
+    // Network table
     private static NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
     private static NetworkTable table = tableInstance.getTable("limelight");
-    
-    //network table values
-    NetworkTableEntry tv = table.getEntry("tv");
-    NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
+
+    // Network table values
+    private NetworkTableEntry tv = table.getEntry("tv");
+    private NetworkTableEntry tx = table.getEntry("tx");
+    private NetworkTableEntry ty = table.getEntry("ty");
+
     private double valid_target;
     private double x;
     private double y;
 
-    //offset default value
+    // offset default value
     private int defaultOffset = 0;
-    
+
+    public enum LEDStates {
+        On(0), Off(1);
+        private int value; 
+        private LEDStates(int value) { this.value = value; }
+    };
+
     private Limelight() {
-        turnLEDsOff();
+       changeLEDStatus(LEDStates.Off);
     }
 
     /**
@@ -47,7 +47,7 @@ public class Limelight {
             System.out.println("Creating limelight");
             try {
                 limelight = new Limelight();
-            } catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 System.out.println("uh-oh " + e);
             }
         }
@@ -59,10 +59,9 @@ public class Limelight {
      */
     public void read() {
         valid_target = tv.getDouble(defaultOffset);
-        //System.out.println(valid_target);
         x = tx.getDouble(defaultOffset);
         y = ty.getDouble(defaultOffset);
-        //System.out.println(valid_target + ", " + x + ", " + y);
+        // System.out.println(valid_target + ", " + x + ", " + y);
     }
 
     /**
@@ -71,29 +70,13 @@ public class Limelight {
      * @return whether or not the robot has a target
      */
     public boolean canSeeTarget() {
-        if (valid_target == 1) {
-           // System.out.println("Target found");
-            return true;
-        }
-        else {
-            //System.out.println("No target seen");
-            return false;
-        }
+        return valid_target == 1;
     }
 
     /**
      * how far off center horizontally the robot is
      */
     public double getXOffset() {
-        // if they tell me what to do i wont do it
-        // it ha been 5 minutes since they told me to do something
-        // i am starting to wonder if they are all idiots. 
-        // drew and sam are talking nerd talk
-        // sam is slacking but still talking nerd
-        // i am very bored and want chocy milk
-        // i won the war over the yard stick
-        // they still have not noticed              -Shawn Tomas
-
         x = tx.getDouble(defaultOffset);
         return x;
     }
@@ -103,16 +86,20 @@ public class Limelight {
      * @return distance from center vertically
      */
     public double getYOffset() {
+        /* if they tell me what to do i wont do it	
+         * it ha been 5 minutes since they told me to do something	
+         * i am starting to wonder if they are all idiots. 	
+         * drew and sam are talking nerd talk	
+         * sam is slacking but still talking nerd	
+         * i am very bored and want chocy milk	
+         * i won the war over the yard stick	
+         * they still have not noticed              -Shawn Tomas
+         */
         y = ty.getDouble(defaultOffset);
         return y;
     }
 
-    public void turnLEDsOff() {
-        table.getEntry("ledMode").setDouble(1);
+    public void changeLEDStatus(LEDStates state) {
+        table.getEntry("ledMode").setDouble(state.value);
     }
-    
-    public void turnLEDsOn() {
-        table.getEntry("ledMode").setDouble(0);
-    }
-
 }

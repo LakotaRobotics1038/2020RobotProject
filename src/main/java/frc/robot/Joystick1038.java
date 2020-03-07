@@ -33,6 +33,11 @@ public class Joystick1038 extends Joystick {
         super(port);
 	}
 	
+	/**
+	 * Returns the state of the POV on the controller
+	 * 
+	 * @return value of POV
+	 */
 	public int getPOV() {
 		return getPOV(0);
 	}
