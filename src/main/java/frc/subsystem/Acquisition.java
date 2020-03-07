@@ -17,7 +17,7 @@ public class Acquisition implements Subsystem {
     private final int LOWER_ACUQUISITION_CHANNEL = 3;
 
     // Solenoid
-    private DoubleSolenoid acquisitionOut = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
+    private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
     private AcquisitionStates acquisitionState = AcquisitionStates.In;
     private enum AcquisitionStates {
         In, Out
@@ -51,12 +51,12 @@ public class Acquisition implements Subsystem {
     public void toggleAcquisitionPosition() {
         switch (acquisitionState) {
             case In:
-                acquisitionOut.set(Value.kReverse);
+                acquisitionSolenoid.set(Value.kReverse);
                 acquisitionState = AcquisitionStates.Out;
                 break;
 
             case Out:
-                acquisitionOut.set(Value.kForward);
+                acquisitionSolenoid.set(Value.kForward);
                 acquisitionState = AcquisitionStates.In;
                 break;
         }
