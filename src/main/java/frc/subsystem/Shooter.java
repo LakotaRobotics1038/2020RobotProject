@@ -32,8 +32,8 @@ public class Shooter implements Subsystem {
         Left, Right
     }
 
-    private final static int RIGHT_STOP = 110000; // 114500
-    private final static int LEFT_STOP = -14200;
+    private final static int LEFT_STOP = 110000; // 114500
+    private final static int RIGHT_STOP = -14200;
     private static double swivelSpeed = 0.2;
 
     // Limelight instance
@@ -232,10 +232,10 @@ public class Shooter implements Subsystem {
         if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
             stopTurret();
         } else if (turretTurningMotor.getSelectedSensorPosition() > 0) {
-            currentTurretDirection = TurretDirections.Left;
+            currentTurretDirection = TurretDirections.Right;
             swivelEy();
         } else if (turretTurningMotor.getSelectedSensorPosition() < 0) {
-            currentTurretDirection = TurretDirections.Right;
+            currentTurretDirection = TurretDirections.Left;
             swivelEy();
         }
     }
@@ -244,11 +244,11 @@ public class Shooter implements Subsystem {
         if (hardStop.get()) {
             turretTurningMotor.setSelectedSensorPosition(0);
         }
-        if (turretTurningMotor.getSelectedSensorPosition() <= LEFT_STOP) {
-            currentTurretDirection = TurretDirections.Right;
-            swivelEy();
-        } else if (turretTurningMotor.getSelectedSensorPosition() >= RIGHT_STOP) {
+        if (turretTurningMotor.getSelectedSensorPosition() <= RIGHT_STOP) {
             currentTurretDirection = TurretDirections.Left;
+            swivelEy();
+        } else if (turretTurningMotor.getSelectedSensorPosition() >= LEFT_STOP) {
+            currentTurretDirection = TurretDirections.Right;
             swivelEy();
         } else if (limelight.canSeeTarget()) {
             executeAimPID();
