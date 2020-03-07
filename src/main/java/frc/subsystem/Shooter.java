@@ -92,7 +92,7 @@ public class Shooter implements Subsystem {
      */
     public void feedBall() {
         if (isFinished()) {
-            storage.feedShooter(feedSpeed);
+            storage.enableManualStorage(ManualStorageModes.Forward);
         }
     }
 
@@ -100,7 +100,7 @@ public class Shooter implements Subsystem {
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-        storage.feedShooter(0);
+        storage.disableManualStorage();
     }
 
     /**
