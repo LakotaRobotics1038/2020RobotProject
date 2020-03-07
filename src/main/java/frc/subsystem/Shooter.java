@@ -196,10 +196,10 @@ public class Shooter implements Subsystem {
     public void swivelEy() {
         switch (currentTurretDirection) {
             case Left:
-                turretTurningMotor.set(-swivelSpeed);
+                turretTurningMotor.set(swivelSpeed);
                 break;
             case Right:
-                turretTurningMotor.set(swivelSpeed);
+                turretTurningMotor.set(-swivelSpeed);
                 break;
         }
     }
