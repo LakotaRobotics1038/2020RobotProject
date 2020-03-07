@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.auton.Auton;
 import frc.auton.ShootingAuton;
 import frc.robot.Limelight.LEDStates;
-import frc.subsystem.PowerCell;
+import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
-import frc.subsystem.PowerCell.ManualStorageModes;
+import frc.subsystem.Storage.ManualStorageModes;
 import frc.subsystem.Shooter.TurretDirections;
 
 /**
@@ -52,8 +52,8 @@ public class Robot extends TimedRobot {
   private final Joystick1038 operatorJoystick = new Joystick1038(1);
   public double multiplyer = .8;
 
-  // Powercell
-  private final PowerCell powerCell = PowerCell.getInstance();
+  // Storage
+  private final Storage storage = Storage.getInstance();
 
   // Aquisition
   private final Acquisition acquisition = Acquisition.getInstance();
@@ -151,7 +151,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     operator();
     driver();
-    powerCell.periodic();
+    storage.periodic();
     SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
     System.out.println(shooter.isFinished());
   }
@@ -242,13 +242,13 @@ public class Robot extends TimedRobot {
     // }
 
     if (operatorJoystick.getLeftTrigger() > .5) {
-      powerCell.enableManualStorage(ManualStorageModes.Forward);
+      storage.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
-      powerCell.enableManualStorage(ManualStorageModes.Forward);
+      storage.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {
-      powerCell.enableManualStorage(ManualStorageModes.Reverse);
+      storage.enableManualStorage(ManualStorageModes.Reverse);
     } else {
-      powerCell.disableManualStorage();
+      storage.disableManualStorage();
     }
 
     if (operatorJoystick.getAButton()) {

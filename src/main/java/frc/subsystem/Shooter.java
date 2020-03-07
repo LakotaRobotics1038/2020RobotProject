@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Limelight;
 import frc.robot.Prox;
 import frc.robot.TalonSRX1038;
-import frc.subsystem.PowerCell;
+import frc.subsystem.Storage;
 
 public class Shooter implements Subsystem {
     // Motor port numbers
@@ -39,8 +39,8 @@ public class Shooter implements Subsystem {
     // Limelight instance
     private Limelight limelight = Limelight.getInstance();
 
-    // PowerCell instance
-    private PowerCell powerCell = PowerCell.getInstance();
+    // Storage instance
+    private Storage storage = Storage.getInstance();
 
     // Position PID for turret
     private final double positionSetpoint = 0.0;
@@ -90,7 +90,7 @@ public class Shooter implements Subsystem {
      */
     public void feedBall() {
         // if (speedPID.atSetpoint()) {
-        powerCell.feedShooter(feedSpeed);
+        storage.feedShooter(feedSpeed);
         // }
     }
 
@@ -98,7 +98,7 @@ public class Shooter implements Subsystem {
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-        powerCell.feedShooter(0);
+        storage.feedShooter(0);
     }
 
     /**
