@@ -26,7 +26,7 @@ public class Shooter implements Subsystem {
     private static Shooter shooter;
 
     // Turret
-    private TurretDirections currentTurretDirection = TurretDirections.Right;
+    private TurretDirections currentTurretDirection = TurretDirections.Left;
 
     public enum TurretDirections {
         Left, Right
