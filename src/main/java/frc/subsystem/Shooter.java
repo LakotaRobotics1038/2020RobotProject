@@ -7,6 +7,7 @@ import frc.robot.Limelight;
 import frc.robot.Prox;
 import frc.robot.TalonSRX1038;
 import frc.subsystem.Storage;
+import frc.subsystem.Storage.ManualStorageModes;
 
 public class Shooter implements Subsystem {
     // Motor port numbers
@@ -44,19 +45,20 @@ public class Shooter implements Subsystem {
 
     // Position PID for turret
     private final double positionSetpoint = 0.0;
-    private final double positionTolerance = .5;
-    private final static double positionP = 0.055; // .15
+    private final double positionTolerance = 1;
+    private final static double positionP = 0.08; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
 
     // Speed PID for shooter
-    private final double speedSetpoint = 0.0;
-    private final double speedTolerance = 0.0;
-    private final static double speedP = 0.0;
+    private final double speedSetpoint = limelight.getShooterSetpoint();
+    private final double speedTolerance = 1000;
+    private final static double speedP = 0.000007;
     private final static double speedI = 0.0;
     private final static double speedD = 0.0;
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
+    private boolean isRunning = false;
 
     // Motor speed for shooter feeder
     private final static double feedSpeed = 1;
@@ -89,9 +91,9 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        // if (speedPID.atSetpoint()) {
-        storage.feedShooter(feedSpeed);
-        // }
+        if (isFinished()) {
+            storage.feedShooter(feedSpeed);
+        }
     }
 
     /**
@@ -125,6 +127,7 @@ public class Shooter implements Subsystem {
     public void executeAimPID() {
         // System.out.println("PID");
         double power = positionPID.calculate(limelight.getXOffset());
+        System.out.println("x " + limelight.getXOffset());
         turretTurningMotor.set(power * 0.5);
     }
 
@@ -132,8 +135,18 @@ public class Shooter implements Subsystem {
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
-        shooterMotor1.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
-        shooterMotor2.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
+        isRunning = true;
+        speedPID.setSetpoint(limelight.getShooterSetpoint());
+        double power = speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()) + limelight.getMotorPower();
+        System.out.println("speed" + shooterMotor1.getSelectedSensorVelocity());
+        System.out.println("setpoint: " + speedPID.getSetpoint());
+        System.out.println("power" + power);
+        shooterMotor1.set(-power);
+        shooterMotor2.set(power);
+    }
+
+    public void disableSpeedPID() {
+        isRunning = false;
     }
 
     public boolean speedOnTarget() {
@@ -183,7 +196,7 @@ public class Shooter implements Subsystem {
      * @return returns if robot is ready to shoot
      */
     public boolean isFinished() {
-        return positionPID.atSetpoint(); /* && speedPID.atSetpoint(); */
+        return positionPID.atSetpoint() && speedPID.atSetpoint() && isRunning;
     }
 
     /**

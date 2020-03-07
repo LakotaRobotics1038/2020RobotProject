@@ -13,7 +13,7 @@ public class Storage implements Subsystem {
     private final int SHUTTLE_MOTOR_PORT = 62;
     private final int START_LASER_PORT = 6;
     private final int END_LASER_PORT = 5;
-    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;
+    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 2;
     private final int ENCODER_OFFSET = 500;
 
     // shuttle motor and speed

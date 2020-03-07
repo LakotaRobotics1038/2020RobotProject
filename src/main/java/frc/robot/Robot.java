@@ -95,7 +95,8 @@ public class Robot extends TimedRobot {
     limelight.read();
     dashboard.update();
     //System.out.println("working");
-    System.out.println(shooter.getTurretEncoder());
+    // System.out.println(limelight.getYOffset());
+    // System.out.println(shooter.getShooterSpeed());
   }
 
   /**
@@ -226,23 +227,24 @@ public class Robot extends TimedRobot {
       prevDDownState = false;
     }
     if (operatorJoystick.getLeftButton()) {
-      // shooter.executeSpeedPID();
+      shooter.executeSpeedPID();
       // TODO: invert shooter motors
-      shooter.shootManually(shooterSpeed);
+      // shooter.shootManually(shooterSpeed);
     } else {
+      shooter.disableSpeedPID();
       shooter.shootManually(0);
     }
-    // if(shooter.speedOnTarget()){
-    // operatorJoystick.setLeftRumble(1);
-    // operatorJoystick.setRightRumble(1);
-    // }
-    // else {
-    // operatorJoystick.setRightRumble(0);
-    // operatorJoystick.setLeftRumble(0);
-    // }
+    if(shooter.isFinished() && operatorJoystick.getLeftButton()){
+    operatorJoystick.setLeftRumble(1);
+    operatorJoystick.setRightRumble(1);
+    }
+    else {
+    operatorJoystick.setRightRumble(0);
+    operatorJoystick.setLeftRumble(0);
+    }
 
     if (operatorJoystick.getLeftTrigger() > .5) {
-      storage.enableManualStorage(ManualStorageModes.Forward);
+      shooter.feedBall();
     } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
       storage.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {
