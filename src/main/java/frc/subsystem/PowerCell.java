@@ -17,7 +17,7 @@ public class PowerCell {
     private final int shuttleMotorPort = 62;
     private final int laserStartPort = 6;
     private final int laserEndPort = 5;
-    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;
+    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 2;
 
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(shuttleMotorPort, MotorType.kBrushless);

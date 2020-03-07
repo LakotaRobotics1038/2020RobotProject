@@ -107,6 +107,16 @@ public class Limelight {
         return y;
     }
 
+    public double getMotorPower() {
+        double power = ty.getDouble(defaultOffset);
+        return power * -.00417 + .55;
+    }
+
+    public double getShooterSetpoint() {
+        double setpoint = ty.getDouble(defaultOffset);
+        return setpoint * -250 + 31000;
+    }
+
     public void turnLEDsOff() {
         table.getEntry("ledMode").setDouble(1);
     }
