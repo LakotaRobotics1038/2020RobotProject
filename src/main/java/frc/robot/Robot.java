@@ -253,7 +253,7 @@ public class Robot extends TimedRobot {
 
     if (operatorJoystick.getAButton()) {
       if (!prevOperatorAState) {
-        shooter.setTurretDirection(TurretDirections.Right);
+        shooter.setTurretDirection(TurretDirections.Left);
         prevOperatorAState = true;
       }
       limelight.changeLEDStatus(LEDStates.On);

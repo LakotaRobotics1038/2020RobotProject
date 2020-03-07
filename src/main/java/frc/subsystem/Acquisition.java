@@ -13,8 +13,8 @@ public class Acquisition implements Subsystem {
     private final int beaterBarPort = 54;
     
     // Solenoid channels
-    private final int RAISE_ACQUISITION_CHANNEL = 2;
-    private final int LOWER_ACUQUISITION_CHANNEL = 3;
+    private final int RAISE_ACQUISITION_CHANNEL = 3;
+    private final int LOWER_ACUQUISITION_CHANNEL = 2;
 
     // Solenoid
     private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
