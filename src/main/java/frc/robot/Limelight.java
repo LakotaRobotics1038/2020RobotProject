@@ -86,6 +86,15 @@ public class Limelight {
      * @return distance from center vertically
      */
     public double getYOffset() {
+        /* if they tell me what to do i wont do it	
+         * it ha been 5 minutes since they told me to do something	
+         * i am starting to wonder if they are all idiots. 	
+         * drew and sam are talking nerd talk	
+         * sam is slacking but still talking nerd	
+         * i am very bored and want chocy milk	
+         * i won the war over the yard stick	
+         * they still have not noticed              -Shawn Tomas
+         */
         y = ty.getDouble(defaultOffset);
         return y;
     }
