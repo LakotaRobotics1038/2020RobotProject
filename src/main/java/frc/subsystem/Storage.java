@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import frc.robot.CANSpark1038;
 
-public class PowerCell implements Subsystem {
+public class Storage implements Subsystem {
     // ports
     private final int SHUTTLE_MOTOR_PORT = 62;
     private final int START_LASER_PORT = 6;
@@ -21,8 +21,8 @@ public class PowerCell implements Subsystem {
     private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
     private final static double shuttleMotorSpeed = 1.0;
 
-    // declares powercell
-    private static PowerCell powerCell;
+    // declares storage
+    private static Storage storage;
 
     // photoeyes
     private DigitalInput laserStart = new DigitalInput(START_LASER_PORT);
@@ -37,19 +37,19 @@ public class PowerCell implements Subsystem {
     }
 
     /**
-     * returns the powercell instance when the robot starts
+     * returns the storage instance when the robot starts
      * 
-     * @return powercell instance
+     * @return storage instance
      */
-    public static PowerCell getInstance() {
-        if (powerCell == null) {
-            System.out.println("creating a new powercell");
-            powerCell = new PowerCell();
+    public static Storage getInstance() {
+        if (storage == null) {
+            System.out.println("creating a new storage");
+            storage = new Storage();
         }
-        return powerCell;
+        return storage;
     }
 
-    private PowerCell() {
+    private Storage() {
         shuttleMotor.setInverted(true);
         shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
     }
