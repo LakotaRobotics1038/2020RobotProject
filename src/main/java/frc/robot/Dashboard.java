@@ -31,9 +31,11 @@ public class Dashboard {
     SmartDashboard.putNumber("Reset Turret Encoder", 0);
     SmartDashboard.putNumber("normal Increment", .1);
     SmartDashboard.putNumber("brake increment", .1);
+    SmartDashboard.putNumber("Shooter Angle", 0);
   }
 
   public void update() {
+    SmartDashboard.putNumber("Shooter Angle", shooter.getTurretEncoder());
     SmartDashboard.putNumber("Turret Encoder", shooter.getTurretEncoder());
     SmartDashboard.putBoolean("Shooter Hard Stop", shooter.getHardStop());
     SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());

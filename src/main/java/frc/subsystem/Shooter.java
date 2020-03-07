@@ -26,7 +26,7 @@ public class Shooter implements Subsystem {
 
     // swerves
     private boolean leftMost = false;
-    private final static int RIGHT_STOP = 114500; // 114500
+    private final static int RIGHT_STOP = 111000; // 114500
     private final static int LEFT_STOP = -14200;
     private static double swivelSpeed = 0.2;
 
@@ -39,7 +39,7 @@ public class Shooter implements Subsystem {
     // position PID for turret
     private final double positionSetpoint = 0.0;
     private final double positionTolerance = .05;
-    private final static double positionP = 0.10; // .15
+    private final static double positionP = 0.055; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
@@ -198,7 +198,7 @@ public class Shooter implements Subsystem {
     }
 
     public void goToCrashPosition() {
-        if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 500) {
+        if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
             stopTurret();
         } else if (turretTurningMotor.getSelectedSensorPosition() > 0) {
             leftMost = false;
@@ -210,9 +210,9 @@ public class Shooter implements Subsystem {
     }
 
     public void move() {
-        // if (hardStop.get()) {
-        // turretTurningMotor.setSelectedSensorPosition(0);
-        // }
+        if (hardStop.get()) {
+        turretTurningMotor.setSelectedSensorPosition(0);
+        }
         if (turretTurningMotor.getSelectedSensorPosition() <= LEFT_STOP) {
             leftMost = true;
             swivelEy();
