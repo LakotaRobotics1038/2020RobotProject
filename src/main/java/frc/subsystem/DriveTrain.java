@@ -1,32 +1,36 @@
-package frc.robot;
+package frc.subsystem;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.CANSpark1038;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-public class DriveTrain extends Subsystem {
-    public enum driveModes {
+
+import frc.robot.CANSpark1038;
+
+public class DriveTrain implements Subsystem {
+    public enum DriveModes {
         tankDrive, singleArcadeDrive, dualArcadeDrive
     };
 
-    public driveModes currentDriveMode = driveModes.dualArcadeDrive;
+    public DriveModes currentDriveMode = DriveModes.dualArcadeDrive;
 
     public final double WHEEL_DIAMETER = 4;
+    private final int HIGH_GEAR_PORT = 0;
+    private final int LOW_GEAR_PORT = 1;
 
-    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(4, 5);
+    public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(LOW_GEAR_PORT, HIGH_GEAR_PORT);
     public boolean isHighGear = false;
 
-    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(53, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(52, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(51, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(50, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(57, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(58, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);//previously 55
+    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
 
-    public CANEncoder CANSparkRightEncoder = CANSparkRightBack.getEncoder();
-    public CANEncoder CANSparkLeftEncoder = CANSparkLeftBack.getEncoder();
+    public CANEncoder CANSparkRightEncoder = new CANEncoder(CANSparkRightBack);
+    public CANEncoder CANSparkLeftEncoder = new CANEncoder(CANSparkLeftBack);
 
     private DifferentialDrive differentialDrive;
     private static DriveTrain driveTrain;
@@ -44,18 +48,21 @@ public class DriveTrain extends Subsystem {
         CANSparkLeftFront.restoreFactoryDefaults();
         CANSparkRightBack.restoreFactoryDefaults();
         CANSparkRightFront.restoreFactoryDefaults();
+
         CANSparkLeftBack.setInverted(true);
         CANSparkLeftFront.setInverted(true);
         CANSparkRightBack.setInverted(true);
         CANSparkRightFront.setInverted(true);
-        CANSparkLeftBack.setIdleMode(IdleMode.kBrake);
-        CANSparkLeftFront.setIdleMode(IdleMode.kBrake);
-        CANSparkRightBack.setIdleMode(IdleMode.kBrake);
-        CANSparkRightFront.setIdleMode(IdleMode.kBrake);
+
+        CANSparkLeftBack.setIdleMode(IdleMode.kCoast);
+        CANSparkLeftFront.setIdleMode(IdleMode.kCoast);
+        CANSparkRightBack.setIdleMode(IdleMode.kCoast);
+        CANSparkRightFront.setIdleMode(IdleMode.kCoast);
+
         CANSparkRightFront.follow(CANSparkRightBack);
         CANSparkLeftFront.follow(CANSparkLeftBack);
+        
         differentialDrive = new DifferentialDrive(CANSparkLeftBack, CANSparkRightBack);
-
     }
 
     // Get and return distance driven by the left of the robot in inches
@@ -69,11 +76,11 @@ public class DriveTrain extends Subsystem {
     }
 
     public double getCANSparkRightEncoder() {
-        return CANSparkRightEncoder.getPosition() * -1;
+        return -CANSparkRightEncoder.getPosition();
     }
 
     public double getCANSparkLeftEncoder() {
-        return CANSparkLeftEncoder.getPosition() * -1;
+        return -CANSparkLeftEncoder.getPosition();
     }
 
     // Pneumatics
@@ -87,18 +94,22 @@ public class DriveTrain extends Subsystem {
         GearChangeSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
+    public void resetEncoders() {
+        CANSparkRightEncoder.setPosition(0);
+        CANSparkLeftEncoder.setPosition(0);
+    }
+
     // Switch between drive modes
     public void driveModeToggler() {
-
         switch (currentDriveMode) {
         case tankDrive:
-            currentDriveMode = driveModes.singleArcadeDrive;
+            currentDriveMode = DriveModes.singleArcadeDrive;
             break;
         case singleArcadeDrive:
-            currentDriveMode = driveModes.dualArcadeDrive;
+            currentDriveMode = DriveModes.dualArcadeDrive;
             break;
         case dualArcadeDrive:
-            currentDriveMode = driveModes.tankDrive;
+            currentDriveMode = DriveModes.tankDrive;
             break;
         default:
             System.out.println("Help I have fallen and I can't get up!");
@@ -119,10 +130,5 @@ public class DriveTrain extends Subsystem {
     // Drive robot using 2 sticks (input ranges -1 to 1)
     public void dualArcadeDrive(double yaxis, double xaxis) {
         differentialDrive.arcadeDrive(yaxis, xaxis, true);
-    }
-
-    @Override
-    protected void initDefaultCommand() {
-
     }
 }
