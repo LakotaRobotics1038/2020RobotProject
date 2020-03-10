@@ -15,7 +15,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 
 import frc.auton.Auton;
-import frc.auton.ShootingAuton;
+import frc.auton.DriveAuton;
+import frc.auton.Shooting3BallAuton;
+import frc.auton.commands.AcquireCommand;
+import frc.auton.Shooting5BallAuton;
+import frc.auton.AcquisitionAuton;
 import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
@@ -32,8 +36,10 @@ import frc.subsystem.Shooter.TurretDirections;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kDriveAuto = "Drive Auto";
+  private static final String k3BallAuto = "3 Ball Auto";
+  private static final String k5BallAuto = "5 Ball Auto";
+  private static final String k8BallAuto = "8 Ball Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private CommandScheduler schedule = CommandScheduler.getInstance();
@@ -80,8 +86,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     shooter.resetTurretEncoder();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("Drive Straight With Shooting", kCustomAuto);
+    m_chooser.setDefaultOption("Drive Auto", kDriveAuto);
+    m_chooser.addOption("3 Ball Auto", k3BallAuto);
+    m_chooser.addOption("5 Ball Auto", k5BallAuto);
+    m_chooser.addOption("8 Ball Auto", k8BallAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -110,21 +118,26 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     System.out.println("Auton started");
     m_autoSelected = m_chooser.getSelected();
-    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
     switch (m_autoSelected) {
-      case kCustomAuto:
-        autonPath = new ShootingAuton();
-        // acquisition.toggleAcquisitionPosition();
+      case kDriveAuto:
+        autonPath = new DriveAuton();
+        System.out.println("Selected drive auton");
+        break;
+      case k3BallAuto:
+        autonPath = new Shooting3BallAuton();
         System.out.println("Selected shoot auton");
         break;
-      case kDefaultAuto:
-      default:
-      
-        autonPath = new ShootingAuton();
-        // autonPath = new ForwardAuton().select();
-        // acquisition.toggleAcquisitionPosition();
+      case k5BallAuto:
+        autonPath = new Shooting5BallAuton();
+        System.out.println("Selected acquisition auton");
+        break;
+      case k8BallAuto:
+        autonPath = new DriveAuton();
         System.out.println("Selected drive auton");
+        break;
+      default:
+        System.out.println("how? just how? also why?");
         break;
     }
 

@@ -5,14 +5,14 @@ import frc.auton.commands.ShootCommand;
 import frc.auton.commands.AimCommand;
 
 
-public class ShootingAuton extends Auton{
-    public ShootingAuton() {
+public class Shooting3BallAuton extends Auton{
+    public Shooting3BallAuton() {
         super();
         
         addCommands(
             new AimCommand(),
             new ShootCommand(),
-            new DriveStraightCommand(65)
+            new DriveStraightCommand(0) //65
         );
     }
 }

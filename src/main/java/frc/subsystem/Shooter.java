@@ -172,7 +172,7 @@ public class Shooter implements Subsystem {
 
     public void periodic() {
         if (isEnabled) {
-            executeAimPID();
+            //executeAimPID();
             executeSpeedPID();
         }
     }
@@ -197,6 +197,10 @@ public class Shooter implements Subsystem {
      */
     public boolean isFinished() {
         return positionPID.atSetpoint() && speedPID.atSetpoint() && isRunning;
+    }
+
+    public boolean turretOnTarget() {
+        return positionPID.atSetpoint() && limelight.canSeeTarget();
     }
 
     /**

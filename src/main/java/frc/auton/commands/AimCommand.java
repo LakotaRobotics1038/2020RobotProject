@@ -1,10 +1,12 @@
 package frc.auton.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.Limelight;
 import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Shooter;
+import frc.subsystem.Shooter.TurretDirections;
 
 public class AimCommand extends CommandBase {
     private Shooter shooter = Shooter.getInstance();
@@ -15,23 +17,27 @@ public class AimCommand extends CommandBase {
 
     private final int TURRET_90_DEGREES = 39500;
 
+    private final int END_TIME = 4;
+
+
     @Override
     public void initialize() {
+        shooter.setTurretDirection(TurretDirections.Left);
         limelight.changeLEDStatus(LEDStates.On);
-        turned = false;
     }
 
     @Override
     public void execute() {
         shooter.shootManually(-.55);
+        shooter.move();
 
         // TODO: Get the limelight working here
-        if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
-            shooter.turnTurret(TURRET_SPEED);
-        } else {
-            shooter.turnTurret(0);
-            turned = true;
-        }
+        // if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
+        //      shooter.turnTurret(TURRET_SPEED);
+        // } else {
+        //     shooter.turnTurret(0);
+        //      turned = true;
+        // }
     }
 
     @Override
@@ -41,6 +47,7 @@ public class AimCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return turned;
+
+        return (Timer.getMatchTime() <= END_TIME && shooter.turretOnTarget());
     }
 }
