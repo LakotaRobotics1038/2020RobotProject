@@ -2,6 +2,7 @@ package frc.auton;
 
 import frc.auton.commands.DriveStraightCommand;
 import frc.auton.commands.ShootCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.auton.commands.AimCommand;
 
 
@@ -10,9 +11,12 @@ public class Shooting3BallAuton extends Auton{
         super();
         
         addCommands(
-            new AimCommand(),
-            new ShootCommand(),
-            new DriveStraightCommand(0) //65
+            new AimCommand(11),
+            new ParallelCommandGroup(
+                new ShootCommand(6),
+                new AimCommand(6)
+            ),
+            new DriveStraightCommand(200)
         );
     }
 }

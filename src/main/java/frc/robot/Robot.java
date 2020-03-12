@@ -17,9 +17,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.auton.Auton;
 import frc.auton.DriveAuton;
 import frc.auton.Shooting3BallAuton;
-import frc.auton.commands.AcquireCommand;
 import frc.auton.Shooting5BallAuton;
-import frc.auton.AcquisitionAuton;
 import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
@@ -102,7 +100,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     limelight.read();
     dashboard.update();
-    //System.out.println("working");
+    System.out.println(shooter.getTurretEncoder());
     // System.out.println(limelight.getYOffset());
     // System.out.println(shooter.getShooterSpeed());
   }
@@ -223,37 +221,19 @@ public class Robot extends TimedRobot {
       prevOperatorYState = false;
     }
 
-    // if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
-    // spinner.setRotationEnabled();
-    // }
-    // else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
-    // spinner.setcolorEnabled();
-    // }
-    if (operatorJoystick.getBButton() && !prevDUpState) {
-      shooterSpeed -= .05;
-      prevDUpState = true;
-    } else if (operatorJoystick.getXButton() && !prevDDownState) {
-      shooterSpeed += .05;
-      prevDDownState = true;
-    } else if (!operatorJoystick.getXButton() && !operatorJoystick.getBButton()) {
-      prevDUpState = false;
-      prevDDownState = false;
-    }
     if (operatorJoystick.getLeftButton()) {
       shooter.executeSpeedPID();
-      // TODO: invert shooter motors
-      // shooter.shootManually(shooterSpeed);
     } else {
       shooter.disableSpeedPID();
       shooter.shootManually(0);
     }
     if(shooter.isFinished() && operatorJoystick.getLeftButton()){
-    operatorJoystick.setLeftRumble(1);
-    operatorJoystick.setRightRumble(1);
+      operatorJoystick.setLeftRumble(1);
+      operatorJoystick.setRightRumble(1);
     }
     else {
-    operatorJoystick.setRightRumble(0);
-    operatorJoystick.setLeftRumble(0);
+      operatorJoystick.setRightRumble(0);
+      operatorJoystick.setLeftRumble(0);
     }
 
     if (operatorJoystick.getLeftTrigger() > .5) {
@@ -266,7 +246,10 @@ public class Robot extends TimedRobot {
       storage.disableManualStorage();
     }
 
-    if (operatorJoystick.getAButton()) {
+    if(operatorJoystick.getBButton() || driverJoystick.getBButton()) {
+      shooter.holdPosition();
+    }
+    else if (operatorJoystick.getAButton()) {
       if (!prevOperatorAState) {
         shooter.setTurretDirection(TurretDirections.Left);
         prevOperatorAState = true;

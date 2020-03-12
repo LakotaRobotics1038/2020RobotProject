@@ -1,5 +1,7 @@
 package frc.subsystem;
 
+import java.util.function.ToDoubleFunction;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -33,8 +35,8 @@ public class Shooter implements Subsystem {
         Left, Right
     }
 
-    private final static int LEFT_STOP = 110000; // 114500
-    private final static int RIGHT_STOP = -14200;
+    private final static int LEFT_STOP = 242; // 114500
+    private final static int RIGHT_STOP = -31;
     private static double swivelSpeed = 0.2;
 
     // Limelight instance
@@ -221,12 +223,12 @@ public class Shooter implements Subsystem {
         }
     }
 
-    public int getTurretEncoder() {
-        return turretTurningMotor.getSelectedSensorPosition();
+    public double getTurretEncoder() {
+        return turretTurningMotor.getSelectedSensorPosition()*180.00/82000.00;
     }
 
-    public int getShooterSpeed() {
-        return shooterMotor1.getSelectedSensorVelocity();
+    public double getShooterSpeed() {
+        return shooterMotor1.getSelectedSensorVelocity()/4100.00;
     }
 
     public boolean getHardStop() {
@@ -245,6 +247,8 @@ public class Shooter implements Subsystem {
         return currentTurretDirection;
     }
 
+    
+
     public void goToCrashPosition() {
         if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
             stopTurret();
@@ -255,6 +259,10 @@ public class Shooter implements Subsystem {
             currentTurretDirection = TurretDirections.Left;
             swivelEy();
         }
+    }
+
+    public void holdPosition() {
+        turretTurningMotor.set(0);
     }
 
     public void move() {

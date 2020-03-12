@@ -110,6 +110,6 @@ public class Limelight {
     
     public double getShooterSetpoint() {
         double setpoint = ty.getDouble(defaultOffset);
-        return setpoint * -250 + 31000;
+        return (setpoint * -250 + 31000)/(4100.00);
     }
 }

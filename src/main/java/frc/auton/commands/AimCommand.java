@@ -17,7 +17,11 @@ public class AimCommand extends CommandBase {
 
     private final int TURRET_90_DEGREES = 39500;
 
-    private final int END_TIME = 4;
+    private final double END_TIME;
+
+    public AimCommand(double endTime) {
+        END_TIME = endTime;
+    }
 
 
     @Override
@@ -28,7 +32,7 @@ public class AimCommand extends CommandBase {
 
     @Override
     public void execute() {
-        shooter.shootManually(-.55);
+        shooter.executeSpeedPID();
         shooter.move();
 
         // TODO: Get the limelight working here
@@ -47,7 +51,6 @@ public class AimCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-
-        return (Timer.getMatchTime() <= END_TIME && shooter.turretOnTarget());
+        return (Timer.getMatchTime() <= END_TIME && shooter.turretOnTarget() && shooter.speedOnTarget());
     }
 }

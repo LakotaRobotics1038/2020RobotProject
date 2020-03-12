@@ -8,7 +8,10 @@
 package frc.auton;
 
 import frc.auton.commands.AimCommand;
+import frc.auton.commands.DriveStraightCommand;
 import frc.auton.commands.ShootCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.auton.commands.AcquireCommand;
 
 /**
  * Add your docs here.
@@ -18,9 +21,16 @@ public class Shooting5BallAuton extends Auton {
         super();
         
         addCommands(
-            new AcquisitionAuton(),
-            new AimCommand(),
-            new ShootCommand()
+            new ParallelCommandGroup(
+                new AcquireCommand(8),
+                new DriveStraightCommand(200)
+            ),
+            new AimCommand(4),
+            new ParallelCommandGroup(
+                new AimCommand(0),
+                new AcquireCommand(0),
+                new ShootCommand(0)
+            )
         );
     }
 

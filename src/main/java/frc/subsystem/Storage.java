@@ -13,13 +13,14 @@ public class Storage implements Subsystem {
     private final int SHUTTLE_MOTOR_PORT = 62;
     private final int START_LASER_PORT = 6;
     private final int END_LASER_PORT = 5;
-    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 2;
+    private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;
     private final int ENCODER_OFFSET = 500;
 
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(SHUTTLE_MOTOR_PORT, MotorType.kBrushless);
     private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
     private final static double shuttleMotorSpeed = 1.0;
+    
 
     // declares storage
     private static Storage storage;
@@ -52,6 +53,7 @@ public class Storage implements Subsystem {
     private Storage() {
         shuttleMotor.setInverted(true);
         shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
+        shuttleMotorEncoder.setPositionConversionFactor(47/2);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {

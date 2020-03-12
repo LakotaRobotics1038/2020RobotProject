@@ -16,11 +16,13 @@ public class AcquireCommand extends CommandBase {
 
   Acquisition acquisition = Acquisition.getInstance();
   Storage storage = Storage.getInstance();
+
+  private static double END_TIME;
   /**
    * Creates a new MoveAcquisitionCommand.
    */
-  public AcquireCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public AcquireCommand(double endTime) {
+    END_TIME = endTime;
   }
 
   // Called when the command is initially scheduled.
@@ -47,6 +49,6 @@ public class AcquireCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Timer.getMatchTime() <= 8;
+    return Timer.getMatchTime() <= END_TIME;
   }
 }
