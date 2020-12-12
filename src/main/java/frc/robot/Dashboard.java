@@ -15,7 +15,7 @@ public class Dashboard {
   private DriverStation driverStation = DriverStation.getInstance();
   private Shooter shooter = Shooter.getInstance();
   private Limelight limelight = Limelight.getInstance();
-  private UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
+  //private UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
 
   private final int CAMERA_EXPOSURE =  50;
 
@@ -35,7 +35,7 @@ public class Dashboard {
    * Instantiates dashboard object
    */
   private Dashboard() {
-    visionCam.setExposureManual(CAMERA_EXPOSURE);
+    //visionCam.setExposureManual(CAMERA_EXPOSURE);
     SmartDashboard.putNumber("Match Time", -1);
     SmartDashboard.putNumber("Shooter Angle", 0);
     SmartDashboard.putBoolean("Prox", false);

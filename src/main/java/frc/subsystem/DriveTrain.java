@@ -17,7 +17,7 @@ public class DriveTrain implements Subsystem {
 
     public DriveModes currentDriveMode = DriveModes.dualArcadeDrive;
 
-    public final double WHEEL_DIAMETER = 4;
+    public final double WHEEL_DIAMETER = 6;
     private final int HIGH_GEAR_PORT = 0;
     private final int LOW_GEAR_PORT = 1;
 
@@ -61,6 +61,8 @@ public class DriveTrain implements Subsystem {
 
         CANSparkRightFront.follow(CANSparkRightBack);
         CANSparkLeftFront.follow(CANSparkLeftBack);
+        CANSparkRightEncoder.setPositionConversionFactor(1/24.785587);
+        CANSparkLeftEncoder.setPositionConversionFactor(1/24.785587);
         
         differentialDrive = new DifferentialDrive(CANSparkLeftBack, CANSparkRightBack);
     }

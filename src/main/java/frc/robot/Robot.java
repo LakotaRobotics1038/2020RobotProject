@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 
 import frc.auton.Auton;
-import frc.auton.ShootingAuton;
+import frc.auton.DriveAuton;
+import frc.auton.Shooting3BallAuton;
+import frc.auton.Shooting5BallAuton;
 import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
@@ -32,8 +34,10 @@ import frc.subsystem.Shooter.TurretDirections;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kDriveAuto = "Drive Auto";
+  private static final String k3BallAuto = "3 Ball Auto";
+  private static final String k5BallAuto = "5 Ball Auto";
+  private static final String k8BallAuto = "8 Ball Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private CommandScheduler schedule = CommandScheduler.getInstance();
@@ -80,8 +84,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     shooter.resetTurretEncoder();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("Drive Straight With Shooting", kCustomAuto);
+    m_chooser.setDefaultOption("Drive Auto", kDriveAuto);
+    m_chooser.addOption("3 Ball Auto", k3BallAuto);
+    m_chooser.addOption("5 Ball Auto", k5BallAuto);
+    m_chooser.addOption("8 Ball Auto", k8BallAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -94,8 +100,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     limelight.read();
     dashboard.update();
-    //System.out.println("working");
     System.out.println(shooter.getTurretEncoder());
+    // System.out.println(limelight.getYOffset());
+    // System.out.println(shooter.getShooterSpeed());
   }
 
   /**
@@ -109,21 +116,26 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     System.out.println("Auton started");
     m_autoSelected = m_chooser.getSelected();
-    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
     switch (m_autoSelected) {
-      case kCustomAuto:
-        autonPath = new ShootingAuton();
-        // acquisition.toggleAcquisitionPosition();
+      case kDriveAuto:
+        autonPath = new DriveAuton();
+        System.out.println("Selected drive auton");
+        break;
+      case k3BallAuto:
+        autonPath = new Shooting3BallAuton();
         System.out.println("Selected shoot auton");
         break;
-      case kDefaultAuto:
-      default:
-      
-        autonPath = new ShootingAuton();
-        // autonPath = new ForwardAuton().select();
-        // acquisition.toggleAcquisitionPosition();
+      case k5BallAuto:
+        autonPath = new Shooting5BallAuton();
+        System.out.println("Selected acquisition auton");
+        break;
+      case k8BallAuto:
+        autonPath = new DriveAuton();
         System.out.println("Selected drive auton");
+        break;
+      default:
+        System.out.println("how? just how? also why?");
         break;
     }
 
@@ -209,40 +221,23 @@ public class Robot extends TimedRobot {
       prevOperatorYState = false;
     }
 
-    // if(operatorJoystick.getBButton() && !spinner.getColorEnabled()){
-    // spinner.setRotationEnabled();
-    // }
-    // else if(operatorJoystick.getAButton() && !spinner.getRotationEnabled()) {
-    // spinner.setcolorEnabled();
-    // }
-    if (operatorJoystick.getBButton() && !prevDUpState) {
-      shooterSpeed -= .05;
-      prevDUpState = true;
-    } else if (operatorJoystick.getXButton() && !prevDDownState) {
-      shooterSpeed += .05;
-      prevDDownState = true;
-    } else if (!operatorJoystick.getXButton() && !operatorJoystick.getBButton()) {
-      prevDUpState = false;
-      prevDDownState = false;
-    }
     if (operatorJoystick.getLeftButton()) {
-      // shooter.executeSpeedPID();
-      // TODO: invert shooter motors
-      shooter.shootManually(shooterSpeed);
+      shooter.executeSpeedPID();
     } else {
+      shooter.disableSpeedPID();
       shooter.shootManually(0);
     }
-    // if(shooter.speedOnTarget()){
-    // operatorJoystick.setLeftRumble(1);
-    // operatorJoystick.setRightRumble(1);
-    // }
-    // else {
-    // operatorJoystick.setRightRumble(0);
-    // operatorJoystick.setLeftRumble(0);
-    // }
+    if(shooter.isFinished() && operatorJoystick.getLeftButton()){
+      operatorJoystick.setLeftRumble(1);
+      operatorJoystick.setRightRumble(1);
+    }
+    else {
+      operatorJoystick.setRightRumble(0);
+      operatorJoystick.setLeftRumble(0);
+    }
 
     if (operatorJoystick.getLeftTrigger() > .5) {
-      storage.enableManualStorage(ManualStorageModes.Forward);
+      shooter.feedBall();
     } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
       storage.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {
@@ -251,7 +246,10 @@ public class Robot extends TimedRobot {
       storage.disableManualStorage();
     }
 
-    if (operatorJoystick.getAButton()) {
+    if(operatorJoystick.getBButton() || driverJoystick.getBButton()) {
+      shooter.holdPosition();
+    }
+    else if (operatorJoystick.getAButton()) {
       if (!prevOperatorAState) {
         shooter.setTurretDirection(TurretDirections.Left);
         prevOperatorAState = true;

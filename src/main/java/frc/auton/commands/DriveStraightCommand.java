@@ -15,9 +15,10 @@ public class DriveStraightCommand extends CommandBase {
 	private final double END_DRIVE_ROTATION = 0.0;
 	private final double TOLERANCE = 1.9;
 
-	private final static double dP = 0.150; // .04 proto
-	private final static double dI = 0.000;
-	private final static double dD = 0.002;
+	private final static double dP = 0.001; // .04 proto
+	private final static double dI = 0.001;
+	private final static double dD = 0.000;
+	private static double dSetpoint;
 	private final static double tP = 0.200; // .23 proto
 	private final static double tI = 0.001;
 	private final static double tD = 0.000;
@@ -40,7 +41,9 @@ public class DriveStraightCommand extends CommandBase {
 
 
 		// *12 Converts inches to feet
-		drivePID.setSetpoint(setpoint * 12 + drive.getLeftDriveEncoderDistance());
+		dSetpoint = setpoint;
+		drivePID.setSetpoint(setpoint);
+		System.out.println("setpoint" + drivePID.getSetpoint());
 		drivePID.setTolerance(TOLERANCE);
 		drivePID.disableContinuousInput();
 		SmartDashboard.putData("Controls/Drive Straight", drivePID);
@@ -57,6 +60,8 @@ public class DriveStraightCommand extends CommandBase {
 		gyroSensor.reset();
 		turnPID.setSetpoint(gyroSensor.getAngle());
 		drive.resetEncoders();
+		// drivePID.setSetpoint(dSetpoint);
+		// System.out.println("setpoint" + drivePID.getSetpoint());
 		// turnPID.setInputRange(0, 359);
 	}
 
@@ -67,7 +72,7 @@ public class DriveStraightCommand extends CommandBase {
 		// TODO incorperate the turnPID calculate.
 		drive.tankDrive(distancePID, distancePID);
 	
-		System.out.println("dist out: " + distancePID + " ang out: " + " ang sp: " + turnPID.getSetpoint() + "ang: " + gyroSensor.getAngle());
+		System.out.println("power: " + distancePID + " encoders: " + drive.getLeftDriveEncoderDistance());
 	}
 
 	@Override
