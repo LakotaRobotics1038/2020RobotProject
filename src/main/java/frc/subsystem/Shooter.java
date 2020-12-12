@@ -213,6 +213,10 @@ public class Shooter implements Subsystem {
     }
 
     public void swivelEy() {
+        /*--------------------------------------------------------------------------------------*/
+        /* Clue #9:                                                                             */
+        /* This is one way to accomplish a toggle. Find the other way, used for acquisition.    */
+        /*--------------------------------------------------------------------------------------*/
         switch (currentTurretDirection) {
             case Left:
                 turretTurningMotor.set(swivelSpeed);
@@ -279,6 +283,10 @@ public class Shooter implements Subsystem {
             executeAimPID();
         } else {
             swivelEy();
+            /*--------------------------------------------------*/
+            /* Clue #8:                                         */
+            /* Find the definition of the "swivelEy()" method.  */
+            /*--------------------------------------------------*/
         }
     }
 }

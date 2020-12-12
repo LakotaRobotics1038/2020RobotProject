@@ -33,6 +33,10 @@ public class AimCommand extends CommandBase {
     @Override
     public void execute() {
         shooter.executeSpeedPID();
+        /*----------------------------------------------*/
+        /* Clue #7:                                     */
+        /* Find the definition of the "move()" method.  */
+        /*----------------------------------------------*/
         shooter.move();
 
         // TODO: Get the limelight working here

@@ -1,9 +1,13 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
+/*--------------------------------------------------------*/
+/* Welcome to the Controls 2021 Training Scavenger Hunt!  */
+/* Presented by Courtney Lyden and Drew Friend.           */
+/* You will be given clues that will lead you to specific */
+/* places within the code from last year. When you get    */
+/* to the correct spot, you will find the next clue.      */
+/* The first clue is:                                     */
+/* This button allows you to start grabbing balls.        */
+/* Good luck, and may the odds be ever in your favor!     */
+/*--------------------------------------------------------*/
 
 package frc.robot;
 
@@ -123,6 +127,10 @@ public class Robot extends TimedRobot {
         System.out.println("Selected drive auton");
         break;
       case k3BallAuto:
+      /*--------------------------------------------------*/
+      /* Clue #5:                                         */
+      /* Find the command group for "Shooting3BallAuton." */
+      /*--------------------------------------------------*/
         autonPath = new Shooting3BallAuton();
         System.out.println("Selected shoot auton");
         break;
@@ -206,6 +214,10 @@ public class Robot extends TimedRobot {
   }
 
   public void operator() {
+    /*--------------------------------------------------------*/
+    /* Clue #2:                                               */
+    /* Find the definition of the "runBeaterBarFwd()" method. */
+    /*--------------------------------------------------------*/
     if (operatorJoystick.getRightButton()) {
       acquisition.runBeaterBarFwd();
     } else if (operatorJoystick.getRightTrigger() > .5) {

@@ -9,7 +9,10 @@ import frc.auton.commands.AimCommand;
 public class Shooting3BallAuton extends Auton{
     public Shooting3BallAuton() {
         super();
-        
+        /*------------------------------------------------------*/
+        /* Clue #6:                                             */
+        /* Find the place that the turret is aimed for auton.   */
+        /*------------------------------------------------------*/
         addCommands(
             new AimCommand(11),
             new ParallelCommandGroup(

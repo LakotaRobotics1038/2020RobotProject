@@ -27,6 +27,10 @@ public class Acquisition implements Subsystem {
     private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless);
 
     // Motor speeds
+    /*-----------------------------------------*/
+    /* Clue #4                                 */
+    /* Find where you pick which auton is run. */
+    /*-----------------------------------------*/
     private final static double BEATER_BAR_SPEED = .65;
     
     // Acquisition instance
@@ -65,6 +69,10 @@ public class Acquisition implements Subsystem {
     /**
      * sets the speed that the acquistion will pull the balls into storage
      */
+    /*--------------------------------------------------*/
+    /* Clue #3                                          */
+    /* Find the  numerical value of "BEATER_BAR_SPEED". */
+    /*--------------------------------------------------*/
     public void runBeaterBarFwd() {
         beaterBar.set(BEATER_BAR_SPEED);
     }
