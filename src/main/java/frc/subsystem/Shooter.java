@@ -1,5 +1,7 @@
 package frc.subsystem;
 
+import java.util.function.ToDoubleFunction;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -7,6 +9,7 @@ import frc.robot.Limelight;
 import frc.robot.Prox;
 import frc.robot.TalonSRX1038;
 import frc.subsystem.Storage;
+import frc.subsystem.Storage.ManualStorageModes;
 
 public class Shooter implements Subsystem {
     // Motor port numbers
@@ -32,8 +35,8 @@ public class Shooter implements Subsystem {
         Left, Right
     }
 
-    private final static int LEFT_STOP = 110000; // 114500
-    private final static int RIGHT_STOP = -14200;
+    private final static int LEFT_STOP = 242; // 114500
+    private final static int RIGHT_STOP = -31;
     private static double swivelSpeed = 0.2;
 
     // Limelight instance
@@ -44,19 +47,20 @@ public class Shooter implements Subsystem {
 
     // Position PID for turret
     private final double positionSetpoint = 0.0;
-    private final double positionTolerance = .5;
-    private final static double positionP = 0.055; // .15
+    private final double positionTolerance = 1;
+    private final static double positionP = 0.08; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
 
     // Speed PID for shooter
-    private final double speedSetpoint = 0.0;
-    private final double speedTolerance = 0.0;
-    private final static double speedP = 0.0;
+    private final double speedSetpoint = limelight.getShooterSetpoint();
+    private final double speedTolerance = 1000;
+    private final static double speedP = 0.000007;
     private final static double speedI = 0.0;
     private final static double speedD = 0.0;
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
+    private boolean isRunning = false;
 
     // Motor speed for shooter feeder
     private final static double feedSpeed = 1;
@@ -89,16 +93,16 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        // if (speedPID.atSetpoint()) {
-        storage.feedShooter(feedSpeed);
-        // }
+        if (isFinished()) {
+            storage.enableManualStorage(ManualStorageModes.Forward);
+        }
     }
 
     /**
      * stops feeding balls into shooter
      */
     public void noFeedBall() {
-        storage.feedShooter(0);
+        storage.disableManualStorage();
     }
 
     /**
@@ -125,6 +129,7 @@ public class Shooter implements Subsystem {
     public void executeAimPID() {
         // System.out.println("PID");
         double power = positionPID.calculate(limelight.getXOffset());
+        System.out.println("x " + limelight.getXOffset());
         turretTurningMotor.set(power * 0.5);
     }
 
@@ -132,8 +137,18 @@ public class Shooter implements Subsystem {
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
-        shooterMotor1.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
-        shooterMotor2.set(speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()));
+        isRunning = true;
+        speedPID.setSetpoint(limelight.getShooterSetpoint());
+        double power = speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()) + limelight.getMotorPower();
+        System.out.println("speed" + shooterMotor1.getSelectedSensorVelocity());
+        System.out.println("setpoint: " + speedPID.getSetpoint());
+        System.out.println("power" + power);
+        shooterMotor1.set(-power);
+        shooterMotor2.set(power);
+    }
+
+    public void disableSpeedPID() {
+        isRunning = false;
     }
 
     public boolean speedOnTarget() {
@@ -159,7 +174,7 @@ public class Shooter implements Subsystem {
 
     public void periodic() {
         if (isEnabled) {
-            executeAimPID();
+            //executeAimPID();
             executeSpeedPID();
         }
     }
@@ -183,7 +198,11 @@ public class Shooter implements Subsystem {
      * @return returns if robot is ready to shoot
      */
     public boolean isFinished() {
-        return positionPID.atSetpoint(); /* && speedPID.atSetpoint(); */
+        return positionPID.atSetpoint() && speedPID.atSetpoint() && isRunning;
+    }
+
+    public boolean turretOnTarget() {
+        return positionPID.atSetpoint() && limelight.canSeeTarget();
     }
 
     /**
@@ -204,12 +223,12 @@ public class Shooter implements Subsystem {
         }
     }
 
-    public int getTurretEncoder() {
-        return turretTurningMotor.getSelectedSensorPosition();
+    public double getTurretEncoder() {
+        return turretTurningMotor.getSelectedSensorPosition()*180.00/82000.00;
     }
 
-    public int getShooterSpeed() {
-        return shooterMotor1.getSelectedSensorVelocity();
+    public double getShooterSpeed() {
+        return shooterMotor1.getSelectedSensorVelocity()/4100.00;
     }
 
     public boolean getHardStop() {
@@ -228,6 +247,8 @@ public class Shooter implements Subsystem {
         return currentTurretDirection;
     }
 
+    
+
     public void goToCrashPosition() {
         if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
             stopTurret();
@@ -238,6 +259,10 @@ public class Shooter implements Subsystem {
             currentTurretDirection = TurretDirections.Left;
             swivelEy();
         }
+    }
+
+    public void holdPosition() {
+        turretTurningMotor.set(0);
     }
 
     public void move() {

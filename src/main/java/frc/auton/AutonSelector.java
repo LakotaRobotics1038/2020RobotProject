@@ -36,9 +36,9 @@ public class AutonSelector {
 		
 		switch (autonChooser) {
 			case ForwardAuto:
-				return new ForwardAuton();
+				return new DriveAuton();
 			default:
-				return new ForwardAuton();
+				return new DriveAuton();
 		}
 	}
 }
