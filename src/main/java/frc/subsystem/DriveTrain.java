@@ -26,7 +26,7 @@ public class DriveTrain implements Subsystem {
 
     public static CANSpark1038 CANSparkRightFront = new CANSpark1038(57, MotorType.kBrushless);
     public static CANSpark1038 CANSparkRightBack = new CANSpark1038(58, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);//previously 55
+    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);
     public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
 
     public CANEncoder CANSparkRightEncoder = new CANEncoder(CANSparkRightBack);
@@ -102,6 +102,10 @@ public class DriveTrain implements Subsystem {
     }
 
     // Switch between drive modes
+    /*--------------------------------------------------*/
+    /* Clue #14:                                        */
+    /* Find where we receive values from the Limelight. */
+    /*--------------------------------------------------*/
     public void driveModeToggler() {
         switch (currentDriveMode) {
         case tankDrive:

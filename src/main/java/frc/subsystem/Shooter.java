@@ -65,11 +65,6 @@ public class Shooter implements Subsystem {
     // Motor speed for shooter feeder
     private final static double feedSpeed = 1;
 
-    /**
-     * Returns the Shooter instance created when the robot starts
-     * 
-     * @return Shooter instance
-     */
     public static Shooter getInstance() {
         if (shooter == null) {
             System.out.println("creating a new shooter");
@@ -89,25 +84,16 @@ public class Shooter implements Subsystem {
         speedPID.disableContinuousInput();
     }
 
-    /**
-     * Feeds ball into shooter
-     */
     public void feedBall() {
         if (isFinished()) {
             storage.enableManualStorage(ManualStorageModes.Forward);
         }
     }
 
-    /**
-     * stops feeding balls into shooter
-     */
     public void noFeedBall() {
         storage.disableManualStorage();
     }
 
-    /**
-     * disables speed motors and pid
-     */
     public void disablePID() {
         // TODO: Fix this
         speedPID.calculate(0.0);
@@ -115,27 +101,21 @@ public class Shooter implements Subsystem {
         shooterMotor2.set(0);
     }
 
-    /**
-     * sets the position setpoint
-     */
     public void initialize() {
         positionPID.setSetpoint(positionSetpoint);
 
     }
 
-    /**
-     * aims turret towards target
-     */
+    /*----------------------------------------*/
+    /* Clue #16:                              */
+    /* Find the diary entry of "Shawn Tomas". */
+    /*----------------------------------------*/
     public void executeAimPID() {
-        // System.out.println("PID");
         double power = positionPID.calculate(limelight.getXOffset());
         System.out.println("x " + limelight.getXOffset());
         turretTurningMotor.set(power * 0.5);
     }
 
-    /**
-     * sets the speed of the shooter
-     */
     public void executeSpeedPID() {
         isRunning = true;
         speedPID.setSetpoint(limelight.getShooterSetpoint());
@@ -174,16 +154,10 @@ public class Shooter implements Subsystem {
 
     public void periodic() {
         if (isEnabled) {
-            //executeAimPID();
             executeSpeedPID();
         }
     }
 
-    /**
-     * stops and resets PID values if interrupted (potentially unnecessary)
-     * 
-     * @param interrupted if the robot is interrupted
-     */
     public void end(boolean interrupted) {
         if (interrupted) {
             System.out.println("position interrupted");
@@ -192,11 +166,6 @@ public class Shooter implements Subsystem {
         speedPID.reset();
     }
 
-    /**
-     * decides whether the robot is ready to shoot
-     * 
-     * @return returns if robot is ready to shoot
-     */
     public boolean isFinished() {
         return positionPID.atSetpoint() && speedPID.atSetpoint() && isRunning;
     }
@@ -205,9 +174,6 @@ public class Shooter implements Subsystem {
         return positionPID.atSetpoint() && limelight.canSeeTarget();
     }
 
-    /**
-     * limits shooter turn radius
-     */
     public void turnTurret(double turnSpeed) {
         turretTurningMotor.set(turnSpeed);
     }

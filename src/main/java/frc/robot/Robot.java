@@ -30,13 +30,6 @@ import frc.subsystem.DriveTrain;
 import frc.subsystem.Storage.ManualStorageModes;
 import frc.subsystem.Shooter.TurretDirections;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
   private static final String kDriveAuto = "Drive Auto";
   private static final String k3BallAuto = "3 Ball Auto";
@@ -70,21 +63,16 @@ public class Robot extends TimedRobot {
   private boolean prevDUpState = false;
   private boolean prevDDownState = false;
 
-  // //limelight
+  // limelight
   private final Limelight limelight = Limelight.getInstance();
 
   // shooter
   private final Shooter shooter = Shooter.getInstance();
   private double shooterSpeed = -.55;
 
-  // spinner
-  // private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
+  // dashboard
   private final Dashboard dashboard = Dashboard.getInstance();
 
-  /**
-  * This function is run when the robot is first started up and should be
-  * used for any initialization code.
-  */
   @Override
   public void robotInit() {
     shooter.resetTurretEncoder();
@@ -95,27 +83,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
-  /**
-  * This function is called every robot packet, no matter the mode. Use
-  * this for items like diagnostics that you want ran during disabled,
-  * autonomous, teleoperated and test.
-  */
   @Override
   public void robotPeriodic() {
     limelight.read();
     dashboard.update();
     System.out.println(shooter.getTurretEncoder());
-    // System.out.println(limelight.getYOffset());
-    // System.out.println(shooter.getShooterSpeed());
   }
 
-  /**
-  * This autonomous (along with the chooser code above) shows how to select
-  * between different autonomous modes using the dashboard. The sendable
-  * chooser code works with the Java SmartDashboard. If you prefer the
-  * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-  * getString line to get the auto name from the text box below the Gyro
-  */
   @Override
   public void autonomousInit() {
     System.out.println("Auton started");
@@ -151,9 +125,6 @@ public class Robot extends TimedRobot {
     System.out.println("Scheduled tasks");
   }
 
-  /**
-  * This function is called periodically during autonomous.
-  */
   @Override
   public void autonomousPeriodic() {
     if (schedule != null) {
@@ -164,9 +135,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() { }
 
-  /**
-  * This function is called periodically during operator control.
-  */
   @Override
   public void teleopPeriodic() {
     operator();

@@ -18,15 +18,13 @@ public class Acquisition implements Subsystem {
 
     // Solenoid
     private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
-    private AcquisitionStates acquisitionState = AcquisitionStates.In;
-    private enum AcquisitionStates {
-        In, Out
-    }
+    private boolean acquisitionOut = false;
 
     // Motor
     private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless);
 
     // Motor speeds
+
     /*-----------------------------------------*/
     /* Clue #4                                 */
     /* Find where you pick which auton is run. */
@@ -36,11 +34,7 @@ public class Acquisition implements Subsystem {
     // Acquisition instance
     private static Acquisition acquisition;
 
-    /**
-     * returns the acquisiton instance when the robot starts
-     * 
-     * @return acquisition instance
-     */
+
     public static Acquisition getInstance() {
         if(acquisition == null) {
             System.out.println("creating a new acquisition");
@@ -49,26 +43,20 @@ public class Acquisition implements Subsystem {
         return acquisition;
     }
 
-    /**
-     * sends out and pulls back in the acquisition
-     */
+    /*---------------------------------------------------------------------------------------*/
+    /* Clue #10                                                                              */
+    /* Find the spot where the "Shooter Angle" is output for the driver and operator to see. */
+    /*---------------------------------------------------------------------------------------*/
     public void toggleAcquisitionPosition() {
-        switch (acquisitionState) {
-            case In:
-                acquisitionSolenoid.set(Value.kReverse);
-                acquisitionState = AcquisitionStates.Out;
-                break;
-
-            case Out:
-                acquisitionSolenoid.set(Value.kForward);
-                acquisitionState = AcquisitionStates.In;
-                break;
+        if(acquisitionOut) {
+            acquisitionSolenoid.set(Value.kForward);
+            acquisitionOut = false;
+        } else {
+            acquisitionSolenoid.set(Value.kReverse);
+            acquisitionOut = true;
         }
     }
 
-    /**
-     * sets the speed that the acquistion will pull the balls into storage
-     */
     /*--------------------------------------------------*/
     /* Clue #3                                          */
     /* Find the  numerical value of "BEATER_BAR_SPEED". */
@@ -77,16 +65,10 @@ public class Acquisition implements Subsystem {
         beaterBar.set(BEATER_BAR_SPEED);
     }
 
-    /**
-     * sets the speed that the acquisiont will throw the balls out of storage
-     */
     public void runBeaterBarRev() {
         beaterBar.set(-BEATER_BAR_SPEED);
     }
 
-    /**
-     * stops the acquistion from pulling in or throwing balls out of storage
-     */
     public void stopBeaterBar() {
         beaterBar.set(0);
     }

@@ -38,14 +38,6 @@ public class AimCommand extends CommandBase {
         /* Find the definition of the "move()" method.  */
         /*----------------------------------------------*/
         shooter.move();
-
-        // TODO: Get the limelight working here
-        // if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
-        //      shooter.turnTurret(TURRET_SPEED);
-        // } else {
-        //     shooter.turnTurret(0);
-        //      turned = true;
-        // }
     }
 
     @Override

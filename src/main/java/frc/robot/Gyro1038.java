@@ -24,19 +24,11 @@ public class Gyro1038 extends GyroBase {
 	private I2C I2CBus;
 	private static Gyro1038 gyroSensor;
 
-	/**
-	 * Initializes the gyro to listen to the onboard I2C port at the set address and calibrates the gyro
-	 */
 	private Gyro1038() {
 		I2CBus = new I2C(I2C.Port.kOnboard, DEVICE_ADDRESS);
 		calibrate();
 	}
 
-	/**
-	 * Returns the gyro instance created when the robot starts
-	 * 
-	 * @return Gyro instance
-	 */
 	public static Gyro1038 getInstance() {
 		if (gyroSensor == null) {
 			System.out.println("Creating a new Gyro");
@@ -50,9 +42,6 @@ public class Gyro1038 extends GyroBase {
 		return gyroVal;
 	}
 
-	/**
-	 * Calculates the heading of the gyro
-	 */
 	public void readGyro() {
 		byte[] dataBuffer = new byte[6];
 
@@ -91,9 +80,6 @@ public class Gyro1038 extends GyroBase {
 	}
 
 	@Override
-	/**
-	 * This method is not currently implemented
-	 */
 	public double getRate() {
 		return 0;
 	}

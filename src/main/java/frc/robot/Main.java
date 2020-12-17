@@ -14,6 +14,12 @@ import edu.wpi.first.wpilibj.RobotBase;
  * Unless you know what you are doing, do not modify this file except to
  * change the parameter class to the startRobot call.
  */
+    /*---------------------------------------------------------------------------------------------------------------------*/
+    /* Read the comment above ^^                                                                                           */
+    /* We NEVER touch "Main.java". This class is used for starting up "Robot.java" with a new instance of the Robot class. */
+    /* Clue #13                                                                                                            */
+    /* Find where you can switch between different drive modes.                                                            */
+    /*---------------------------------------------------------------------------------------------------------------------*/
 public final class Main {
   private Main() {
   }

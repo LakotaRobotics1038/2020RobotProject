@@ -37,11 +37,6 @@ public class Storage implements Subsystem {
         Forward, Reverse
     }
 
-    /**
-     * returns the storage instance when the robot starts
-     * 
-     * @return storage instance
-     */
     public static Storage getInstance() {
         if (storage == null) {
             System.out.println("creating a new storage");
@@ -74,18 +69,14 @@ public class Storage implements Subsystem {
         manualStorageForward = false;
     }
 
-    /**
-     * feeds the shooter
-     * 
-     * @param power how fast to feed the shooter
-     */
     public void feedShooter(double power) {
         shuttleMotor.set(power);
     }
 
-    /**
-     * runs the ball storage
-     */
+    /*----------------------------------------------------------------------------*/
+    /* Clue #12                                                                   */
+    /* Go to "Main.java" because I can't think of a better way to send you there. */
+    /*----------------------------------------------------------------------------*/
     public void periodic() {
         if (!manualStorageForward && !manualStorageReverse) {
             if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())                                                                                // sensor

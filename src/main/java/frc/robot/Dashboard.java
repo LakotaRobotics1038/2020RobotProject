@@ -7,15 +7,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.subsystem.Shooter;
 
-// TODO gyro 
-// TODO match time (sam's turn)
 public class Dashboard {
   private static Dashboard dashboard;
 
   private DriverStation driverStation = DriverStation.getInstance();
   private Shooter shooter = Shooter.getInstance();
   private Limelight limelight = Limelight.getInstance();
-  //private UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
 
   private final int CAMERA_EXPOSURE =  50;
 
@@ -31,11 +28,11 @@ public class Dashboard {
     return dashboard;
   }
 
-  /**
-   * Instantiates dashboard object
-   */
+    /*-----------------------------------------------------*/
+    /* Clue #11                                            */
+    /* Go to the place where storage is automatically run. */
+    /*-----------------------------------------------------*/
   private Dashboard() {
-    //visionCam.setExposureManual(CAMERA_EXPOSURE);
     SmartDashboard.putNumber("Match Time", -1);
     SmartDashboard.putNumber("Shooter Angle", 0);
     SmartDashboard.putBoolean("Prox", false);

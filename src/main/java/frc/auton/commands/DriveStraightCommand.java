@@ -26,11 +26,6 @@ public class DriveStraightCommand extends CommandBase {
 	private PIDController drivePID; 
 	private PIDController turnPID;
 
-	/**
-	 * Makes a new Drive Straight Command
-	 * 
-	 * @param setpoint in feet
-	 */
 	public DriveStraightCommand(double setpoint) {
 		
 		gyroSensor.reset();
@@ -60,16 +55,11 @@ public class DriveStraightCommand extends CommandBase {
 		gyroSensor.reset();
 		turnPID.setSetpoint(gyroSensor.getAngle());
 		drive.resetEncoders();
-		// drivePID.setSetpoint(dSetpoint);
-		// System.out.println("setpoint" + drivePID.getSetpoint());
-		// turnPID.setInputRange(0, 359);
 	}
 
 	@Override
 	public void execute() {
 		double distancePID = drivePID.calculate(drive.getLeftDriveEncoderDistance());
-		// double anglePID = turnPID.calculate(gyroSensor.getAngle());
-		// TODO incorperate the turnPID calculate.
 		drive.tankDrive(distancePID, distancePID);
 	
 		System.out.println("power: " + distancePID + " encoders: " + drive.getLeftDriveEncoderDistance());
