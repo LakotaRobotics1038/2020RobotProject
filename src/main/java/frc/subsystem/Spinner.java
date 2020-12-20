@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.CANSpark1038;
+import frc.robotLibraries.CANSpark1038;
 import frc.robot.ColorSensor1038;
 
 public class Spinner implements Subsystem {

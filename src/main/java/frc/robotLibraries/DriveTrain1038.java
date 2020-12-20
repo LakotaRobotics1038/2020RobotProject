@@ -1,4 +1,4 @@
-package frc.subsystem;
+package frc.robotLibraries
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -10,40 +10,47 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import frc.robotLibraries.CANSpark1038;
 
-public class DriveTrain implements Subsystem {
+public class DriveTrain1038 implements Subsystem {
     public enum DriveModes {
         tankDrive, singleArcadeDrive, dualArcadeDrive
     };
 
     public DriveModes currentDriveMode = DriveModes.dualArcadeDrive;
 
+    //Change these numbers for each new robot       v
     public final double WHEEL_DIAMETER = 6;
     private final int HIGH_GEAR_PORT = 0;
     private final int LOW_GEAR_PORT = 1;
+    private final static int RIGHT_FRONT_PORT = 57;
+    private final static int RIGHT_BACK_PORT = 58;
+    private final static int LEFT_FRONT_PORT = 52;
+    private final static int LEFT_BACK_PORT = 56;
+    //Change these numbers for each new robot       ^
+
 
     public DoubleSolenoid GearChangeSolenoid = new DoubleSolenoid(LOW_GEAR_PORT, HIGH_GEAR_PORT);
     public boolean isHighGear = false;
 
-    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(57, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(58, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);//previously 55
-    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightFront = new CANSpark1038(RIGHT_FRONT_PORT, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkRightBack = new CANSpark1038(RIGHT_BACK_PORT, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(LEFT_FRONT_PORT, MotorType.kBrushless);
+    public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(LEFT_BACK_PORT, MotorType.kBrushless);
 
     public CANEncoder CANSparkRightEncoder = new CANEncoder(CANSparkRightBack);
     public CANEncoder CANSparkLeftEncoder = new CANEncoder(CANSparkLeftBack);
 
     private DifferentialDrive differentialDrive;
-    private static DriveTrain driveTrain;
+    private static DriveTrain1038 driveTrain;
 
-    public static DriveTrain getInstance() {
+    public static DriveTrain1038 getInstance() {
         if (driveTrain == null) {
             System.out.println("Creating a new DriveTrain");
-            driveTrain = new DriveTrain();
+            driveTrain = new DriveTrain1038();
         }
         return driveTrain;
     }
 
-    private DriveTrain() {
+    private DriveTrain1038() {
         CANSparkLeftBack.restoreFactoryDefaults();
         CANSparkLeftFront.restoreFactoryDefaults();
         CANSparkRightBack.restoreFactoryDefaults();

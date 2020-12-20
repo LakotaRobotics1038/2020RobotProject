@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robotLibraries
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -39,7 +39,7 @@ public class Joystick1038 extends Joystick {
 	 * @return value of POV
 	 */
 	public int getPOV() {
-		return getPOV(0);
+		return getPOV();
 	}
 
     /**
@@ -196,7 +196,35 @@ public class Joystick1038 extends Joystick {
 	public double getRightTrigger() {
 		return getRawAxis(RIGHT_TRIGGER);
     }
-    
+	
+	/**
+	 * Returns the state of the left trigger as on or off
+	 * 
+	 * @return value of the left trigger axis
+	 */
+	public boolean getLeftTriggerDigital() {
+		if(getRawAxis(LEFT_TRIGGER) > .5) {
+			return True; 
+		}
+		else{
+			return False;
+		}
+	}
+	
+	/**
+	 * Returns the state of the right trigger as on or off
+	 * 
+	 * @return value of the right trigger axis
+	 */
+	public double getRightTriggerDigital() {
+		if(getRawAxis(RIGHT_TRIGGER) > .5) {
+			return True; 
+		}
+		else{
+			return False;
+		}
+	}
+	
     /**
 	 * Sets the left rumble speed
 	 * 

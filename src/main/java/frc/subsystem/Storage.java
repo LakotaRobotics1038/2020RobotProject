@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-import frc.robot.CANSpark1038;
+import frc.robotLibraries.CANSpark1038;
 
 public class Storage implements Subsystem {
     // ports

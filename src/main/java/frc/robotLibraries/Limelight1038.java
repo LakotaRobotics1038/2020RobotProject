@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robotLibraries
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -7,9 +7,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 /**
  * Add your docs here.
  */
-public class Limelight {
+public class Limelight1038 {
     // LimeLight instance
-    private static Limelight limelight;
+    private static Limelight1038 limelight;
 
     // Network table
     private static NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
@@ -42,11 +42,11 @@ public class Limelight {
      * 
      * @return the limelight instance
      */
-    public static Limelight getInstance() {
+    public static Limelight1038 getInstance() {
         if (limelight == null) {
             System.out.println("Creating limelight");
             try {
-                limelight = new Limelight();
+                limelight = new Limelight1038();
             } catch (NullPointerException e) {
                 System.out.println("uh-oh " + e);
             }
@@ -70,6 +70,7 @@ public class Limelight {
      * @return whether or not the robot has a target
      */
     public boolean canSeeTarget() {
+        valid_target = tv.getDouble(defaultOffset);
         return valid_target == 1;
     }
 
@@ -101,15 +102,5 @@ public class Limelight {
 
     public void changeLEDStatus(LEDStates state) {
         table.getEntry("ledMode").setDouble(state.value);
-    }
-
-    public double getMotorPower() {
-        double power = ty.getDouble(defaultOffset);
-        return power * -.00417 + .55;
-    }
-    
-    public double getShooterSetpoint() {
-        double setpoint = ty.getDouble(defaultOffset);
-        return (setpoint * -250 + 31000)/(4100.00);
     }
 }

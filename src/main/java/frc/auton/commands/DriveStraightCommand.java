@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.subsystem.DriveTrain;
-import frc.robot.Gyro1038;
+import frc.robotLibraries.Gyro1038;
 
 public class DriveStraightCommand extends CommandBase {
 	private static Gyro1038 gyroSensor = Gyro1038.getInstance();

@@ -18,13 +18,14 @@ import frc.auton.Auton;
 import frc.auton.DriveAuton;
 import frc.auton.Shooting3BallAuton;
 import frc.auton.Shooting5BallAuton;
-import frc.robot.Limelight.LEDStates;
+frc.robotLibraries.Limelight.LEDStates;
 import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
 import frc.subsystem.Storage.ManualStorageModes;
 import frc.subsystem.Shooter.TurretDirections;
+import frc.robotLibraries.Joystick1038
 
 /**
  * The VM is configured to automatically run this class, and to call the

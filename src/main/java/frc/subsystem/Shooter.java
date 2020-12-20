@@ -5,9 +5,9 @@ import java.util.function.ToDoubleFunction;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-import frc.robot.Limelight;
-import frc.robot.Prox;
-import frc.robot.TalonSRX1038;
+frc.robotLibraries.Limelight;
+import frc.robotLibraries.DigitalInput1038;
+import frc.robotLibraries.TalonSRX1038;
 import frc.subsystem.Storage;
 import frc.subsystem.Storage.ManualStorageModes;
 
@@ -23,7 +23,7 @@ public class Shooter implements Subsystem {
     private TalonSRX1038 shooterMotor1 = new TalonSRX1038(SHOOTER_MOTOR_1_PORT);
     private TalonSRX1038 shooterMotor2 = new TalonSRX1038(SHOOTER_MOTOR_2_PORT);
     private TalonSRX1038 turretTurningMotor = new TalonSRX1038(TURRET_TURNING_PORT);
-    private Prox hardStop = new Prox(HARD_STOP_PORT);
+    private DigitalInput1038 hardStop = new DigitalInput1038(HARD_STOP_PORT);
 
     // Shooter
     private static Shooter shooter;

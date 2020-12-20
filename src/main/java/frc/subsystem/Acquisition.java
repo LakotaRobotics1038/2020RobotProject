@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-import frc.robot.CANSpark1038;
+import frc.robotLibraries.CANSpark1038;
 
 public class Acquisition implements Subsystem {
     // Ports
