@@ -1,18 +1,18 @@
 package frc.auton;
 
 import frc.auton.commands.DriveStraightCommand;
-import frc.auton.commands.ShootCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.auton.commands.AimCommand;
+import frc.auton.commands.TurnCommand;
+import frc.auton.commands.AcquireCommand;
 
 
-public class Shooting3BallAuton extends Auton{
+
+public class GalacticCommands extends Auton{
     public static int t = 90;
     public static int d = 200;
     public static int b = -200;
     public static int a = 20;
     public static int ta = 180; 
-    public Shooting3BallAuton() {
+    public GalacticCommands() {
         super();
 
         addCommands(
@@ -62,7 +62,7 @@ public class Shooting3BallAuton extends Auton{
             new AcquireCommand(a),
 
             //go at an angle until you reach the end zone;
-            new TurnCommand(t),
+            new TurnCommand(t)
 
             //drop balls;
             //then celebrate;
