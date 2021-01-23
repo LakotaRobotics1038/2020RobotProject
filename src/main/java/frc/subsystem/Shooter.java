@@ -130,6 +130,7 @@ public class Shooter implements Subsystem {
         // System.out.println("PID");
         double power = positionPID.calculate(limelight.getXOffset());
         System.out.println("x " + limelight.getXOffset());
+        System.out.println("Power" + power);
         turretTurningMotor.set(power * 0.5);
     }
 
@@ -139,7 +140,7 @@ public class Shooter implements Subsystem {
     public void executeSpeedPID() {
         isRunning = true;
         speedPID.setSetpoint(limelight.getShooterSetpoint());
-        double power = speedPID.calculate(shooterMotor1.getSelectedSensorVelocity()) + limelight.getMotorPower();
+        double power = speedPID.calculate(getShooterSpeed()) + limelight.getMotorPower();
         System.out.println("speed" + shooterMotor1.getSelectedSensorVelocity());
         System.out.println("setpoint: " + speedPID.getSetpoint());
         System.out.println("power" + power);
@@ -266,13 +267,13 @@ public class Shooter implements Subsystem {
     }
 
     public void move() {
-        if (hardStop.get()) {
-            turretTurningMotor.setSelectedSensorPosition(0);
-        }
-        if (turretTurningMotor.getSelectedSensorPosition() <= RIGHT_STOP) {
+        // if (hardStop.get()) {
+        //     turretTurningMotor.setSelectedSensorPosition(0);
+        // }
+        if (getTurretEncoder() <= RIGHT_STOP) {
             currentTurretDirection = TurretDirections.Left;
             swivelEy();
-        } else if (turretTurningMotor.getSelectedSensorPosition() >= LEFT_STOP) {
+        } else if (getTurretEncoder() >= LEFT_STOP) {
             currentTurretDirection = TurretDirections.Right;
             swivelEy();
         } else if (limelight.canSeeTarget()) {

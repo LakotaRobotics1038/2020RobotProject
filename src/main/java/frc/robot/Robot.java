@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.Compressor;
 
 import frc.auton.Auton;
 import frc.auton.DriveAuton;
+import frc.auton.GalacticCommands;
+import frc.robot.Gyro1038;
 import frc.auton.Shooting3BallAuton;
 import frc.auton.Shooting5BallAuton;
 import frc.robot.Limelight.LEDStates;
@@ -42,6 +44,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private CommandScheduler schedule = CommandScheduler.getInstance();
   public static SequentialCommandGroup autonPath;
+  private final Gyro1038 gyro = Gyro1038.getInstance();
   private Auton auton = new Auton();
 
   // Compressor
@@ -84,6 +87,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     shooter.resetTurretEncoder();
+    gyro.calibrate();
     m_chooser.setDefaultOption("Drive Auto", kDriveAuto);
     m_chooser.addOption("3 Ball Auto", k3BallAuto);
     m_chooser.addOption("5 Ball Auto", k5BallAuto);
@@ -100,9 +104,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     limelight.read();
     dashboard.update();
-    System.out.println(shooter.getTurretEncoder());
     // System.out.println(limelight.getYOffset());
-    // System.out.println(shooter.getShooterSpeed());
+    //System.out.println(shooter.getShooterSpeed());
   }
 
   /**
@@ -114,30 +117,31 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void autonomousInit() {
-    System.out.println("Auton started");
-    m_autoSelected = m_chooser.getSelected();
-    System.out.println("Auto selected: " + m_autoSelected);
-    switch (m_autoSelected) {
-      case kDriveAuto:
-        autonPath = new DriveAuton();
-        System.out.println("Selected drive auton");
-        break;
-      case k3BallAuto:
-        autonPath = new Shooting3BallAuton();
-        System.out.println("Selected shoot auton");
-        break;
-      case k5BallAuto:
-        autonPath = new Shooting5BallAuton();
-        System.out.println("Selected acquisition auton");
-        break;
-      case k8BallAuto:
-        autonPath = new DriveAuton();
-        System.out.println("Selected drive auton");
-        break;
-      default:
-        System.out.println("how? just how? also why?");
-        break;
-    }
+    autonPath = new GalacticCommands();
+    // System.out.println("Auton started");
+    // m_autoSelected = m_chooser.getSelected();
+    // System.out.println("Auto selected: " + m_autoSelected);
+    // switch (m_autoSelected) {
+    //   case kDriveAuto:
+    //     autonPath = new DriveAuton();
+    //     System.out.println("Selected drive auton");
+    //     break;
+    //   case k3BallAuto:
+    //     autonPath = new Shooting3BallAuton();
+    //     System.out.println("Selected shoot auton");
+    //     break;
+    //   case k5BallAuto:
+    //     autonPath = new Shooting5BallAuton();
+    //     System.out.println("Selected acquisition auton");
+    //     break;
+    //   case k8BallAuto:
+    //     autonPath = new DriveAuton();
+    //     System.out.println("Selected drive auton");
+    //     break;
+    //   default:
+    //     System.out.println("how? just how? also why?");
+    //     break;
+    //}
 
     schedule.schedule(autonPath);
     System.out.println("Scheduled tasks");
@@ -256,7 +260,8 @@ public class Robot extends TimedRobot {
       }
       limelight.changeLEDStatus(LEDStates.On);
       shooter.move();
-    } else {
+    } 
+    else {
       shooter.goToCrashPosition();
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;

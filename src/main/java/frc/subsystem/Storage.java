@@ -87,6 +87,7 @@ public class Storage implements Subsystem {
      * runs the ball storage
      */
     public void periodic() {
+        System.out.println(laserStart.get() + ":"+ laserEnd.get());
         if (!manualStorageForward && !manualStorageReverse) {
             if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())                                                                                // sensor
             {

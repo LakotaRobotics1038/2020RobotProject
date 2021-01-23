@@ -34,10 +34,8 @@ public class AcquireCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Timer.getMatchTime() <= 14) {
-      storage.periodic();
-      acquisition.runBeaterBarFwd();
-    }
+    storage.periodic();
+    acquisition.runBeaterBarFwd();
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +47,6 @@ public class AcquireCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Timer.getMatchTime() <= END_TIME;
+    return Timer.getMatchTime() >= END_TIME;
   }
 }
