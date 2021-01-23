@@ -51,7 +51,7 @@ public class TurnCommand extends CommandBase {
 
 	@Override
 	public void initialize() {
-		gyroSensor.reset();
+		// gyroSensor.reset();
 		// drivePID.setSetpoint(dSetpoint);
 		// System.out.println("setpoint" + drivePID.getSetpoint());
 		// turnPID.setInputRange(0, 359);

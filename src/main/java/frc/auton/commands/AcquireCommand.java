@@ -22,6 +22,7 @@ public class AcquireCommand extends CommandBase {
    * Creates a new MoveAcquisitionCommand.
    */
   public AcquireCommand(double endTime) {
+    START_TIME = Timer.getMatchTime()
     END_TIME = endTime;
   }
 
@@ -47,6 +48,6 @@ public class AcquireCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Timer.getMatchTime() >= END_TIME;
+    return Timer.getMatchTime() - START_TIME >= END_TIME;
   }
 }
