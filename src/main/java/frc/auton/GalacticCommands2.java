@@ -8,15 +8,15 @@ import frc.auton.commands.AcquireCommand;
 import frc.auton.commands.AimCommand;
 
 
-public class GalacticCommands extends Auton{
+public class GalacticCommands2 extends Auton{
     public String teamColor = "Blue";
-    public GalacticCommands() {
+    public GalacticCommands2() {
         super();
         switch(teamColor) {
             case "Blue":
-            final int FIRST_DRIVE_DIST_BLUE = 156;
-            final double SECOND_DRIVE_DIST_BLUE = 99.36;
-            final double THIRD_DRIVE_DIST_BLUE = 67.08;
+            final int FIRST_DRIVE_DIST_BLUE = 120;
+            final double SECOND_DRIVE_DIST_BLUE = 84.84;
+            final double THIRD_DRIVE_DIST_BLUE = 84.84;
             final int FOURTH_DRIVE_DIST_BLUE = 60;
             final int ACQUIRE_TIME_BLUE = 2;
             final double FIRST_TURN_ANGLE_BLUE = -63.438;
@@ -47,11 +47,11 @@ public class GalacticCommands extends Auton{
                 break;
             case "Red":
             final int FIRST_DRIVE_DIST_RED = 60;
-            final double SECOND_DRIVE_DIST_RED = 67.08;
-            final double THIRD_DRIVE_DIST_RED = 99.36;
+            final double SECOND_DRIVE_DIST_RED = 84.84;
+            final double THIRD_DRIVE_DIST_RED = 120;
             final double FOURTH_DRIVE_DIST_RED = 156;
             final int ACQUIRE_TIME_RED = 2;
-            final double FIRST_TURN_ANGLE_RED = 63.367;
+            final double FIRST_TURN_ANGLE_RED = 45;
             final double SECOND_TURN_ANGLE_RED = -63.438;
             final int THIRD_TURN_ANGLE_RED = 0;
                 addCommands(
@@ -61,20 +61,25 @@ public class GalacticCommands extends Auton{
                     new AcquireCommand(ACQUIRE_TIME_RED),
                     //face D5
                     new TurnCommand(FIRST_TURN_ANGLE_RED),
+                    new DriveStraightCommand(SECOND_DRIVE_DIST_RED),
+                    new AcquireCommand(ACQUIRE_TIME_RED),
                     //Forward to D5, 5.59 feet
+                    //the drive command is for you DREW
+                    new TurnCommand(SECOND_TURN_ANGLE_RED),
                     new DriveStraightCommand(SECOND_DRIVE_DIST_RED),
                     //run aquisition at D5
                     new AcquireCommand(ACQUIRE_TIME_RED),
                     //Face A6
-                    new TurnCommand(SECOND_TURN_ANGLE_RED),
+                    new TurnCommand(THIRD_TURN_ANGLE_RED),
+                    new DriveStraightCommand(THIRD_DRIVE_DIST_RED)
                     //Forward to A6, 8.28 feet
-                    new DriveStraightCommand(THIRD_DRIVE_DIST_RED),
+                    /*new DriveStraightCommand(THIRD_DRIVE_DIST_RED),
                     //run aquisition at A6
                     new AcquireCommand(ACQUIRE_TIME_RED),
                     //Face endzone
                     new TurnCommand(THIRD_TURN_ANGLE_RED),
                     //Forward to endzone, 13 feet
-                    new DriveStraightCommand(FOURTH_DRIVE_DIST_RED)
+                    new DriveStraightCommand(FOURTH_DRIVE_DIST_RED)*/
                 );
                 break;
     }
