@@ -23,6 +23,7 @@ public class GalacticCommands extends Auton{
             final double SECOND_TURN_ANGLE_BLUE = 63.367;
             final int THIRD_TURN_ANGLE_BLUE = 0;
                 addCommands(
+                    new AcquireCommand(0),
                     //go forward until you aquire E6, 13 feet
                     new DriveStraightCommand(FIRST_DRIVE_DIST_BLUE),
                     //run aquisition at E6
@@ -56,6 +57,7 @@ public class GalacticCommands extends Auton{
             final int THIRD_TURN_ANGLE_RED = 0;
                 addCommands(
                     //go forward until you aquire C3, 5.5 feet;
+                    new AcquireCommand(0),
                     new DriveStraightCommand(FIRST_DRIVE_DIST_RED),
                     //run aquisition at C3
                     new AcquireCommand(ACQUIRE_TIME_RED),
