@@ -72,7 +72,7 @@ public class DriveStraightCommand extends CommandBase {
 		// TODO incorperate the turnPID calculate.
 		drive.tankDrive(distancePID, distancePID);
 	
-		System.out.println("power: " + distancePID + " encoders: " + drive.getLeftDriveEncoderDistance());
+		//System.out.println("power: " + distancePID + " encoders: " + drive.getLeftDriveEncoderDistance());
 	}
 
 	@Override

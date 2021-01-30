@@ -3,6 +3,7 @@ package frc.auton;
 import frc.auton.commands.DriveStraightCommand;
 import frc.auton.commands.ShootCommand;
 import frc.auton.commands.TurnCommand;
+import frc.subsystem.Acquisition;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.auton.commands.AcquireCommand;
 import frc.auton.commands.AimCommand;
@@ -18,12 +19,12 @@ public class GalacticCommands extends Auton{
             final double SECOND_DRIVE_DIST_BLUE = 99.36;
             final double THIRD_DRIVE_DIST_BLUE = 67.08;
             final int FOURTH_DRIVE_DIST_BLUE = 60;
-            final int ACQUIRE_TIME_BLUE = 2;
+            final int ACQUIRE_TIME_BLUE = 1;
             final double FIRST_TURN_ANGLE_BLUE = -63.438;
             final double SECOND_TURN_ANGLE_BLUE = 63.367;
             final int THIRD_TURN_ANGLE_BLUE = 0;
                 addCommands(
-                    new AcquireCommand(0),
+                    new AcquireCommand(1),
                     //go forward until you aquire E6, 13 feet
                     new DriveStraightCommand(FIRST_DRIVE_DIST_BLUE),
                     //run aquisition at E6

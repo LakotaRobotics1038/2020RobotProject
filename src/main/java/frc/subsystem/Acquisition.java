@@ -62,6 +62,17 @@ public class Acquisition implements Subsystem {
         }
     }
 
+    public void down() {
+        switch (acquisitionState) {
+            case In:
+                acquisitionSolenoid.set(Value.kReverse);
+                acquisitionState = AcquisitionStates.Out;
+                break;
+            case Out:
+                System.out.println("already out");
+                break;
+        }
+    }
     /**
      * sets the speed that the acquistion will pull the balls into storage
      */
