@@ -15,10 +15,10 @@ public class TurnCommand extends CommandBase {
     //private PIDController turnPID = getPIDController();
 
 	private double drivePower = 0.0;
-	private final double END_DRIVE_SPEED = 0.0;
-	private final double END_DRIVE_ROTATION = 0.0;
-	private final double TOLERANCE = 5.1;
-	private final double OUTPUT_RANGE = .6;
+	//private final double END_DRIVE_SPEED = 0.0;
+	//private final double END_DRIVE_ROTATION = 0.0;
+	private final double TOLERANCE = 5.0;
+	//private final double OUTPUT_RANGE = .6;
 	private final static double P = 0.0231;
 	private final static double I = 0.0001;
 	private final static double D = 0.0002;
@@ -32,7 +32,7 @@ public class TurnCommand extends CommandBase {
 	 */
 	public TurnCommand(double setpoint) {
 		//super(P, I, D);
-		gyroSensor.reset();
+		//gyroSensor.reset();
 		turnPID = new PIDController(P, I, D);
 
 		turnPID.setPID(P, I, D);
@@ -64,6 +64,7 @@ public class TurnCommand extends CommandBase {
 		double PIDTurnAdjust = turnPID.calculate(gyroSensor.getAngle());
 		//this.usePIDOutput(PIDTurnAdjust);
 		System.out.println("Gyro: " + gyroSensor.getAngle());
+		System.out.println("Setpoint: " + turnPID.getSetpoint());
 		if(PIDTurnAdjust > 0) {
 			System.out.println("Clockwise: " + PIDTurnAdjust);
 		} else {

@@ -11,25 +11,21 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Storage;
-import java.util.*;
 
 public class AcquireCommand extends CommandBase {
   // private double START_TIME = 0;
 
   Acquisition acquisition = Acquisition.getInstance();
   Storage storage = Storage.getInstance();
-  List <Integer> ends = new ArrayList<Integer>();
+  Timer timer = new Timer();
 
-  private static double END_TIME;
+  private final double END_TIME;
+  private final double START_TIME;
   /**
    * Creates a new MoveAcquisitionCommand.
    */
   public AcquireCommand(double endTime) {
-    endTime *= 100;
-    int intVal = (int) endTime;
-    ends.add(-1, intVal);
-    // START_TIME = Timer.getMatchTime();
-    // System.out.println(START_TIME);
+    START_TIME = Timer.getFPGATimestamp();
     END_TIME = endTime;
   }
 
@@ -37,13 +33,13 @@ public class AcquireCommand extends CommandBase {
   @Override
   public void initialize() {
     acquisition.down();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(END_TIME);
-    //System.out.println(START_TIME);
     storage.periodic();
     acquisition.runBeaterBarFwd();
   }
@@ -52,12 +48,15 @@ public class AcquireCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     acquisition.stopBeaterBar();
+    timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return Timer.getMatchTime() - START_TIME <= END_TIME;
-    return Timer.getMatchTime() >= ends[0];
+    //return (Timer.getFPGATimestamp() - START_TIME) <= END_TIME;
+    //boolean finished = Timer.hasPeriodPassed(END_TIME);
+    return (timer.get() >= END_TIME);
+    //Timer.getFPGATimestamp()
   }
 }

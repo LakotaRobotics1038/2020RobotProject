@@ -15,7 +15,7 @@ public class DriveStraightCommand extends CommandBase {
 	private final double END_DRIVE_ROTATION = 0.0;
 	private final double TOLERANCE = 1.9;
 
-	private final static double dP = 0.001; // .04 proto
+	private final static double dP = 0.0015; // .04 proto
 	private final static double dI = 0.001;
 	private final static double dD = 0.000;
 	private static double dSetpoint;
