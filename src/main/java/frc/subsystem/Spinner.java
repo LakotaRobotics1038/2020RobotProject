@@ -30,7 +30,7 @@ public class Spinner implements Subsystem {
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
 
 
-    private final int SPINNER_MOTOR_PORT = 50;
+    private final int SPINNER_MOTOR_PORT = 60;
     private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
     private CANEncoder spinnerEncoder = spinnerMotor.getEncoder();
     private boolean rotationEnabled = false;

@@ -3,8 +3,6 @@ package frc.auton.commands;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.command.PIDCommand;
-import frc.robot.*;
 
 import frc.subsystem.DriveTrain;
 import frc.robot.Gyro1038;
@@ -15,13 +13,11 @@ public class TurnCommand extends CommandBase {
     //private PIDController turnPID = getPIDController();
 
 	private double drivePower = 0.0;
-	private final double END_DRIVE_SPEED = 0.0;
-	private final double END_DRIVE_ROTATION = 0.0;
 	private final double TOLERANCE = 5.1;
-	private final double OUTPUT_RANGE = .6;
 	private final static double P = 0.0231;
 	private final static double I = 0.0001;
 	private final static double D = 0.0002;
+	private static  double tSetpoint;
 	 
 	private PIDController turnPID;
 
@@ -37,6 +33,7 @@ public class TurnCommand extends CommandBase {
 
 		turnPID.setPID(P, I, D);
 		
+		tSetpoint = setpoint;
 		turnPID.setSetpoint(setpoint);
 		System.out.println("setpoint" + turnPID.getSetpoint());
 		//turnPID.disableContinuousInput();

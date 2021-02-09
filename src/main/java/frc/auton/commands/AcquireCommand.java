@@ -11,23 +11,21 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Storage;
-import java.util.*;
+
 
 public class AcquireCommand extends CommandBase {
   // private double START_TIME = 0;
 
   Acquisition acquisition = Acquisition.getInstance();
   Storage storage = Storage.getInstance();
-  List <Integer> ends = new ArrayList<Integer>();
+  
 
-  private static double END_TIME;
+  private final double END_TIME;
   /**
    * Creates a new MoveAcquisitionCommand.
    */
   public AcquireCommand(double endTime) {
-    endTime *= 100;
-    int intVal = (int) endTime;
-    ends.add(-1, intVal);
+    
     // START_TIME = Timer.getMatchTime();
     // System.out.println(START_TIME);
     END_TIME = endTime;
@@ -58,6 +56,6 @@ public class AcquireCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     //return Timer.getMatchTime() - START_TIME <= END_TIME;
-    return Timer.getMatchTime() >= ends[0];
+    return Timer.getMatchTime() >= END_TIME;
   }
 }

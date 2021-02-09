@@ -10,7 +10,7 @@ import frc.robot.CANSpark1038;
 
 public class Storage implements Subsystem {
     // ports
-    private final int SHUTTLE_MOTOR_PORT = 62;
+    private final int SHUTTLE_MOTOR_PORT = 61;
     private final int START_LASER_PORT = 6;
     private final int END_LASER_PORT = 5;
     private final int SHUTTLE_MOTOR_ENCODER_COUNTS = 47;

@@ -14,8 +14,8 @@ import frc.subsystem.Storage.ManualStorageModes;
 public class Shooter implements Subsystem {
     // Motor port numbers
     private static boolean isEnabled = false;
-    private final int SHOOTER_MOTOR_1_PORT = 60;
-    private final int SHOOTER_MOTOR_2_PORT = 61;
+    private final int SHOOTER_MOTOR_1_PORT = 57;
+    private final int SHOOTER_MOTOR_2_PORT = 58;
     private final int TURRET_TURNING_PORT = 59;
     private final int HARD_STOP_PORT = 0;
 
