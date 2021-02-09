@@ -19,12 +19,19 @@ public class GalacticCommands extends Auton{
             final double SECOND_DRIVE_DIST_BLUE = 99.36;
             final double THIRD_DRIVE_DIST_BLUE = 67.08;
             final int FOURTH_DRIVE_DIST_BLUE = 60;
+<<<<<<< HEAD
             final int ACQUIRE_TIME_BLUE = 1;
             final double FIRST_TURN_ANGLE_BLUE = 63.438;
             final double SECOND_TURN_ANGLE_BLUE = -63.367;
+=======
+            final double ACQUIRE_TIME_BLUE = 1.5;
+            final double FIRST_TURN_ANGLE_BLUE = 300;//63.438;
+            final double SECOND_TURN_ANGLE_BLUE = 63.367;
+>>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
             final int THIRD_TURN_ANGLE_BLUE = 0;
                 addCommands(
-                    new AcquireCommand(1),
+                    //new AcquireCommand(180)
+                    new AcquireCommand(0.1),
                     //go forward until you aquire E6, 13 feet
                     new DriveStraightCommand(FIRST_DRIVE_DIST_BLUE),
                     //run aquisition at E6

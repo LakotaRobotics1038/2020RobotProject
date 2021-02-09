@@ -169,7 +169,7 @@ public class Robot extends TimedRobot {
     driver();
     storage.periodic();
     SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
-    System.out.println(shooter.isFinished());
+    //System.out.println(shooter.isFinished());
   }
 
   public void driver() {
