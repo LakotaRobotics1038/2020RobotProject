@@ -23,6 +23,7 @@ import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
+import frc.subsystem.Endgame;
 import frc.subsystem.Storage.ManualStorageModes;
 import frc.subsystem.Shooter.TurretDirections;
 
@@ -47,6 +48,8 @@ public class Robot extends TimedRobot {
   // Compressor
   public Compressor c = new Compressor();
 
+  // Endgmae
+  public Endgame endgame = new Endgame();
   // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
   private double drivePower = 0;
@@ -260,6 +263,9 @@ public class Robot extends TimedRobot {
       shooter.goToCrashPosition();
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
+    }
+    if(operatorJoystick.getXButton()) {
+      endgame.toggleLock();
     }
   }
 }

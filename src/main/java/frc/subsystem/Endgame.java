@@ -7,11 +7,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
 
 public class Endgame implements Subsystem {
-    private final int LOCK_PORT = 0;
-    private final int UNLOCK_PORT = 1;
+    private final int LOCK_PORT = 4;
+    private final int UNLOCK_PORT = 3;
     private final int SPARK_PORT = 0;
-    private final int MOTOR_SPEED = 0.0;
-    private final int FINAL_COUNT =0;
+    private final int MOTOR_SPEED = 0.5;
+    private final int FINAL_COUNT = 0;
     public DoubleSolenoid LockSolenoid = new DoubleSolenoid(UNLOCK_PORT, LOCK_PORT);
     public boolean isLocked = false;
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
