@@ -16,21 +16,21 @@ public class Limelight {
     private static NetworkTable table = tableInstance.getTable("limelight");
 
     // Network table values
-    private NetworkTableEntry tv = table.getEntry("tv");
-    private NetworkTableEntry tx = table.getEntry("tx");
-    private NetworkTableEntry ty = table.getEntry("ty");
+    private final NetworkTableEntry tv = table.getEntry("tv");
+    private final NetworkTableEntry tx = table.getEntry("tx");
+    private final NetworkTableEntry ty = table.getEntry("ty");
 
     private double valid_target;
     private double x;
     private double y;
 
     // offset default value
-    private int defaultOffset = 0;
+    private final int defaultOffset = 0;
 
     public enum LEDStates {
         On(0), Off(1);
         private int value; 
-        private LEDStates(int value) { this.value = value; }
+        private LEDStates(final int value) { this.value = value; }
     };
 
     private Limelight() {
@@ -47,7 +47,7 @@ public class Limelight {
             System.out.println("Creating limelight");
             try {
                 limelight = new Limelight();
-            } catch (NullPointerException e) {
+            } catch (final NullPointerException e) {
                 System.out.println("uh-oh " + e);
             }
         }
@@ -99,17 +99,28 @@ public class Limelight {
         return y;
     }
 
-    public void changeLEDStatus(LEDStates state) {
+    public void changeLEDStatus(final LEDStates state) {
         table.getEntry("ledMode").setDouble(state.value);
     }
 
     public double getMotorPower() {
         double power = ty.getDouble(defaultOffset);
-        return power * -.00417 + .55;
+        if(power < -13) {       //Red Zone
+            return power * -.005 + .49;
+        }
+        else if(power < -8) {  //Blue Zone
+            return power * -.002 + .49;
+        }
+        else if(power < 2) {  //Yellow Zone
+            return power * -.0025 + .49;
+        }
+        else {                 //Green Zone
+            return power * .03 + .49;
+        }
     }
     
     public double getShooterSetpoint() {
-        double setpoint = ty.getDouble(defaultOffset);
-        return (setpoint * -250 + 31000)/(4100.00);
+        final double setpoint = ty.getDouble(defaultOffset);
+        return (setpoint * -250 + 31000)/(410.00);
     }
 }

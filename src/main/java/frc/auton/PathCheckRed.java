@@ -2,22 +2,22 @@ package frc.auton;
 
 import frc.auton.commands.DriveStraightCommand;
 import frc.auton.commands.TurnCommand;
-import frc.auton.commands.AcquireCommand;
-import frc.auton.commands.CheckCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.auton.commands.AcquireCommand;
+import frc.auton.commands.PathCheckCommand;
 
 
-public class GalacticCommands extends Auton{
-    public GalacticCommands() {
+public class PathCheckRed extends Auton{
+    public PathCheckRed() {
         super();
         addCommands(
+            new TurnCommand(20),
             new ParallelCommandGroup(
-            //go forward until you aquire B3, 5.5 feet
-            new DriveStraightCommand(72),
+            new DriveStraightCommand(62),
             //run aquisition 
             new AcquireCommand(8)
             ),
-            new CheckCommand()
+            new PathCheckCommand('R')
         );
     }
 }

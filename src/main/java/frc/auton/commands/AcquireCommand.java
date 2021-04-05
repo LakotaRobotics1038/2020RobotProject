@@ -11,38 +11,35 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Storage;
-<<<<<<< HEAD
-
-=======
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
 
 public class AcquireCommand extends CommandBase {
   // private double START_TIME = 0;
 
   Acquisition acquisition = Acquisition.getInstance();
   Storage storage = Storage.getInstance();
-<<<<<<< HEAD
-  
-
-  private final double END_TIME;
-=======
   Timer timer = new Timer();
 
   private final double END_TIME;
   private final double START_TIME;
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
+  public boolean redTeam;
+  
   /**
    * Creates a new MoveAcquisitionCommand.
    */
   public AcquireCommand(double endTime) {
-<<<<<<< HEAD
-    
-    // START_TIME = Timer.getMatchTime();
-    // System.out.println(START_TIME);
-=======
     START_TIME = Timer.getFPGATimestamp();
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
     END_TIME = endTime;
+  }
+
+  public AcquireCommand(double endTimeRed, double endTimeBlue) {
+    double setpoint = 0.0;
+		if(Storage.redTeam) {
+			END_TIME = endTimeRed;
+		}
+		else {
+			END_TIME = endTimeBlue;
+		}
+    START_TIME = Timer.getFPGATimestamp();
   }
 
   // Called when the command is initially scheduled.
@@ -56,28 +53,29 @@ public class AcquireCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(storage.shuttleMotorEncoder.getPosition());
     storage.periodic();
     acquisition.runBeaterBarFwd();
+    System.out.println(timer.get());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println(storage.shuttleMotorEncoder.getPosition());
     acquisition.stopBeaterBar();
+    storage.feedShooter(0.0);
+    storage.shuttleMotorEncoder.setPosition(547);
     timer.stop();
+    System.out.println("End Acquire");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-<<<<<<< HEAD
-    //return Timer.getMatchTime() - START_TIME <= END_TIME;
-    return Timer.getMatchTime() >= END_TIME;
-=======
     //return (Timer.getFPGATimestamp() - START_TIME) <= END_TIME;
-    //boolean finished = Timer.hasPeriodPassed(END_TIME);
-    return (timer.get() >= END_TIME);
+    //boolean finished = Timer.hasPeriodPassed(END_TIME);\
+    return (timer.get() >= END_TIME || (storage.shuttleMotorEncoder.getPosition() > 170 && storage.shuttleMotorEncoder.getPosition() <= 500));
     //Timer.getFPGATimestamp()
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
   }
 }

@@ -10,7 +10,7 @@ import frc.robot.CANSpark1038;
 
 public class Acquisition implements Subsystem {
     // Ports
-    private final int beaterBarPort = 55;
+    private final int beaterBarPort = 54;
     
     // Solenoid channels
     private final int RAISE_ACQUISITION_CHANNEL = 3;
@@ -27,7 +27,7 @@ public class Acquisition implements Subsystem {
     private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless);
 
     // Motor speeds
-    private final static double BEATER_BAR_SPEED = .65;
+    private final static double BEATER_BAR_SPEED = .85;
     
     // Acquisition instance
     private static Acquisition acquisition;
@@ -78,7 +78,6 @@ public class Acquisition implements Subsystem {
      */
     public void runBeaterBarFwd() {
         beaterBar.set(BEATER_BAR_SPEED);
-        System.out.println("you worked so you won't feel my wrath");
     }
 
     /**
