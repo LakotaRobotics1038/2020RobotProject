@@ -92,6 +92,11 @@ public class Storage implements Subsystem {
         if(laserStart.get() && checking){
             redTeam = true;
         }
+        /*
+        if(shuttleMotorEncoder.getPosition() != 547){
+            redTeam = true;
+        }
+        */
         if (!manualStorageForward && !manualStorageReverse) {
             if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())                                                                                // sensor
             {
