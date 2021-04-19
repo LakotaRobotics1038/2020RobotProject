@@ -11,37 +11,28 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Storage;
-<<<<<<< HEAD
 
-=======
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
 
 public class AcquireCommand extends CommandBase {
   // private double START_TIME = 0;
 
   Acquisition acquisition = Acquisition.getInstance();
   Storage storage = Storage.getInstance();
-<<<<<<< HEAD
   
 
   private final double END_TIME;
-=======
   Timer timer = new Timer();
 
   private final double END_TIME;
   private final double START_TIME;
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
   /**
    * Creates a new MoveAcquisitionCommand.
    */
   public AcquireCommand(double endTime) {
-<<<<<<< HEAD
     
     // START_TIME = Timer.getMatchTime();
     // System.out.println(START_TIME);
-=======
     START_TIME = Timer.getFPGATimestamp();
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
     END_TIME = endTime;
   }
 
@@ -70,14 +61,11 @@ public class AcquireCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-<<<<<<< HEAD
     //return Timer.getMatchTime() - START_TIME <= END_TIME;
     return Timer.getMatchTime() >= END_TIME;
-=======
     //return (Timer.getFPGATimestamp() - START_TIME) <= END_TIME;
     //boolean finished = Timer.hasPeriodPassed(END_TIME);
     return (timer.get() >= END_TIME);
     //Timer.getFPGATimestamp()
->>>>>>> 88fd74587ed9aefdd639a2860d31a10134d83af7
   }
 }
