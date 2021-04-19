@@ -14,8 +14,8 @@ import frc.subsystem.Storage.ManualStorageModes;
 public class Shooter implements Subsystem {
     // Motor port numbers
     private static boolean isEnabled = false;
-    private final int SHOOTER_MOTOR_1_PORT = 57;
-    private final int SHOOTER_MOTOR_2_PORT = 58;
+    private final int SHOOTER_MOTOR_1_PORT = 60;
+    private final int SHOOTER_MOTOR_2_PORT = 61;
     private final int TURRET_TURNING_PORT = 59;
     private final int HARD_STOP_PORT = 0;
 
@@ -37,7 +37,7 @@ public class Shooter implements Subsystem {
 
     private final static int LEFT_STOP = 242; // 114500
     private final static int RIGHT_STOP = -31;
-    private static double swivelSpeed = 0.2;
+    private static double swivelSpeed = 0.3;
 
     // Limelight instance
     private Limelight limelight = Limelight.getInstance();
@@ -48,17 +48,17 @@ public class Shooter implements Subsystem {
     // Position PID for turret
     private final double positionSetpoint = 0.0;
     private final double positionTolerance = 1;
-    private final static double positionP = 0.08; // .15
+    private final static double positionP = 0.036; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
 
     // Speed PID for shooter
     private final double speedSetpoint = limelight.getShooterSetpoint();
-    private final double speedTolerance = 1000;
-    private final static double speedP = 0.000007;
-    private final static double speedI = 0.0;
-    private final static double speedD = 0.0;
+    private final double speedTolerance = 9001;
+    private final static double speedP = 0.00002;
+    private final static double speedI = 0.00001;
+    private final static double speedD = 0.00001;
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
     private boolean isRunning = false;
 
@@ -128,9 +128,16 @@ public class Shooter implements Subsystem {
      */
     public void executeAimPID() {
         // System.out.println("PID");
-        double power = positionPID.calculate(limelight.getXOffset());
-        System.out.println("x " + limelight.getXOffset());
-        System.out.println("Power" + power);
+        double power = 0.0;
+        if(limelight.getYOffset() < -13){
+            power = positionPID.calculate(limelight.getXOffset() + 1);
+            System.out.println("X += 1");
+        }
+        else{
+            power = positionPID.calculate(limelight.getXOffset());
+        }
+        // System.out.println("x " + limelight.getXOffset());
+        // System.out.println("Power" + power);
         turretTurningMotor.set(power * 0.5);
     }
 
@@ -141,9 +148,9 @@ public class Shooter implements Subsystem {
         isRunning = true;
         speedPID.setSetpoint(limelight.getShooterSetpoint());
         double power = speedPID.calculate(getShooterSpeed()) + limelight.getMotorPower();
-        System.out.println("speed" + shooterMotor1.getSelectedSensorVelocity());
+        System.out.println("speed" + getShooterSpeed());
         System.out.println("setpoint: " + speedPID.getSetpoint());
-        System.out.println("power" + power);
+        //System.out.println("power" + power);
         shooterMotor1.set(-power);
         shooterMotor2.set(power);
     }
@@ -251,7 +258,7 @@ public class Shooter implements Subsystem {
     
 
     public void goToCrashPosition() {
-        if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
+        if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 2000) {
             stopTurret();
         } else if (turretTurningMotor.getSelectedSensorPosition() > 0) {
             currentTurretDirection = TurretDirections.Right;

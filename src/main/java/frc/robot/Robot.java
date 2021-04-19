@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.auton.Auton;
 import frc.auton.DriveAuton;
 import frc.auton.GalacticCommands;
+import frc.auton.GalacticCommands2;
 import frc.robot.Gyro1038;
 import frc.auton.Shooting3BallAuton;
 import frc.auton.Shooting5BallAuton;
@@ -25,6 +26,7 @@ import frc.subsystem.Storage;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
+import frc.subsystem.Endgame;
 import frc.subsystem.Storage.ManualStorageModes;
 import frc.subsystem.Shooter.TurretDirections;
 
@@ -42,13 +44,17 @@ public class Robot extends TimedRobot {
   private static final String k8BallAuto = "8 Ball Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private CommandScheduler schedule = CommandScheduler.getInstance();
+  public static CommandScheduler schedule = CommandScheduler.getInstance();
   public static SequentialCommandGroup autonPath;
   private final Gyro1038 gyro = Gyro1038.getInstance();
   private Auton auton = new Auton();
 
   // Compressor
   public Compressor c = new Compressor();
+
+  //Endgame
+  public Endgame endgame = new Endgame();
+  private boolean prevXState = false;
 
   // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
@@ -117,6 +123,7 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void autonomousInit() {
+    //autonPath = new GalacticCommands2();
     autonPath = new GalacticCommands();
     // System.out.println("Auton started");
     // m_autoSelected = m_chooser.getSelected();
@@ -265,6 +272,13 @@ public class Robot extends TimedRobot {
       shooter.goToCrashPosition();
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
+    }
+    endgame.periodic(operatorJoystick.getRightJoystickVertical());
+    if (operatorJoystick.getXButton() && !prevXState) {
+      endgame.toggleLock();
+      prevXState = true;
+    } else if (!operatorJoystick.getXButton()) {
+      prevXState = false;
     }
   }
 }

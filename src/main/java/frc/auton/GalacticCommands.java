@@ -1,18 +1,16 @@
 package frc.auton;
 
 import frc.auton.commands.DriveStraightCommand;
-import frc.auton.commands.ShootCommand;
 import frc.auton.commands.TurnCommand;
-import frc.subsystem.Acquisition;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.auton.commands.AcquireCommand;
-import frc.auton.commands.AimCommand;
+import frc.auton.commands.CheckCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 
 public class GalacticCommands extends Auton{
-    public String teamColor = "Blue";
     public GalacticCommands() {
         super();
+<<<<<<< HEAD
         switch(teamColor) {
             case "Blue":
             final int FIRST_DRIVE_DIST_BLUE = 156;
@@ -84,6 +82,16 @@ public class GalacticCommands extends Auton{
                     new DriveStraightCommand(FOURTH_DRIVE_DIST_RED)
                 );
                 break;
+=======
+        addCommands(
+            new ParallelCommandGroup(
+            //go forward until you aquire B3, 5.5 feet
+            new DriveStraightCommand(72),
+            //run aquisition 
+            new AcquireCommand(8)
+            ),
+            new CheckCommand()
+        );
+>>>>>>> dc9c1d5b88cafb800129ed2852139980595c59a4
     }
-}
 }
