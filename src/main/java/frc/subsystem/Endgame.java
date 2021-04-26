@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.CANSpark1038;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
 import com.revrobotics.CANEncoder;
+
+//NOTE WHEN MOTOR IS LOCKED ENDGAME CANNOT EXTEND BUT IT CAN RETRACT
 
 public class Endgame implements Subsystem {
     private final int MOTOR_LOCK_PORT = 4;
@@ -21,12 +21,18 @@ public class Endgame implements Subsystem {
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
     public DoubleSolenoid EndgameLockSolenoid = new DoubleSolenoid(ENDGAME_UNLOCK_PORT, ENDGAME_LOCK_PORT);
-    public boolean EndgameIsLocked = true;
-    public boolean MotorIsLocked = false;
+    public boolean EndgameIsLocked = true; //Safety lock for endgame
+    public boolean MotorIsLocked = false; //Motor lock for endgame
+    public boolean prevButtonState = false;
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
     public CANEncoder encoder = new CANEncoder(motor);
     public void periodic() {
         switch (Directions) {
+            default:
+                //Default Value for endgame motor
+                motor.set(0);
+                break;
+
             case extending:
                 //Extends Endgame
                 if (encoder.getPosition() <= MAX_COUNT && !EndgameIsLocked && !MotorIsLocked) {
@@ -34,7 +40,8 @@ public class Endgame implements Subsystem {
                     System.out.println("Extending Endgame");
                 }
                 else {
-                    motor.set(0);
+                    Directions = directionsOptions.stop;
+
                 }
                 break;
             case retracting:
@@ -44,18 +51,16 @@ public class Endgame implements Subsystem {
                     System.out.println("Retracting Endgame");
                 }
                 else {
-                    motor.set(0);
+                    Directions = directionsOptions.stop;
                 }
 
                 break;
             case stop:
                 //Stops Endgame
                 motor.set(0);
+                motorLock();
+                MotorIsLocked = true;
                 System.out.println("Stopped Endgame");
-                break;
-            default:
-                //Default Value for endgame motor
-                motor.set(0);
                 break;
         }
 
@@ -98,6 +103,19 @@ public class Endgame implements Subsystem {
         if (encoder.getPosition() <= MIN_COUNT && MotorIsLocked ) {
             MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             MotorIsLocked = false;
+        }
+    }
+    //Extends and Retracts endgame
+    public void onButton() {
+        if (prevButtonState == false && MotorIsLocked) {
+            endgameUnlock();
+            Directions = directionsOptions.extending;
+            prevButtonState = true;
+        }
+        else if (Directions == directionsOptions.stop) {
+            Directions = directionsOptions.retracting;
+            endgameLock();
+            prevButtonState = false;
         }
     }
 }
