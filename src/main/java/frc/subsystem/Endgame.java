@@ -5,83 +5,99 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.CANSpark1038;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import com.revrobotics.CANEncoder;
 
 public class Endgame implements Subsystem {
-    private final int LOCK_PORT = 4;
-    private final int UNLOCK_PORT = 5;
+    private final int MOTOR_LOCK_PORT = 4;
+    private final int MOTOR_UNLOCK_PORT = 5;
+    private final int ENDGAME_LOCK_PORT = 6;
+    private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
-    private final double MOTOR_SPEED = 0.25;
-    private final int FINAL_COUNT = 60;
-    public enum Directions {extending, retracting, neutral};
-    public Directions currentDirections = Directions.neutral;
-    public DoubleSolenoid LockSolenoid = new DoubleSolenoid(UNLOCK_PORT, LOCK_PORT);
-    public boolean isLocked = false;
+    private final int MAX_COUNT = 175; //Needs to be updated with actual value
+    private final int MIN_COUNT = 25;  //Needs to be updated with actual value
+    public enum directionsOptions {extending, retracting, stop};
+    public directionsOptions Directions = directionsOptions.stop;
+    public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
+    public DoubleSolenoid EndgameLockSolenoid = new DoubleSolenoid(ENDGAME_UNLOCK_PORT, ENDGAME_LOCK_PORT);
+    public boolean EndgameIsLocked = true;
+    public boolean MotorIsLocked = false;
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
     public CANEncoder encoder = new CANEncoder(motor);
+    public void periodic() {
+        switch (Directions) {
+            case extending:
+                //Extends Endgame
+                if (encoder.getPosition() <= MAX_COUNT && !EndgameIsLocked && !MotorIsLocked) {
+                    motor.set(.25);
+                    System.out.println("Extending Endgame");
+                }
+                else {
+                    motor.set(0);
+                }
+                break;
+            case retracting:
+                //Retracts Endgame
+                if (encoder.getPosition() >= MIN_COUNT && !EndgameIsLocked && !MotorIsLocked) {
+                    motor.set(-.25);
+                    System.out.println("Retracting Endgame");
+                }
+                else {
+                    motor.set(0);
+                }
 
-    public void periodic(double joystick) {
-        //motor.set(joystick);
-        // if(Math.abs(encoder.getPosition()) >= (FINAL_COUNT - 20)) {
-        //     currentDirections = Directions.neutral;
-        // }
-        // else if(Math.abs(encoder.getPosition()) <= (20) && currentDirections == Directions.retracting) {
-        //     currentDirections = Directions.neutral;
-        // }
-        // switch (currentDirections) {
-        //     case extending:
-        //         //motor.set(0.5);
-        //         System.out.println("Extend");
-        //         break;
-        //     case retracting:
-        //         //motor.set(-0.5);
-        //         System.out.println("Retract");
-        //         break;
-        //     case neutral:
-        //         motor.set(0);
-        //         //System.out.println("Neutral");
-        //         break;
-        // }
-    }
-    public void in() {
-        currentDirections = Directions.retracting;
-    }
-    public void lock() {
-        isLocked = true;
-        LockSolenoid.set(DoubleSolenoid.Value.kForward);
+                break;
+            case stop:
+                //Stops Endgame
+                motor.set(0);
+                System.out.println("Stopped Endgame");
+                break;
+            default:
+                //Default Value for endgame motor
+                motor.set(0);
+                break;
+        }
+
     }
 
-    public void unlock() {
-        isLocked = false;
-        LockSolenoid.set(DoubleSolenoid.Value.kReverse);
+    //Locks Endgame's Safety
+    public void endgameLock() {
+        if (encoder.getPosition() <= MIN_COUNT && !EndgameIsLocked && !MotorIsLocked) {
+            EndgameLockSolenoid.set(DoubleSolenoid.Value.kForward);
+            EndgameIsLocked = true;
+            System.out.println("Endgame is locked");
+        }
+        else {
+            System.out.println("Endgame is already locked");
+        }
     }
-    // public void extend() {
-    //     motor.set(0.25);
-    // }
-    // public void raise(){
-    //     if (Math.abs(encoder.getPosition()) > 20){
-    //         if(encoder.getPosition() < 0) {
-    //             motor.set(MOTOR_SPEED);
-    //         }
-    //         else{
-    //             motor.set(-1 * MOTOR_SPEED);
-    //         }
-    //     }
-    //     else {
-    //         motor.set(0);
-    //         lock();
-    //     }
-    // }
 
-    public void toggleLock(){
-    //turn pneumatics on and off
-    if  (isLocked){
-        unlock();
-        currentDirections = Directions.extending;
+    //Unlocks Endgame and Endgame Motor
+    public void endgameUnlock() {
+        if (encoder.getPosition() <= MIN_COUNT && EndgameIsLocked && MotorIsLocked) {
+            EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
+            MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
+            EndgameIsLocked = false;
+            MotorIsLocked = false;
+            System.out.println("Endgame is unlocked");
+        }
+        else {
+            System.out.println("Endgame is already unlocked");
+        }
     }
-    else {
-        lock();
-        currentDirections = Directions.neutral;
+    //Locks Endgame Motor
+    public void motorLock() {
+        if (encoder.getPosition() >= MAX_COUNT && !MotorIsLocked ) {
+            MotorLockSolenoid.set(DoubleSolenoid.Value.kForward);
+            MotorIsLocked = true;
+        }
     }
+    //Unlocks Endgame Motor
+    public void motorUnLock() {
+        if (encoder.getPosition() <= MIN_COUNT && MotorIsLocked ) {
+            MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
+            MotorIsLocked = false;
+        }
     }
 }

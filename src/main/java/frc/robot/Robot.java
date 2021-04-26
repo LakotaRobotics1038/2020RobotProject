@@ -273,12 +273,6 @@ public class Robot extends TimedRobot {
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
-    endgame.periodic(operatorJoystick.getRightJoystickVertical());
-    if (operatorJoystick.getXButton() && !prevXState) {
-      endgame.toggleLock();
-      prevXState = true;
-    } else if (!operatorJoystick.getXButton()) {
-      prevXState = false;
-    }
+    
   }
 }
