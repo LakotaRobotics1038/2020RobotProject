@@ -26,6 +26,16 @@ public class Endgame implements Subsystem {
     public boolean endgameState = false;
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
     public CANEncoder encoder = new CANEncoder(motor);
+    private static Endgame endgame;
+
+    public static Endgame getInstance() {
+        if (endgame == null) {
+            System.out.println("Creating a new DriveTrain");
+            endgame = new Endgame();
+        }
+        return endgame;
+    }
+
     public void periodic() {
         switch (Directions) {
             default:
@@ -36,10 +46,13 @@ public class Endgame implements Subsystem {
             case extending:
                 //Extends Endgame
                 if (encoder.getPosition() <= MAX_COUNT && !EndgameIsLocked && !MotorIsLocked) {
+                    MotorIsLocked = false;
+                    EndgameIsLocked = false;
                     motor.set(.25);
                     System.out.println("Extending Endgame");
                 }
                 else {
+                    motor.set(0);
                     Directions = directionsOptions.stop;
                     motorLock();
 
@@ -48,10 +61,13 @@ public class Endgame implements Subsystem {
             case retracting:
                 //Retracts Endgame
                 if (encoder.getPosition() >= MIN_COUNT && !EndgameIsLocked && !MotorIsLocked) {
+                    MotorIsLocked = false;
+                    EndgameIsLocked = false;
                     motor.set(-.25);
                     System.out.println("Retracting Endgame");
                 }
                 else {
+                    motor.set(0);
                     Directions = directionsOptions.stop;
                 }
 
@@ -69,7 +85,7 @@ public class Endgame implements Subsystem {
 
     //Locks Endgame's Safety
     public void endgameLock() {
-        if (encoder.getPosition() <= MIN_COUNT && !EndgameIsLocked && !MotorIsLocked) {
+        if (!EndgameIsLocked && !MotorIsLocked) {
             EndgameLockSolenoid.set(DoubleSolenoid.Value.kForward);
             EndgameIsLocked = true;
             System.out.println("Endgame is locked");
@@ -81,7 +97,7 @@ public class Endgame implements Subsystem {
 
     //Unlocks Endgame and Endgame Motor
     public void endgameUnlock() {
-        if (encoder.getPosition() <= MIN_COUNT && EndgameIsLocked && MotorIsLocked) {
+        if (EndgameIsLocked && MotorIsLocked) {
             EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             EndgameIsLocked = false;
@@ -94,14 +110,14 @@ public class Endgame implements Subsystem {
     }
     //Locks Endgame Motor
     public void motorLock() {
-        if (encoder.getPosition() >= MAX_COUNT && !MotorIsLocked ) {
+        if (!MotorIsLocked ) {
             MotorLockSolenoid.set(DoubleSolenoid.Value.kForward);
             MotorIsLocked = true;
         }
     }
     //Unlocks Endgame Motor
     public void motorUnLock() {
-        if (encoder.getPosition() <= MIN_COUNT && MotorIsLocked ) {
+        if (MotorIsLocked) {
             MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             MotorIsLocked = false;
         }

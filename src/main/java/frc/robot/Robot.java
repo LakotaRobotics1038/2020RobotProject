@@ -53,7 +53,8 @@ public class Robot extends TimedRobot {
   public Compressor c = new Compressor();
 
   //Endgame
-  public Endgame endgame = new Endgame();
+  //public Endgame endgame = new Endgame();
+  private final Endgame endgame = endgame.getInstance();
   private boolean prevXState = false;
 
   // Drive
