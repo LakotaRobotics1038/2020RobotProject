@@ -54,8 +54,8 @@ public class Robot extends TimedRobot {
 
   //Endgame
   //public Endgame endgame = new Endgame();
-  private final Endgame endgame = endgame.getInstance();
-  private boolean prevXState = false;
+  private final Endgame endgame = Endgame.getInstance();
+  //private boolean prevXState = false;
 
   // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
