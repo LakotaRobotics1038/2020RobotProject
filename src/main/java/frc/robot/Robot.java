@@ -52,10 +52,15 @@ public class Robot extends TimedRobot {
   // Compressor
   public Compressor c = new Compressor();
 
+<<<<<<< HEAD
   //Endgame
   public Endgame endgame = new Endgame();
   private boolean prevXState = false;
 
+=======
+  // Endgmae
+  public Endgame endgame = new Endgame();
+>>>>>>> 3ec678afdfbfbc6af0c01d87de01ef8569d0b199
   // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
   private double drivePower = 0;
@@ -273,6 +278,12 @@ public class Robot extends TimedRobot {
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
+<<<<<<< HEAD
   
+=======
+    if(operatorJoystick.getXButton()) {
+      endgame.toggleLock();
+    }
+>>>>>>> 3ec678afdfbfbc6af0c01d87de01ef8569d0b199
   }
 }
