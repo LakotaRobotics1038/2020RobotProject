@@ -23,7 +23,7 @@ public class Endgame implements Subsystem {
     public DoubleSolenoid EndgameLockSolenoid = new DoubleSolenoid(ENDGAME_UNLOCK_PORT, ENDGAME_LOCK_PORT);
     public boolean EndgameIsLocked = true; //Safety lock for endgame
     public boolean MotorIsLocked = false; //Motor lock for endgame
-    public boolean prevButtonState = false;
+    public boolean endgameState = false;
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
     public CANEncoder encoder = new CANEncoder(motor);
     public void periodic() {
@@ -41,6 +41,7 @@ public class Endgame implements Subsystem {
                 }
                 else {
                     Directions = directionsOptions.stop;
+                    motorLock();
 
                 }
                 break;
@@ -107,15 +108,15 @@ public class Endgame implements Subsystem {
     }
     //Extends and Retracts endgame
     public void onButton() {
-        if (prevButtonState == false && MotorIsLocked) {
-            endgameUnlock();
-            Directions = directionsOptions.extending;
-            prevButtonState = true;
+        if (endgameState == false && MotorIsLocked) {    //Checks to see if X has been pressed before and if the motor is locked
+            endgameUnlock();    //Unlocks endgame safety and motor
+            Directions = directionsOptions.extending;   //Starts extending endgame
+            endgameState = true;     //tells the robot that the button has been pressed 
         }
-        else if (Directions == directionsOptions.stop) {
-            Directions = directionsOptions.retracting;
-            endgameLock();
-            prevButtonState = false;
+        else if (endgameState == true && (Directions == directionsOptions.stop)) {   //Checks to see if the button has been pressed before
+            Directions = directionsOptions.retracting;  //Starts retracting endgame
+            //endgameLock();  //Locks the safety
+            endgameState = false; //Tells the robot x has been pressed again
         }
     }
 }
