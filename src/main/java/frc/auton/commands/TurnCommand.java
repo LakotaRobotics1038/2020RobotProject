@@ -13,21 +13,12 @@ public class TurnCommand extends CommandBase {
 	//private PIDController turnPID = getPIDController();
 
 	private double drivePower = 0.0;
-<<<<<<< HEAD
-	private final double TOLERANCE = 5.1;
-=======
->>>>>>> dc9c1d5b88cafb800129ed2852139980595c59a4
 	//private final double END_DRIVE_SPEED = 0.0;
 	//private final double END_DRIVE_ROTATION = 0.0;
 	private final double TOLERANCE = 5.0;
 	//private final double OUTPUT_RANGE = .6;
-<<<<<<< HEAD
-	private final static double P = 0.0231;
-	private final static double I = 0.0001;
-=======
 	private final static double P = 0.035;
 	private final static double I = 0.0015;
->>>>>>> dc9c1d5b88cafb800129ed2852139980595c59a4
 	private final static double D = 0.0002;
 	 
 	private PIDController turnPID;

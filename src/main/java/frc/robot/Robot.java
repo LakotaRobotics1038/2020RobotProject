@@ -166,7 +166,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() { }
+  public void teleopInit() {
+    endgame.reset();
+   }
 
   /**
   * This function is called periodically during operator control.
