@@ -24,7 +24,8 @@ public class Endgame implements Subsystem {
     public DoubleSolenoid EndgameLockSolenoid = new DoubleSolenoid(ENDGAME_UNLOCK_PORT, ENDGAME_LOCK_PORT);
     public boolean safetyIsLocked = true; //Safety lock for endgame
     public boolean MotorIsLocked = true; //Motor lock for endgame
-    public boolean endgameState = false;
+    public boolean endgameState = false; //Is endgame up or down
+    public boolean preExtendState = false; //Has prextend been completed
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
     public CANEncoder encoder = new CANEncoder(motor);
     private static Endgame endgame;
@@ -43,15 +44,8 @@ public class Endgame implements Subsystem {
         motorLock();
         Directions = directionsOptions.stop;
     }
-    public void periodic(double speed) {
-        if(speed > .2 && endgameState == true) {
-            motorUnLock();
-            motor.set(.3);
-        }
-        else if(speed < -.2 && endgameState == true) {
-            motor.set(-.3);
-        }
-        else {
+    public void periodic() {
+
         System.out.println(endgameState + " " + MotorIsLocked + " " + encoder.getPosition() + " " + safetyIsLocked);
         switch (Directions) {
             default:
@@ -63,16 +57,18 @@ public class Endgame implements Subsystem {
                 if(encoder.getPosition() > -8) {
                     motor.set(-.25);
                     System.out.println("PreExtend");
+                    preExtendState = true;
                 }
                 else {
                     motorUnLock();
                     motor.set(.5);
-                    Directions = directionsOptions.extending;
+                    Directions = directionsOptions.stop;
                 }
                 break;
             case extending:
                 //Extends Endgame
-                if (encoder.getPosition() < MAX_COUNT && !safetyIsLocked && !MotorIsLocked) {
+                motorUnLock();
+                if (encoder.getPosition() < MAX_COUNT) {
                     motor.set(.5);
                     System.out.println("Extending Endgame");
                 }
@@ -84,9 +80,9 @@ public class Endgame implements Subsystem {
                 }
                 break;
             case retracting:
-            motorLock();
+                motorLock();
                 //Retracts Endgame
-                if (encoder.getPosition() > MIN_COUNT && !safetyIsLocked) {
+                if (encoder.getPosition() > MIN_COUNT) {
                     motor.set(-.8);
                     System.out.println("Retracting Endgame");
                 }
@@ -99,10 +95,12 @@ public class Endgame implements Subsystem {
             case stop:
                 //Stops Endgame
                 motor.set(0);
-                motorLock();
+                if (!preExtendState) {
+                    motorLock();
+                }
                 System.out.println("Stopped Endgame");
                 break;
-        }
+        
         }
 
     }
@@ -119,24 +117,36 @@ public class Endgame implements Subsystem {
         }
     }
 
-    //Unlocks Endgame and Endgame Motor
-    public void endgameUnlock() {
-        if (safetyIsLocked && MotorIsLocked) {
+    public void safetyUnlock() {
+        if (safetyIsLocked) {
             EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
-            MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             safetyIsLocked = false;
-            MotorIsLocked = false;
             System.out.println("Endgame is unlocked");
         }
         else {
             System.out.println("Endgame is already unlocked");
         }
     }
+
+    //Unlocks Endgame and Endgame Motor
+    // public void endgameUnlock() {
+    //     if (safetyIsLocked && MotorIsLocked) {
+    //         EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
+    //         MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
+    //         safetyIsLocked = false;
+    //         MotorIsLocked = false;
+    //         System.out.println("Endgame is unlocked");
+    //     }
+    //     else {
+    //         System.out.println("Endgame is already unlocked");
+    //     }
+    // }
     //Locks Endgame Motor
     public void motorLock() {
-        if (!MotorIsLocked ) {
+        if (!MotorIsLocked) {
             MotorLockSolenoid.set(DoubleSolenoid.Value.kForward);
             MotorIsLocked = true;
+            preExtendState = false;
         }
     }
     //Unlocks Endgame Motor
@@ -152,20 +162,29 @@ public class Endgame implements Subsystem {
     //     }
     // }
     //Extends and Retracts endgame
-    public void onButton() {
-        if (endgameState == false && MotorIsLocked && Directions == directionsOptions.stop) {    //Checks to see if X has been pressed before and if the motor is locked
+    public void onJoyStick(double joystickValue) {
             System.out.println("Begin Extend");
-            endgameUnlock();    //Unlocks endgame safety and motor
-            encoder.setPosition(0);
-            Directions = directionsOptions.preExtend;
-            //Directions = directionsOptions.extending;   //Starts extending endgame
-            endgameState = true;     //tells the robot that the button has been pressed 
-        }
-        else if (endgameState == true && (Directions == directionsOptions.stop)) {   //Checks to see if the button has been pressed before
-            System.out.println("Begin retract");
-            Directions = directionsOptions.retracting;  //Starts retracting endgame
-            //safetyLock();  //Locks the safety
-            endgameState = false; //Tells the robot x has been pressed again
-        }
+            safetyUnlock(); //Unlocks endgame safety and motor
+            if (joystickValue > 0) {
+                if (!preExtendState) {
+                    Directions = directionsOptions.preExtend; //runs pre-extend
+                }
+                else {
+                    Directions = directionsOptions.extending; //runs extend
+                }
+            }
+            else if (joystickValue < 0) {
+                Directions = directionsOptions.retracting;   //Starts retracting endgame
+            }
+            else if (joystickValue == 0) {
+                Directions = directionsOptions.stop; //stops endgame from moving
+            }
+        
+        // else if (endgameState == true && (Directions == directionsOptions.stop)) {   //Checks to see if the button has been pressed before
+        //     System.out.println("Begin retract");
+        //     Directions = directionsOptions.retracting;  //Starts retracting endgame
+        //     //safetyLock();  //Locks the safety
+        //     endgameState = false; //Tells the robot x has been pressed again
+        // }
     }
 }

@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     operator();
     driver();
-    endgame.periodic(operatorJoystick.getRightJoystickVertical());
+    endgame.periodic();
     storage.periodic();
     SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
     //System.out.println(shooter.isFinished());
@@ -278,12 +278,10 @@ public class Robot extends TimedRobot {
     // }
     else {
       shooter.goToCrashPosition();
-      //limelight.changeLEDStatus(LEDStates.Off);
+      limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
     
-    if (operatorJoystick.getXButton()) {
-      endgame.onButton();
-    }
+    endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
   }
 }
