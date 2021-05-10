@@ -23,7 +23,7 @@ public class Shooter implements Subsystem {
     private TalonSRX1038 shooterMotor1 = new TalonSRX1038(SHOOTER_MOTOR_1_PORT);
     private TalonSRX1038 shooterMotor2 = new TalonSRX1038(SHOOTER_MOTOR_2_PORT);
     private TalonSRX1038 turretTurningMotor = new TalonSRX1038(TURRET_TURNING_PORT);
-    private Prox hardStop = new Prox(HARD_STOP_PORT);
+    //private Prox hardStop = new Prox(HARD_STOP_PORT);
 
     // Shooter
     private static Shooter shooter;
@@ -35,7 +35,7 @@ public class Shooter implements Subsystem {
         Left, Right
     }
 
-    private final static int LEFT_STOP = 242; // 114500
+    private final static int LEFT_STOP = 220; // 114500
     private final static int RIGHT_STOP = -31;
     private static double swivelSpeed = 0.3;
 
@@ -127,7 +127,7 @@ public class Shooter implements Subsystem {
      * aims turret towards target
      */
     public void executeAimPID() {
-        // System.out.println("PID");
+        System.out.println("PID");
         double power = 0.0;
         if(limelight.getYOffset() < -13){
             power = positionPID.calculate(limelight.getXOffset() + 1);
@@ -136,8 +136,8 @@ public class Shooter implements Subsystem {
         else{
             power = positionPID.calculate(limelight.getXOffset());
         }
-        // System.out.println("x " + limelight.getXOffset());
-        // System.out.println("Power" + power);
+         System.out.println("x " + limelight.getXOffset());
+         System.out.println("Power" + power);
         turretTurningMotor.set(power * 0.5);
     }
 
@@ -145,6 +145,8 @@ public class Shooter implements Subsystem {
      * sets the speed of the shooter
      */
     public void executeSpeedPID() {
+        //shooterMotor1.set(-.55);
+        //shooterMotor2.set(.55);
         isRunning = true;
         speedPID.setSetpoint(limelight.getShooterSetpoint());
         double power = speedPID.calculate(getShooterSpeed()) + limelight.getMotorPower();
@@ -182,7 +184,7 @@ public class Shooter implements Subsystem {
 
     public void periodic() {
         if (isEnabled) {
-            //executeAimPID();
+            executeAimPID();
             executeSpeedPID();
         }
     }
@@ -210,7 +212,8 @@ public class Shooter implements Subsystem {
     }
 
     public boolean turretOnTarget() {
-        return positionPID.atSetpoint() && limelight.canSeeTarget();
+        return false;
+        //return positionPID.atSetpoint() && limelight.canSeeTarget();
     }
 
     /**
@@ -239,9 +242,9 @@ public class Shooter implements Subsystem {
         return shooterMotor1.getSelectedSensorVelocity()/4100.00;
     }
 
-    public boolean getHardStop() {
-        return hardStop.get();
-    }
+    // public boolean getHardStop() {
+    //     return hardStop.get();
+    // }
 
     public void resetTurretEncoder() {
         turretTurningMotor.setSelectedSensorPosition(0);
@@ -273,6 +276,15 @@ public class Shooter implements Subsystem {
         turretTurningMotor.set(0);
     }
 
+    // public void ninety() {
+    //     if(getTurretEncoder() < 90) {
+    //         turretTurningMotor.set(swivelSpeed);
+    //     }
+    //     else {
+    //         turretTurningMotor.set(0);
+    //     }
+    // }
+
     public void move() {
         // if (hardStop.get()) {
         //     turretTurningMotor.setSelectedSensorPosition(0);
@@ -289,4 +301,16 @@ public class Shooter implements Subsystem {
             swivelEy();
         }
     }
+    // public void manual(double turnDir) {
+    //     System.out.println(turnDir + "," + getTurretEncoder());
+    //     if (turnDir < 0 && getTurretEncoder() > RIGHT_STOP) {
+    //         turretTurningMotor.set(turnDir/2);
+    //     }
+    //     else if (turnDir > 0 && getTurretEncoder() <LEFT_STOP) {
+    //         turretTurningMotor.set(turnDir/2);
+    //     }
+    //     else{
+    //         turretTurningMotor.set(0);
+    //     }
+    // }
 }

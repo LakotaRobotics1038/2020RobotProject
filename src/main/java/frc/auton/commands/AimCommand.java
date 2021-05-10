@@ -33,15 +33,15 @@ public class AimCommand extends CommandBase {
     @Override
     public void execute() {
         shooter.executeSpeedPID();
-        shooter.move();
+        //shooter.ninety();
 
-        // TODO: Get the limelight working here
-        // if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
-        //      shooter.turnTurret(TURRET_SPEED);
-        // } else {
-        //     shooter.turnTurret(0);
-        //      turned = true;
-        // }
+        //TODO: Get the limelight working here
+        if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
+             shooter.turnTurret(TURRET_SPEED);
+        } else {
+            shooter.turnTurret(0);
+             turned = true;
+        }
     }
 
     @Override

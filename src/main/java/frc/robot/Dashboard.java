@@ -14,7 +14,7 @@ public class Dashboard {
 
   private DriverStation driverStation = DriverStation.getInstance();
   private Shooter shooter = Shooter.getInstance();
-  private Limelight limelight = Limelight.getInstance();
+  //private Limelight limelight = Limelight.getInstance();
   //private UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
 
   private final int CAMERA_EXPOSURE =  50;
@@ -40,12 +40,13 @@ public class Dashboard {
     SmartDashboard.putNumber("Shooter Angle", 0);
     SmartDashboard.putBoolean("Prox", false);
     SmartDashboard.putNumber("Shooter speed", .55);
+    SmartDashboard.putNumber("Shooter Multiplier", -.005);
   }
 
   public void update() {
     SmartDashboard.putNumber("Shooter Angle", shooter.getTurretEncoder());
-    SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());
-    SmartDashboard.putBoolean("Prox", shooter.getHardStop());
+    //SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());
+    //SmartDashboard.putBoolean("Prox", shooter.getHardStop());
   }
 
   public String getPosition() {
@@ -55,4 +56,12 @@ public class Dashboard {
   public String getAutonChooser() {
     return autonChooser;
   }
+  public Double getLimeBase() {
+    return SmartDashboard.getNumber("Shooter speed", .55);
+  }
+
+  public Double getLimeMultiplier() {
+    return SmartDashboard.getNumber("Shooter Multipier", -.005);
+  }
+
 }

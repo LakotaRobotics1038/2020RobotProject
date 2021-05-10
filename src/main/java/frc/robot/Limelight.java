@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Dashboard;
 
 /**
  * Add your docs here.
@@ -26,6 +27,7 @@ public class Limelight {
 
     // offset default value
     private final int defaultOffset = 0;
+    Dashboard dashboard = Dashboard.getInstance();
 
     public enum LEDStates {
         On(0), Off(1);
@@ -105,18 +107,22 @@ public class Limelight {
 
     public double getMotorPower() {
         double power = ty.getDouble(defaultOffset);
-        if(power < -13) {       //Red Zone
-            return power * -.005 + .49;
-        }
-        else if(power < -8) {  //Blue Zone
-            return power * -.002 + .49;
-        }
-        else if(power < 2) {  //Yellow Zone
-            return power * -.0025 + .49;
-        }
-        else {                 //Green Zone
-            return power * .03 + .49;
-        }
+        double mult = dashboard.getLimeMultiplier();
+        double base = dashboard.getLimeBase();
+        return power*mult + base;
+        //return power * -.005 + .55;
+        // if(power < -13) {       //Red Zone
+        //     return power * -.005 + .49;
+        // }
+        // else if(power < -8) {  //Blue Zone
+        //     return power * -.002 + .49;
+        // }
+        // else if(power < 2) {  //Yellow Zone
+        //     return power * -.0025 + .49;
+        // }
+        // else {                 //Green Zone
+        //     return power * .03 + .49;
+        // }
     }
     
     public double getShooterSetpoint() {

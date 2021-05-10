@@ -76,12 +76,12 @@ public class Robot extends TimedRobot {
   private boolean prevDUpState = false;
   private boolean prevDDownState = false;
 
-  // //limelight
+  //limelight
   private final Limelight limelight = Limelight.getInstance();
 
   // shooter
   private final Shooter shooter = Shooter.getInstance();
-  private double shooterSpeed = -.55;
+  private double shooterSpeed = -.7;
 
   // spinner
   // private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
@@ -111,8 +111,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     limelight.read();
     dashboard.update();
-    // System.out.println(limelight.getYOffset());
-    //System.out.println(shooter.getShooterSpeed());
+    System.out.println(limelight.getYOffset());
+    System.out.println(shooter.getShooterSpeed());
   }
 
   /**
@@ -125,31 +125,31 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //autonPath = new GalacticCommands2();
-    autonPath = new GalacticCommands();
-    // System.out.println("Auton started");
-    // m_autoSelected = m_chooser.getSelected();
-    // System.out.println("Auto selected: " + m_autoSelected);
-    // switch (m_autoSelected) {
-    //   case kDriveAuto:
-    //     autonPath = new DriveAuton();
-    //     System.out.println("Selected drive auton");
-    //     break;
-    //   case k3BallAuto:
-    //     autonPath = new Shooting3BallAuton();
-    //     System.out.println("Selected shoot auton");
-    //     break;
-    //   case k5BallAuto:
-    //     autonPath = new Shooting5BallAuton();
-    //     System.out.println("Selected acquisition auton");
-    //     break;
-    //   case k8BallAuto:
-    //     autonPath = new DriveAuton();
-    //     System.out.println("Selected drive auton");
-    //     break;
-    //   default:
-    //     System.out.println("how? just how? also why?");
-    //     break;
-    //}
+    //autonPath = new GalacticCommands();
+     System.out.println("Auton started");
+     m_autoSelected = m_chooser.getSelected();
+     System.out.println("Auto selected: " + m_autoSelected);
+     switch (m_autoSelected) {
+       case kDriveAuto:
+         autonPath = new DriveAuton();
+         System.out.println("Selected drive auton");
+         break;
+       case k3BallAuto:
+         autonPath = new Shooting3BallAuton();
+         System.out.println("Selected shoot auton");
+         break;
+       case k5BallAuto:
+         autonPath = new Shooting5BallAuton();
+         System.out.println("Selected acquisition auton");
+         break;
+       case k8BallAuto:
+         autonPath = new DriveAuton();
+         System.out.println("Selected drive auton");
+         break;
+       default:
+         System.out.println("how? just how? also why?");
+         break;
+    }
 
     schedule.schedule(autonPath);
     System.out.println("Scheduled tasks");
@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     operator();
     driver();
-    endgame.periodic();
+    endgame.periodic(operatorJoystick.getRightJoystickVertical());
     storage.periodic();
     SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
     //System.out.println(shooter.isFinished());
@@ -221,6 +221,7 @@ public class Robot extends TimedRobot {
   }
 
   public void operator() {
+    
     if (operatorJoystick.getRightButton()) {
       acquisition.runBeaterBarFwd();
     } else if (operatorJoystick.getRightTrigger() > .5) {
@@ -272,9 +273,12 @@ public class Robot extends TimedRobot {
       limelight.changeLEDStatus(LEDStates.On);
       shooter.move();
     } 
+    // else if (!endgame.endgameState) {
+    //   shooter.manual(operatorJoystick.getRightJoystickHorizontal());
+    // }
     else {
       shooter.goToCrashPosition();
-      limelight.changeLEDStatus(LEDStates.Off);
+      //limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
     

@@ -8,15 +8,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
 
 //NOTE WHEN MOTOR IS LOCKED ENDGAME CANNOT EXTEND BUT IT CAN RETRACT
-
+//Writen by julian heidt, your welcome! (kidding i had a lot of help with this, thanks for everyone who helped!)
 public class Endgame implements Subsystem {
     private final int MOTOR_LOCK_PORT = 4;
+
     private final int MOTOR_UNLOCK_PORT = 5;
-    private final int ENDGAME_LOCK_PORT = 7;
-    private final int ENDGAME_UNLOCK_PORT = 6;
+    private final int ENDGAME_LOCK_PORT = 6;
+    private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
-    private final int MAX_COUNT = 165; //Needs to be updated with actual value
-    private final int MIN_COUNT = 0;  //Needs to be updated with actual value
+    private final int MAX_COUNT = 220; //Needs to be updated with actual value
+    private final int MIN_COUNT = 20;  //Needs to be updated with actual value
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -42,7 +43,15 @@ public class Endgame implements Subsystem {
         motorLock();
         Directions = directionsOptions.stop;
     }
-    public void periodic() {
+    public void periodic(double speed) {
+        if(speed > .2 && endgameState == true) {
+            motorUnLock();
+            motor.set(.3);
+        }
+        else if(speed < -.2 && endgameState == true) {
+            motor.set(-.3);
+        }
+        else {
         System.out.println(endgameState + " " + MotorIsLocked + " " + encoder.getPosition() + " " + safetyIsLocked);
         switch (Directions) {
             default:
@@ -75,9 +84,10 @@ public class Endgame implements Subsystem {
                 }
                 break;
             case retracting:
+            motorLock();
                 //Retracts Endgame
                 if (encoder.getPosition() > MIN_COUNT && !safetyIsLocked) {
-                    motor.set(-.4);
+                    motor.set(-.8);
                     System.out.println("Retracting Endgame");
                 }
                 else {
@@ -92,6 +102,7 @@ public class Endgame implements Subsystem {
                 motorLock();
                 System.out.println("Stopped Endgame");
                 break;
+        }
         }
 
     }
@@ -135,6 +146,11 @@ public class Endgame implements Subsystem {
             MotorIsLocked = false;
         }
     }
+    // public void manual(double speed) {
+    //     if(endgameState == true) {
+    //         motor.set(-.3);
+    //     }
+    // }
     //Extends and Retracts endgame
     public void onButton() {
         if (endgameState == false && MotorIsLocked && Directions == directionsOptions.stop) {    //Checks to see if X has been pressed before and if the motor is locked
