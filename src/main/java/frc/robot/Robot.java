@@ -227,7 +227,7 @@ public class Robot extends TimedRobot {
       shooter.disableSpeedPID();
       shooter.shootManually(0);
     }
-    if(shooter.isFinished() && operatorJoystick.getLeftButton()){
+    if(shooter.isFinished() && operatorJoystick.getLeftButton() || operatorJoystick.getLeftButton() && shooter.held){
       operatorJoystick.setLeftRumble(1);
       operatorJoystick.setRightRumble(1);
     }
@@ -236,8 +236,9 @@ public class Robot extends TimedRobot {
       operatorJoystick.setLeftRumble(0);
     }
 
-    if (operatorJoystick.getLeftTrigger() > .5) {
+    if (operatorJoystick.getLeftTrigger() > .5 && operatorJoystick.getLeftButton()) {
       shooter.feedBall();
+      
     } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
       storage.enableManualStorage(ManualStorageModes.Forward);
     } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {

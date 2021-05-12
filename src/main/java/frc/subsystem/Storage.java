@@ -53,7 +53,7 @@ public class Storage implements Subsystem {
     private Storage() {
         shuttleMotor.setInverted(true);
         shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
-        shuttleMotorEncoder.setPositionConversionFactor(47/2);
+        shuttleMotorEncoder.setPositionConversionFactor(47/2.2);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {
