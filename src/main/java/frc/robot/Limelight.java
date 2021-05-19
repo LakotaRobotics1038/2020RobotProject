@@ -10,7 +10,7 @@ import frc.robot.Dashboard;
  */
 public class Limelight {
     // LimeLight instance
-    private static Limelight limelight;
+    public static Limelight limelight = new Limelight();
 
     // Network table
     private static NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
@@ -35,7 +35,7 @@ public class Limelight {
         private LEDStates(final int value) { this.value = value; }
     };
 
-    private Limelight() {
+    public Limelight() {
        changeLEDStatus(LEDStates.Off);
     }
 
@@ -46,12 +46,8 @@ public class Limelight {
      */
     public static Limelight getInstance() {
         if (limelight == null) {
-            System.out.println("Creating limelight");
-            try {
-                limelight = new Limelight();
-            } catch (final NullPointerException e) {
-                System.out.println("uh-oh " + e);
-            }
+            System.out.println("Creating limelight buddy");
+            limelight = new Limelight();
         }
         return limelight;
     }

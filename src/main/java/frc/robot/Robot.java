@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
   private boolean prevDDownState = false;
 
   //limelight
-  private final Limelight limelight = Limelight.getInstance();
+  //private final Limelight limelight = Limelight.getInstance();
 
   // shooter
   private final Shooter shooter = Shooter.getInstance();
@@ -109,9 +109,9 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void robotPeriodic() {
-    limelight.read();
+    //limelight.read();
     dashboard.update();
-    System.out.println(limelight.getYOffset());
+    //System.out.println(limelight.getYOffset());
     System.out.println(shooter.getShooterSpeed());
   }
 
@@ -270,7 +270,7 @@ public class Robot extends TimedRobot {
         shooter.setTurretDirection(TurretDirections.Left);
         prevOperatorAState = true;
       }
-      limelight.changeLEDStatus(LEDStates.On);
+      //limelight.changeLEDStatus(LEDStates.On);
       shooter.move();
     } 
     // else if (!endgame.endgameState) {
@@ -278,7 +278,7 @@ public class Robot extends TimedRobot {
     // }
     else {
       shooter.goToCrashPosition();
-      limelight.changeLEDStatus(LEDStates.Off);
+      //limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
     

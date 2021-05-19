@@ -10,7 +10,7 @@ import frc.subsystem.Shooter.TurretDirections;
 
 public class AimCommand extends CommandBase {
     private Shooter shooter = Shooter.getInstance();
-    private Limelight limelight = Limelight.getInstance();
+    //private Limelight limelight = Limelight.getInstance();
 
     private boolean turned = false;
     private final double TURRET_SPEED = 0.2;
@@ -27,7 +27,7 @@ public class AimCommand extends CommandBase {
     @Override
     public void initialize() {
         shooter.setTurretDirection(TurretDirections.Left);
-        limelight.changeLEDStatus(LEDStates.On);
+        //limelight.changeLEDStatus(LEDStates.On);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AimCommand extends CommandBase {
 
     @Override
     public void end(boolean interuppted) {
-        limelight.changeLEDStatus(LEDStates.Off);
+        //limelight.changeLEDStatus(LEDStates.Off);
     }
 
     @Override
