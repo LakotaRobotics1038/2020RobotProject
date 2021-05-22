@@ -10,7 +10,7 @@ import frc.robot.Dashboard;
  */
 public class Limelight {
     // LimeLight instance
-    public static Limelight limelight = new Limelight();
+    private static Limelight limelight;
 
     // Network table
     private static NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
@@ -27,7 +27,7 @@ public class Limelight {
 
     // offset default value
     private final int defaultOffset = 0;
-    Dashboard dashboard = Dashboard.getInstance();
+    //Dashboard dashboard = Dashboard.getInstance();
 
     public enum LEDStates {
         On(0), Off(1);
@@ -36,7 +36,8 @@ public class Limelight {
     };
 
     public Limelight() {
-       changeLEDStatus(LEDStates.Off);
+        System.out.println("this worked");
+        changeLEDStatus(LEDStates.Off);
     }
 
     /**
@@ -45,9 +46,11 @@ public class Limelight {
      * @return the limelight instance
      */
     public static Limelight getInstance() {
+
         if (limelight == null) {
             System.out.println("Creating limelight buddy");
             limelight = new Limelight();
+            System.out.println("you should've been made by now");
         }
         return limelight;
     }
@@ -103,9 +106,9 @@ public class Limelight {
 
     public double getMotorPower() {
         double power = ty.getDouble(defaultOffset);
-        double mult = dashboard.getLimeMultiplier();
-        double base = dashboard.getLimeBase();
-        return power*mult + base;
+        //double mult = dashboard.getLimeMultiplier();
+        //double base = dashboard.getLimeBase();
+        return power;//*mult + base;
         //return power * -.005 + .55;
         // if(power < -13) {       //Red Zone
         //     return power * -.005 + .49;
@@ -125,4 +128,4 @@ public class Limelight {
         final double setpoint = ty.getDouble(defaultOffset);
         return (setpoint * -250 + 31000)/(410.00);
     }
-}
+ }

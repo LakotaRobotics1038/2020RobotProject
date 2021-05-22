@@ -28,11 +28,11 @@ public class AutonSelector {
 	
 	public SequentialCommandGroup chooseAuton() {
         // TODO: Connect auton chooser to dashboard
-		position = Dashboard.getInstance().getPosition(); 
-		autonChooser = Dashboard.getInstance().getAutonChooser(); 
+		//position = Dashboard.getInstance().getPosition(); 
+		//autonChooser = Dashboard.getInstance().getAutonChooser(); 
 		
-		System.out.println("pos:" + position);
-		System.out.println("auto:" + autonChooser);
+		System.out.println("pos:"); //+ position
+		System.out.println("auto:"); //+ autonChooser
 		
 		switch (autonChooser) {
 			case ForwardAuto:

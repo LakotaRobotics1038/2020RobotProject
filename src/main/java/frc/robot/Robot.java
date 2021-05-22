@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
   private boolean prevDDownState = false;
 
   //limelight
-  //private final Limelight limelight = Limelight.getInstance();
+  private final Limelight limelight = Limelight.getInstance();
 
   // shooter
   private final Shooter shooter = Shooter.getInstance();
@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
 
   // spinner
   // private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
-  private final Dashboard dashboard = Dashboard.getInstance();
+  //private final Dashboard dashboard = Dashboard.getInstance();
 
   /**
   * This function is run when the robot is first started up and should be
@@ -109,9 +109,9 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void robotPeriodic() {
-    //limelight.read();
-    dashboard.update();
-    //System.out.println(limelight.getYOffset());
+    limelight.read();
+    //dashboard.update();
+    System.out.println(limelight.getYOffset());
     System.out.println(shooter.getShooterSpeed());
   }
 
@@ -180,7 +180,7 @@ public class Robot extends TimedRobot {
     endgame.periodic();
     storage.periodic();
     SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
-    //System.out.println(shooter.isFinished());
+    System.out.println(shooter.isFinished());
   }
 
   public void driver() {
@@ -270,7 +270,7 @@ public class Robot extends TimedRobot {
         shooter.setTurretDirection(TurretDirections.Left);
         prevOperatorAState = true;
       }
-      //limelight.changeLEDStatus(LEDStates.On);
+      limelight.changeLEDStatus(LEDStates.On);
       shooter.move();
     } 
     // else if (!endgame.endgameState) {
@@ -278,7 +278,7 @@ public class Robot extends TimedRobot {
     // }
     else {
       shooter.goToCrashPosition();
-      //limelight.changeLEDStatus(LEDStates.Off);
+      limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
     

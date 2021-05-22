@@ -15,7 +15,7 @@ public class Dashboard {
 
   private DriverStation driverStation = DriverStation.getInstance();
   private Shooter shooter = Shooter.getInstance();
-  //private Limelight limelight = Limelight.getInstance();
+  private Limelight limelight = Limelight.getInstance();
   //private UsbCamera visionCam = CameraServer.getInstance().startAutomaticCapture();
 
   private final int CAMERA_EXPOSURE =  50;
@@ -26,8 +26,9 @@ public class Dashboard {
 
   public static Dashboard getInstance() {
     if (dashboard == null) {
-      System.out.println("Creating a new Dashboard");
       dashboard = new Dashboard();
+      System.out.println("Creating a new Dashboard");
+      System.out.println("ayo is this working");
     }
     return dashboard;
   }
@@ -36,33 +37,34 @@ public class Dashboard {
    * Instantiates dashboard object
    */
   private Dashboard() {
+    System.out.println("hey you are doing great");
     //visionCam.setExposureManual(CAMERA_EXPOSURE);
     SmartDashboard.putNumber("Match Time", -1);
     SmartDashboard.putNumber("Shooter Angle", 0);
-    SmartDashboard.putBoolean("Prox", false);
+    //SmartDashboard.putBoolean("Prox", false); TODO//Remove prox code
     SmartDashboard.putNumber("Shooter speed", .55);
     SmartDashboard.putNumber("Shooter Multiplier", -.005);
   }
 
-  public void update() {
-    SmartDashboard.putNumber("Shooter Angle", shooter.getTurretEncoder());
-    //SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());
-    //SmartDashboard.putBoolean("Prox", shooter.getHardStop());
-  }
+  // public void update() {
+  //   SmartDashboard.putNumber("Shooter Angle", shooter.getTurretEncoder());
+  //   SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());
+  //   //SmartDashboard.putBoolean("Prox", shooter.getHardStop());
+  // }
 
-  public String getPosition() {
-    return position;
-  }
+  // public String getPosition() {
+  //   return position;
+  // }
 
-  public String getAutonChooser() {
-    return autonChooser;
-  }
-  public Double getLimeBase() {
-    return SmartDashboard.getNumber("Shooter speed", .55);
-  }
+  // public String getAutonChooser() {
+  //   return autonChooser;
+  // }
+  // public Double getLimeBase() {
+  //   return SmartDashboard.getNumber("Shooter speed", .55);
+  // }
 
-  public Double getLimeMultiplier() {
-    return SmartDashboard.getNumber("Shooter Multipier", -.005);
-  }
+  // public Double getLimeMultiplier() {
+  //   return SmartDashboard.getNumber("Shooter Multipier", -.005);
+  // }
 
 }
