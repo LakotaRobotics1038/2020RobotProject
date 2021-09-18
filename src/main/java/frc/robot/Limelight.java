@@ -108,20 +108,20 @@ public class Limelight {
         double power = ty.getDouble(defaultOffset);
         //double mult = dashboard.getLimeMultiplier();
         //double base = dashboard.getLimeBase();
-        return power;//*mult + base;
+        //return power;//*mult + base;
         //return power * -.005 + .55;
-        // if(power < -13) {       //Red Zone
-        //     return power * -.005 + .49;
-        // }
-        // else if(power < -8) {  //Blue Zone
-        //     return power * -.002 + .49;
-        // }
-        // else if(power < 2) {  //Yellow Zone
-        //     return power * -.0025 + .49;
-        // }
-        // else {                 //Green Zone
-        //     return power * .03 + .49;
-        // }
+        if(power < -13) {       //Red Zone
+            return power * -.005 + .49;
+        }
+        else if(power < -8) {  //Blue Zone
+            return power * -.002 + .49;
+        }
+        else if(power < 2) {  //Yellow Zone
+            return power * -.0025 + .49;
+        }
+        else {                 //Green Zone
+            return power * .03 + .49;
+        }
     }
     
     public double getShooterSetpoint() {

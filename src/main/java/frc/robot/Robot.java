@@ -23,11 +23,13 @@ import frc.auton.Shooting3BallAuton;
 import frc.auton.Shooting5BallAuton;
 import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Storage;
+import frc.subsystem.Endgame.directionsOptions;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
 import frc.subsystem.Endgame;
 import frc.subsystem.Storage.ManualStorageModes;
+import jdk.jshell.spi.ExecutionControl.EngineTerminationException;
 import frc.subsystem.Shooter.TurretDirections;
 
 /**
@@ -55,7 +57,7 @@ public class Robot extends TimedRobot {
   //Endgame
   //public Endgame endgame = new Endgame();
   private final Endgame endgame = Endgame.getInstance();
-  //private boolean prevXState = false;
+  private boolean prevXState = false;
 
   // Drive
   private final DriveTrain driveTrain = DriveTrain.getInstance();
@@ -281,7 +283,15 @@ public class Robot extends TimedRobot {
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
-    
-    endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
+    if (operatorJoystick.getRightJoystickVertical() < .1) {
+      endgame.Directions = directionsOptions.extending;
+    }
+    else if (operatorJoystick.getRightJoystickVertical() > -.1) {
+      endgame.Directions = directionsOptions.retracting;
+    }
+    if (operatorJoystick.getXButton()) {
+      endgame.Directions  = directionsOptions.stop;
+    }
+    //endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
   }
 }

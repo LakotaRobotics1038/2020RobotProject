@@ -11,13 +11,12 @@ import com.revrobotics.CANEncoder;
 //Writen by julian heidt, your welcome! (kidding i had a lot of help with this, thanks for everyone who helped!)
 public class Endgame implements Subsystem {
     private final int MOTOR_LOCK_PORT = 4;
-
     private final int MOTOR_UNLOCK_PORT = 5;
     private final int ENDGAME_LOCK_PORT = 6;
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
-    private final int MAX_COUNT = 220; //Needs to be updated with actual value
-    private final int MIN_COUNT = 20;  //Needs to be updated with actual value
+    private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
+    private final int MIN_COUNT = -200;  //Needs to be updated with actual value
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -40,8 +39,8 @@ public class Endgame implements Subsystem {
 
     public void reset() {
         endgameState = false;
-        encoder.setPosition(0);
-        motorLock();
+        encoder.setPosition(50); // 220 is the current position
+        //motorLock();
         Directions = directionsOptions.stop;
     }
     public void periodic() {
@@ -53,8 +52,12 @@ public class Endgame implements Subsystem {
                 System.out.println("How?");
                 motor.set(0);
                 break;
-            case preExtend:
-                if(encoder.getPosition() > -8) {
+            
+            //sets the motor to the preextend state, this lets the motor unlock. 
+            //The motor needs to move down first so that the lock can unlock
+            case preExtend: 
+                if(encoder.getPosition() < 8) {
+                    motorUnLock();
                     motor.set(-.25);
                     System.out.println("PreExtend");
                     preExtendState = true;
@@ -65,10 +68,13 @@ public class Endgame implements Subsystem {
                     Directions = directionsOptions.stop;
                 }
                 break;
+
+            //sets the motor to the extending state. This will have Endgame go up until it reaches the max count. 
             case extending:
                 //Extends Endgame
                 motorUnLock();
                 if (encoder.getPosition() < MAX_COUNT) {
+                    Directions = directionsOptions.preExtend;
                     motor.set(.5);
                     System.out.println("Extending Endgame");
                 }
@@ -79,6 +85,8 @@ public class Endgame implements Subsystem {
 
                 }
                 break;
+
+            //sets the motor to the retracting state. This will have Endgame go down until it reaches the minium count.    
             case retracting:
                 motorLock();
                 //Retracts Endgame
@@ -92,8 +100,12 @@ public class Endgame implements Subsystem {
                 }
 
                 break;
+
+            //sets the motor to the stop state. This will set the motor to stop and lock the motor. Call this after every single case.
             case stop:
                 //Stops Endgame
+                //motor.set(-.8);
+                //Thread.sleep(10);
                 motor.set(0);
                 if (!preExtendState) {
                     motorLock();
@@ -156,11 +168,13 @@ public class Endgame implements Subsystem {
             MotorIsLocked = false;
         }
     }
+    
     // public void manual(double speed) {
     //     if(endgameState == true) {
     //         motor.set(-.3);
     //     }
     // }
+    
     //Extends and Retracts endgame
     public void onJoyStick(double joystickValue) {
             System.out.println("Begin Extend");
@@ -187,4 +201,5 @@ public class Endgame implements Subsystem {
         //     endgameState = false; //Tells the robot x has been pressed again
         // }
     }
+    
 }
