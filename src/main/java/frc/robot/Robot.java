@@ -286,17 +286,17 @@ public class Robot extends TimedRobot {
 
     System.out.println("Right joystick value " + operatorJoystick.getRightJoystickVertical());
 
-    if (operatorJoystick.getRightJoystickVertical() < -.1) {
-      endgame.Directions = directionsOptions.extending;
-    }
+    // if (operatorJoystick.getRightJoystickVertical() < -.1) {
+    //   endgame.Directions = directionsOptions.extending;
+    // }
 
-    else if (operatorJoystick.getRightJoystickVertical() > .1) {
-      endgame.Directions = directionsOptions.retracting;
-    }
-    
-    if (operatorJoystick.getXButton()) {
-      endgame.Directions  = directionsOptions.stop;
-    }
-    //endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
+    // else if (operatorJoystick.getRightJoystickVertical() > .1) {
+    //   endgame.Directions = directionsOptions.retracting;
+    // }
+
+    // if (operatorJoystick.getXButton()) {
+    //   endgame.Directions  = directionsOptions.stop;
+    // }
+    endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
   }
 }
