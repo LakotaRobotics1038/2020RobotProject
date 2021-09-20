@@ -169,7 +169,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    endgame.reset();
+    //endgame.reset();
    }
 
   /**
@@ -297,7 +297,7 @@ public class Robot extends TimedRobot {
     // if (operatorJoystick.getXButton()) {
     //   endgame.Directions  = directionsOptions.stop;
     // }
-    
+
     endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
   }
 }

@@ -7,6 +7,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.revrobotics.CANEncoder;
 
+//77 is the safety port
+
+//9/20/2021 encoder counts sometimes get reset at the bottom, preventing us from extending again. Trying to find out why they are resetting when the reset function hasn't been called. 
+
 //NOTE WHEN MOTOR IS LOCKED ENDGAME CANNOT EXTEND BUT IT CAN RETRACT
 //Writen by julian heidt, your welcome! (kidding i had a lot of help with this, thanks for everyone who helped!)
 public class Endgame implements Subsystem {
@@ -16,7 +20,7 @@ public class Endgame implements Subsystem {
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
     private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
-    private final int MIN_COUNT = 176;  //Needs to be updated with actual value
+    private final int MIN_COUNT = -235;  //201 is where it hits the safety 
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -39,7 +43,7 @@ public class Endgame implements Subsystem {
 
     public void reset() {
         endgameState = false;
-        encoder.setPosition(50); // 220 is the current position
+        encoder.setPosition(0); // 220 is the current position
         //motorLock();
         Directions = directionsOptions.stop;
     }
@@ -56,7 +60,7 @@ public class Endgame implements Subsystem {
             //sets the motor to the preextend state, this lets the motor unlock. 
             //The motor needs to move down first so that the lock can unlock
             case preExtend: 
-                if(encoder.getPosition() > 170 && !preExtendState) { //170 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
+                if(encoder.getPosition() >= MIN_COUNT && !preExtendState) { //170 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
                     motorUnLock(); 
                     motor.set(-.25); //moves the motor counter-clockwise to release the tension on the rachet and gear
                     System.out.println("Motor has preextened and is ready to extend");
@@ -73,7 +77,7 @@ public class Endgame implements Subsystem {
             case extending:
                 //Extends Endgame
                 //motorUnLock();
-                if (encoder.getPosition() > MAX_COUNT) {
+                if (encoder.getPosition() < (MAX_COUNT - 5)) {
                     Directions = directionsOptions.preExtend;
                     motor.set(.5);
                     System.out.println("Extending Endgame");
@@ -90,7 +94,7 @@ public class Endgame implements Subsystem {
             case retracting:
                 motorLock();
                 //Retracts Endgame
-                if (encoder.getPosition() < MIN_COUNT) {
+                if (encoder.getPosition() > MIN_COUNT) {
                     motor.set(-.8);
                     System.out.println("Retracting Endgame");
                 }
@@ -165,6 +169,7 @@ public class Endgame implements Subsystem {
     }
     //Unlocks Endgame Motor
     public void motorUnLock() {
+        safetyUnlock();
         if (MotorIsLocked) {
             MotorLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             MotorIsLocked = false;
