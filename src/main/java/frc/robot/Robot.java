@@ -297,6 +297,7 @@ public class Robot extends TimedRobot {
     // if (operatorJoystick.getXButton()) {
     //   endgame.Directions  = directionsOptions.stop;
     // }
+    
     endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
   }
 }

@@ -16,7 +16,7 @@ public class Endgame implements Subsystem {
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
     private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
-    private final int MIN_COUNT = -200;  //Needs to be updated with actual value
+    private final int MIN_COUNT = 176;  //Needs to be updated with actual value
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -25,7 +25,7 @@ public class Endgame implements Subsystem {
     public boolean MotorIsLocked = true; //Motor lock for endgame
     public boolean endgameState = false; //Is endgame up or down
     public boolean preExtendState = false; //Has prextend been completed
-    public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless);
+    public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless); //negitve value makes the motor spin counter-clockwise, a positive value makes it spin clockwise
     public CANEncoder encoder = new CANEncoder(motor);
     private static Endgame endgame;
 
@@ -56,10 +56,10 @@ public class Endgame implements Subsystem {
             //sets the motor to the preextend state, this lets the motor unlock. 
             //The motor needs to move down first so that the lock can unlock
             case preExtend: 
-                if(encoder.getPosition() < 8) {
-                    motorUnLock();
-                    motor.set(-.25);
-                    System.out.println("PreExtend");
+                if(encoder.getPosition() > 170 && !preExtendState) { //170 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
+                    motorUnLock(); 
+                    motor.set(-.25); //moves the motor counter-clockwise to release the tension on the rachet and gear
+                    System.out.println("Motor has preextened and is ready to extend");
                     preExtendState = true;
                 }
                 else {
@@ -73,7 +73,7 @@ public class Endgame implements Subsystem {
             case extending:
                 //Extends Endgame
                 //motorUnLock();
-                if (encoder.getPosition() < MAX_COUNT) {
+                if (encoder.getPosition() > MAX_COUNT) {
                     Directions = directionsOptions.preExtend;
                     motor.set(.5);
                     System.out.println("Extending Endgame");
@@ -90,27 +90,29 @@ public class Endgame implements Subsystem {
             case retracting:
                 motorLock();
                 //Retracts Endgame
-                if (encoder.getPosition() > MIN_COUNT) {
+                if (encoder.getPosition() < MIN_COUNT) {
                     motor.set(-.8);
                     System.out.println("Retracting Endgame");
                 }
                 else {
                     motor.set(0);
                     Directions = directionsOptions.stop;
+                    motorLock();
                 }
 
                 break;
 
-            //sets the motor to the stop state. This will set the motor to stop and lock the motor. Call this after every single case.
+            //sets the motor to the stop state. This will set the motor to stop and lock the motor. Call this after every single case so Endgame doesn't move back up
             case stop:
                 //Stops Endgame
                 //motor.set(-.8);
                 //Thread.sleep(10);
-                motor.set(0);
+                motor.set(0); //stops the motor
                 if (!preExtendState) {
+                    preExtendState = false;
                     motorLock();
                 }
-                System.out.println("Stopped Endgame");
+                System.out.println("Endgame locked in place");
                 break;
         
         }
