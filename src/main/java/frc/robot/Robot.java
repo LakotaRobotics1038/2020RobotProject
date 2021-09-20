@@ -283,12 +283,17 @@ public class Robot extends TimedRobot {
       limelight.changeLEDStatus(LEDStates.Off);
       prevOperatorAState = false;
     }
-    if (operatorJoystick.getRightJoystickVertical() < .1) {
+
+    System.out.println("Right joystick value " + operatorJoystick.getRightJoystickVertical());
+
+    if (operatorJoystick.getRightJoystickVertical() < -.1) {
       endgame.Directions = directionsOptions.extending;
     }
-    else if (operatorJoystick.getRightJoystickVertical() > -.1) {
+
+    else if (operatorJoystick.getRightJoystickVertical() > .1) {
       endgame.Directions = directionsOptions.retracting;
     }
+    
     if (operatorJoystick.getXButton()) {
       endgame.Directions  = directionsOptions.stop;
     }

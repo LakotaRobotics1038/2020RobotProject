@@ -72,7 +72,7 @@ public class Endgame implements Subsystem {
             //sets the motor to the extending state. This will have Endgame go up until it reaches the max count. 
             case extending:
                 //Extends Endgame
-                motorUnLock();
+                //motorUnLock();
                 if (encoder.getPosition() < MAX_COUNT) {
                     Directions = directionsOptions.preExtend;
                     motor.set(.5);
