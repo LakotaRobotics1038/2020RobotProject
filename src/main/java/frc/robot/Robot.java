@@ -299,5 +299,9 @@ public class Robot extends TimedRobot {
     // }
 
     endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
+
+    if (operatorJoystick.getXButton()){
+      endgame.reset();
+    }
   }
 }

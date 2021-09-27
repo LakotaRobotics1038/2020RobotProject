@@ -20,7 +20,7 @@ public class Endgame implements Subsystem {
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
     private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
-    private final int MIN_COUNT = -235;  //201 is where it hits the safety 
+    private final int MIN_COUNT = -240;  //201 is where it hits the safety 
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -29,6 +29,7 @@ public class Endgame implements Subsystem {
     public boolean MotorIsLocked = true; //Motor lock for endgame
     public boolean endgameState = false; //Is endgame up or down
     public boolean preExtendState = false; //Has prextend been completed
+    
     public CANSpark1038 motor = new CANSpark1038(SPARK_PORT, MotorType.kBrushless); //negitve value makes the motor spin counter-clockwise, a positive value makes it spin clockwise
     public CANEncoder encoder = new CANEncoder(motor);
     private static Endgame endgame;
@@ -67,8 +68,9 @@ public class Endgame implements Subsystem {
                     preExtendState = true;
                 }
                 else {
-                    motorUnLock();
-                    motor.set(.5);
+                    // motorUnLock();
+                    // motor.set(.5);
+                    System.out.println("Preextened state true");
                     Directions = directionsOptions.stop;
                 }
                 break;
@@ -77,7 +79,7 @@ public class Endgame implements Subsystem {
             case extending:
                 //Extends Endgame
                 //motorUnLock();
-                if (encoder.getPosition() < (MAX_COUNT - 5)) {
+                if (encoder.getPosition() < (MAX_COUNT - 10)) {
                     Directions = directionsOptions.preExtend;
                     motor.set(.5);
                     System.out.println("Extending Endgame");
@@ -128,10 +130,10 @@ public class Endgame implements Subsystem {
         if (!safetyIsLocked) {
             EndgameLockSolenoid.set(DoubleSolenoid.Value.kForward);
             safetyIsLocked = true;
-            System.out.println("Endgame is locked");
+            System.out.println("Safety is locked");
         }
         else {
-            System.out.println("Endgame is already locked");
+            System.out.println("Safety is already locked");
         }
     }
 
@@ -139,10 +141,10 @@ public class Endgame implements Subsystem {
         if (safetyIsLocked) {
             EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             safetyIsLocked = false;
-            System.out.println("Endgame is unlocked");
+            System.out.println("Safety is unlocked");
         }
         else {
-            System.out.println("Endgame is already unlocked");
+            System.out.println("Safety is already unlocked");
         }
     }
 
@@ -184,9 +186,10 @@ public class Endgame implements Subsystem {
     
     //Extends and Retracts endgame
     public void onJoyStick(double joystickValue) {
-            System.out.println("Begin Extend");
             safetyUnlock(); //Unlocks endgame safety and motor
             if (joystickValue > 0) {
+                motorUnLock();
+                System.out.println("joystick positive");
                 if (!preExtendState) {
                     Directions = directionsOptions.preExtend; //runs pre-extend
                 }
@@ -195,9 +198,11 @@ public class Endgame implements Subsystem {
                 }
             }
             else if (joystickValue < 0) {
+                System.out.println("joystick negitive");
                 Directions = directionsOptions.retracting;   //Starts retracting endgame
             }
             else if (joystickValue == 0) {
+                System.out.println("Joystick at zero");
                 Directions = directionsOptions.stop; //stops endgame from moving
             }
         
