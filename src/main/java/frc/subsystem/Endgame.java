@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.CANSpark1038;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import java.sql.Time;
+
 import com.revrobotics.CANEncoder;
 
 //77 is the safety port
@@ -20,7 +22,7 @@ public class Endgame implements Subsystem {
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
     private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
-    private final int MIN_COUNT = -240;  //201 is where it hits the safety 
+    private final int MIN_COUNT = -220;  //201 is where it hits the safety 
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -50,7 +52,7 @@ public class Endgame implements Subsystem {
     }
     public void periodic() {
 
-        System.out.println(endgameState + " " + MotorIsLocked + " " + encoder.getPosition() + " " + safetyIsLocked);
+        System.out.println("Endgame state" + endgameState + " " + "Is motor locked" + MotorIsLocked + " " + "Encoder count" + encoder.getPosition() + " " + "Is safety locked" + safetyIsLocked);
         switch (Directions) {
             default:
                 //Default Value for endgame motor
@@ -61,9 +63,11 @@ public class Endgame implements Subsystem {
             //sets the motor to the preextend state, this lets the motor unlock. 
             //The motor needs to move down first so that the lock can unlock
             case preExtend: 
-                if(encoder.getPosition() >= MIN_COUNT && !preExtendState) { //170 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
+                System.out.println("Preexteen min count value" + (MIN_COUNT-5));
+                if(encoder.getPosition() > (MIN_COUNT-10) && !preExtendState) { //210 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
                     motorUnLock(); 
                     motor.set(-.25); //moves the motor counter-clockwise to release the tension on the rachet and gear
+                    
                     System.out.println("Motor has preextened and is ready to extend");
                     preExtendState = true;
                 }
@@ -79,7 +83,8 @@ public class Endgame implements Subsystem {
             case extending:
                 //Extends Endgame
                 //motorUnLock();
-                if (encoder.getPosition() < (MAX_COUNT - 10)) {
+                if (encoder.getPosition() < MAX_COUNT) {
+                    motorUnLock();
                     Directions = directionsOptions.preExtend;
                     motor.set(.5);
                     System.out.println("Extending Endgame");
@@ -103,6 +108,7 @@ public class Endgame implements Subsystem {
                 else {
                     motor.set(0);
                     Directions = directionsOptions.stop;
+                    preExtendState = false;
                     motorLock();
                 }
 
@@ -128,7 +134,7 @@ public class Endgame implements Subsystem {
     //Locks Endgame's Safety
     public void safetyLock() {
         if (!safetyIsLocked) {
-            EndgameLockSolenoid.set(DoubleSolenoid.Value.kForward);
+            EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
             safetyIsLocked = true;
             System.out.println("Safety is locked");
         }
@@ -139,7 +145,7 @@ public class Endgame implements Subsystem {
 
     public void safetyUnlock() {
         if (safetyIsLocked) {
-            EndgameLockSolenoid.set(DoubleSolenoid.Value.kReverse);
+            EndgameLockSolenoid.set(DoubleSolenoid.Value.kForward);
             safetyIsLocked = false;
             System.out.println("Safety is unlocked");
         }
@@ -186,12 +192,13 @@ public class Endgame implements Subsystem {
     
     //Extends and Retracts endgame
     public void onJoyStick(double joystickValue) {
-            safetyUnlock(); //Unlocks endgame safety and motor
+            //safetyUnlock(); //Unlocks endgame safety and motor
             if (joystickValue > 0) {
                 motorUnLock();
                 System.out.println("joystick positive");
                 if (!preExtendState) {
                     Directions = directionsOptions.preExtend; //runs pre-extend
+                
                 }
                 else {
                     Directions = directionsOptions.extending; //runs extend
