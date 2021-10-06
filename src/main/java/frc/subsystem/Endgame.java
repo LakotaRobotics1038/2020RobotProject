@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.CANSpark1038;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import java.sql.Time;
-
 import com.revrobotics.CANEncoder;
 
 //77 is the safety port
@@ -38,7 +36,7 @@ public class Endgame implements Subsystem {
 
     public static Endgame getInstance() {
         if (endgame == null) {
-            System.out.println("Creating a new DriveTrain");
+            System.out.println("Creating a new endgame");
             endgame = new Endgame();
         }
         return endgame;
@@ -120,7 +118,7 @@ public class Endgame implements Subsystem {
                 //motor.set(-.8);
                 //Thread.sleep(10);
                 motor.set(0); //stops the motor
-                if (!preExtendState) {
+                if (!preExtendState) { 
                     preExtendState = false;
                     motorLock();
                 }
