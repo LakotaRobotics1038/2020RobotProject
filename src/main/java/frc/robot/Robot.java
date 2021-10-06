@@ -300,8 +300,8 @@ public class Robot extends TimedRobot {
 
     endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
 
-    if (operatorJoystick.getXButton()){
-      endgame.reset();
-    }
+    // if (operatorJoystick.getXButton()){ DISABLED THIS IF STATEMENT OF CODE
+    //   endgame.reset();
+    // }
   }
 }
