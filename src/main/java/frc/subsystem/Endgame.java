@@ -42,9 +42,9 @@ public class Endgame implements Subsystem {
         return endgame;
     }
 
-    public void reset() {
+    public void reset(int resetValue) {
         endgameState = false;
-        encoder.setPosition(0); // 220 is the current position
+        encoder.setPosition(resetValue); // 220 is the current position
         //motorLock();
         Directions = directionsOptions.stop;
     }

@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 
+import frc.subsystem.*;
+
 import frc.auton.Auton;
 import frc.auton.DriveAuton;
 import frc.auton.GalacticCommands;
@@ -169,7 +171,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //endgame.reset();
+    endgame.reset(-220);
    }
 
   /**
@@ -300,8 +302,8 @@ public class Robot extends TimedRobot {
 
     endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
 
-    // if (operatorJoystick.getXButton()){ DISABLED THIS IF STATEMENT OF CODE
-    //   endgame.reset();
-    // }
+    if (operatorJoystick.getXButton()){ //DISABLED THIS IF STATEMENT OF CODE
+      endgame.reset(0);
+    }
   }
 }
