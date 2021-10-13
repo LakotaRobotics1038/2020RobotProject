@@ -20,7 +20,7 @@ public class Endgame implements Subsystem {
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
     private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
-    private final int MIN_COUNT = -220;  //201 is where it hits the safety 
+    public final int MIN_COUNT = -220;  //201 is where it hits the safety 
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -47,6 +47,10 @@ public class Endgame implements Subsystem {
         encoder.setPosition(resetValue); // 220 is the current position
         //motorLock();
         Directions = directionsOptions.stop;
+    }
+    //Setting where encoder count is top
+    public void settingTopPosition() {
+        encoder.setPosition(0);
     }
     public void periodic() {
 

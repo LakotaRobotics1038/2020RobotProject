@@ -171,7 +171,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    endgame.reset(-220);
+    endgame.reset(endgame.MIN_COUNT); // SETTING THE INTIAL POSITION!!!!!
    }
 
   /**
@@ -302,8 +302,8 @@ public class Robot extends TimedRobot {
 
     endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
 
-    if (operatorJoystick.getXButton()){ //DISABLED THIS IF STATEMENT OF CODE
-      endgame.reset(0);
+    if (operatorJoystick.getXButton()){ 
+      endgame.settingTopPosition();
     }
   }
 }
