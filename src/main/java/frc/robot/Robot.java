@@ -171,7 +171,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    endgame.reset(endgame.MIN_COUNT); // SETTING THE INTIAL POSITION!!!!!
+    //endgame.reset(endgame.MIN_COUNT); // SETTING THE INTIAL POSITION!!!!!
+    endgame.reset(0);
    }
 
   /**
