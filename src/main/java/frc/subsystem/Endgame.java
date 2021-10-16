@@ -72,12 +72,14 @@ public class Endgame implements Subsystem {
                     
                     System.out.println("Motor has preextened and is ready to extend");
                     preExtendState = true;
+                    break;
                 }
                 else {
                     // motorUnLock();
                     // motor.set(.5);
                     System.out.println("Preextened state true");
                     Directions = directionsOptions.stop;
+                    
                 }
                 break;
 
@@ -212,7 +214,7 @@ public class Endgame implements Subsystem {
             }
             else if (joystickValue == 0) {
                 System.out.println("Joystick at zero");
-                Directions = directionsOptions.stop; //stops endgame from moving
+                Directions = directionsOptions.stop;
             }
         
         // else if (endgameState == true && (Directions == directionsOptions.stop)) {   //Checks to see if the button has been pressed before
