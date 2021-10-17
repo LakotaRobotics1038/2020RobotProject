@@ -166,11 +166,17 @@ public class Robot extends TimedRobot {
   */
   @Override
   public void autonomousPeriodic() {
-    driveTrain.tankDrive(.1, .1);
+
+    if (driveTrain.getLeftDriveEncoderDistance() < 1) {
+      driveTrain.tankDrive(.1, .1);
+    }
+    else {
+      driveTrain.tankDrive(0, 0);
+    }
+
     shooter.setTurretDirection(TurretDirections.Left);
     limelight.changeLEDStatus(LEDStates.On);
     shooter.move();
-    driveTrain.tankDrive(0, 0);
 
     if (limelight.canSeeTarget()) {
       shooter.holdPosition();
