@@ -167,10 +167,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
+    driveTrain.tankDrive(.5, .5);
+
     if (driveTrain.getLeftDriveEncoderDistance() < 24) {
-      driveTrain.tankDrive(.1, .1);
-    }
-    else {
       driveTrain.tankDrive(0, 0);
     }
 
