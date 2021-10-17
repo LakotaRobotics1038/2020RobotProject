@@ -57,7 +57,7 @@ public class Shooter implements Subsystem {
     // Speed PID for shooter
     private final double speedSetpoint = limelight.getShooterSetpoint();
     private final double speedTolerance = 9001;
-    private final static double speedP = 0.00002;
+    private final static double speedP = 0.00004;
     private final static double speedI = 0.00001;
     private final static double speedD = 0.00001;
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
