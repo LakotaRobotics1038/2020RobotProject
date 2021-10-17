@@ -67,6 +67,7 @@ public class Endgame implements Subsystem {
             case preExtend: 
                 System.out.println("Preexteen min count value" + (MIN_COUNT-5));
                 if(encoder.getPosition() > (MIN_COUNT-10) && !preExtendState) { //210 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
+                    safetyUnlock();
                     motorUnLock(); 
                     motor.set(-.25); //moves the motor counter-clockwise to release the tension on the rachet and gear
                     
@@ -88,6 +89,7 @@ public class Endgame implements Subsystem {
                 //Extends Endgame
                 //motorUnLock();
                 if (encoder.getPosition() < MAX_COUNT) {
+                    safetyUnlock();
                     motorUnLock();
                     Directions = directionsOptions.preExtend;
                     motor.set(.5);
@@ -106,9 +108,17 @@ public class Endgame implements Subsystem {
                 motorLock();
                 //Retracts Endgame
                 if (encoder.getPosition() > MIN_COUNT) {
+                    safetyUnlock();
                     motor.set(-.8);
                     System.out.println("Retracting Endgame");
                 }
+
+                else if (encoder.getPosition() < 210 && !safetyIsLocked) {
+                    motor.set(0);
+                    safetyLock();
+                    System.out.println("Endgame is locked in place with safety");
+                }
+
                 else {
                     motor.set(0);
                     Directions = directionsOptions.stop;
