@@ -56,9 +56,9 @@ public class Dashboard {
   //   return position;
   // }
 
-  // public String getAutonChooser() {
-  //   return autonChooser;
-  // }
+  public String getAutonChooser() {
+    return autonChooser;
+  }
   // public Double getLimeBase() {
   //   return SmartDashboard.getNumber("Shooter speed", .55);
   // }

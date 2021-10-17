@@ -18,13 +18,13 @@ import edu.wpi.first.wpilibj.Compressor;
 import frc.subsystem.*;
 
 import frc.auton.Auton;
-// import frc.auton.DriveAuton;
-// import frc.auton.GalacticCommands;
-// import frc.auton.GalacticCommands2;
-// import frc.robot.Gyro1038;
-// import frc.auton.Shooting3BallAuton;
-//import frc.auton.Shooting5BallAuton;
-//import frc.auton.commands.DriveStraightCommand;
+import frc.auton.DriveAuton;
+import frc.auton.GalacticCommands;
+import frc.auton.GalacticCommands2;
+import frc.robot.Gyro1038;
+import frc.auton.Shooting3BallAuton;
+import frc.auton.Shooting5BallAuton;
+import frc.auton.commands.DriveStraightCommand;
 import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Storage;
 //import frc.subsystem.Endgame.directionsOptions;
@@ -133,32 +133,32 @@ public class Robot extends TimedRobot {
     //autonPath = new GalacticCommands2();
     //autonPath = new GalacticCommands();
     System.out.println("Auton started");
-  //    m_autoSelected = m_chooser.getSelected();
-  //    System.out.println("Auto selected: " + m_autoSelected);
-  //    switch (m_autoSelected) {
-  //      case kDriveAuto:
-  //        autonPath = new DriveAuton();
-  //        System.out.println("Selected drive auton");
-  //        break;
-  //      case k3BallAuto:
-  //        autonPath = new Shooting3BallAuton();
-  //        System.out.println("Selected shoot auton");
-  //        break;
-  //      case k5BallAuto:
-  //        autonPath = new Shooting5BallAuton();
-  //        System.out.println("Selected acquisition auton");
-  //        break;
-  //      case k8BallAuto:
-  //        autonPath = new DriveAuton();
-  //        System.out.println("Selected drive auton");
-  //        break;
-  //      default:
-  //        System.out.println("how? just how? also why?");
-  //        break;
-  //   }
+     m_autoSelected = m_chooser.getSelected();
+     System.out.println("Auto selected: " + m_autoSelected);
+     switch (m_autoSelected) {
+       case kDriveAuto:
+         autonPath = new DriveAuton();
+         System.out.println("Selected drive auton");
+         break;
+       case k3BallAuto:
+         autonPath = new Shooting3BallAuton();
+         System.out.println("Selected shoot auton");
+         break;
+      //  case k5BallAuto:
+      //    autonPath = new Shooting5BallAuton();
+      //    System.out.println("Selected acquisition auton");
+      //    break;
+      //  case k8BallAuto:
+      //    autonPath = new DriveAuton();
+      //    System.out.println("Selected drive auton");
+      //    break;
+      //  default:
+      //    System.out.println("how? just how? also why?");
+      //    break;
+    }
 
-  //   schedule.schedule(autonPath);
-  //   System.out.println("Scheduled tasks");
+    schedule.schedule(autonPath);
+    System.out.println("Scheduled tasks");
    }
 
   /**
@@ -167,21 +167,21 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
-    driveTrain.tankDrive(.5, .5);
+    // driveTrain.tankDrive(.5, .5);
 
-    if (driveTrain.getLeftDriveEncoderDistance() < 24) {
-      driveTrain.tankDrive(0, 0);
-    }
+    // if (driveTrain.getLeftDriveEncoderDistance() < 24) {
+    //   driveTrain.tankDrive(0, 0);
+    // }
 
-    shooter.setTurretDirection(TurretDirections.Left);
-    limelight.changeLEDStatus(LEDStates.On);
-    shooter.move();
+    // shooter.setTurretDirection(TurretDirections.Left);
+    // limelight.changeLEDStatus(LEDStates.On);
+    // shooter.move();
 
-    if (limelight.canSeeTarget()) {
-      shooter.holdPosition();
-      shooter.speedOnTarget();
-      storage.feedShooter(.1);
-    }
+    // if (limelight.canSeeTarget()) {
+    //   shooter.holdPosition();
+    //   shooter.speedOnTarget();
+    //   storage.feedShooter(.1);
+    // }
   }
 
   @Override
