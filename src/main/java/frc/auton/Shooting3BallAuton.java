@@ -16,7 +16,7 @@ public class Shooting3BallAuton extends Auton{
                 new ShootCommand(6),
                 new AimCommand(6)
             ),
-            new DriveStraightCommand(200)
+            new DriveStraightCommand(24)
         );
     }
 }

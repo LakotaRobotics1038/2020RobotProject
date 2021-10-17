@@ -36,7 +36,7 @@ public class AimCommand extends CommandBase {
         //shooter.ninety();
 
         //TODO: Get the limelight working here
-        if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
+        if (shooter.getTurretEncoder() < TURRET_90_DEGREES && !limelight.canSeeTarget()) {
              shooter.turnTurret(TURRET_SPEED);
         } else {
             shooter.turnTurret(0);
