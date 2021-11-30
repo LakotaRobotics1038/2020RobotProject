@@ -1,6 +1,7 @@
 package frc.subsystem;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;  
 import frc.robot.CANSpark1038;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -20,7 +21,8 @@ public class Endgame implements Subsystem {
     private final int ENDGAME_UNLOCK_PORT = 7;
     private final int SPARK_PORT = 53;
     private final int MAX_COUNT = 0; // was 220, that is the value at the bottom of endgame, top of endgame should be 0 Needs to be updated with actual value
-    public final int MIN_COUNT = -220;  //201 is where it hits the safety 
+    private DigitalInput prox = new DigitalInput(4);
+    public final int MIN_COUNT = -220;  //201 is where it hits the safety
     public enum directionsOptions {preExtend, extending, retracting, stop};
     public directionsOptions Directions = directionsOptions.stop;
     public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
@@ -66,7 +68,7 @@ public class Endgame implements Subsystem {
             //The motor needs to move down first so that the lock can unlock
             case preExtend: 
                 System.out.println("Preexteen min count value" + (MIN_COUNT-5));
-                if(encoder.getPosition() > (MIN_COUNT-10) && !preExtendState) { //210 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT
+                if( !prox.get() && !preExtendState) { //210 is close to the bottom, but not bottom'd out DO NOT BOTTOM OUT THE ROBOT encoder.getPosition() > (MIN_COUNT-10)
                     safetyUnlock();
                     motorUnLock(); 
                     motor.set(-.25); //moves the motor counter-clockwise to release the tension on the rachet and gear
@@ -107,13 +109,13 @@ public class Endgame implements Subsystem {
             case retracting:
                 motorLock();
                 //Retracts Endgame
-                if (encoder.getPosition() > MIN_COUNT) {
+                if (prox.get()) { //encoder.getPosition() > MIN_COUNT
                     safetyUnlock();
                     motor.set(-.8);
                     System.out.println("Retracting Endgame");
                 }
 
-                else if (encoder.getPosition() < 210 && !safetyIsLocked) {
+                else if (!prox.get() && !safetyIsLocked) {
                     motor.set(0);
                     safetyLock();
                     System.out.println("Endgame is locked in place with safety");
