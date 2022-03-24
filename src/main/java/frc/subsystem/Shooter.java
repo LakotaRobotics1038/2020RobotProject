@@ -67,7 +67,7 @@ public class Shooter implements Subsystem {
 
     /**
      * Returns the Shooter instance created when the robot starts
-     * 
+     *
      * @return Shooter instance
      */
     public static Shooter getInstance() {
@@ -159,7 +159,7 @@ public class Shooter implements Subsystem {
         shooterMotor1.set(speed);
         shooterMotor2.set(-speed);
     }
-    //pass thru the turret direction you want, then this will set the turret to that 
+    //pass thru the turret direction you want, then this will set the turret to that
     public void setTurretDirection(TurretDirections value) {
         currentTurretDirection = value;
     }
@@ -181,7 +181,7 @@ public class Shooter implements Subsystem {
 
     /**
      * stops and resets PID values if interrupted (potentially unnecessary)
-     * 
+     *
      * @param interrupted if the robot is interrupted
      */
     public void end(boolean interrupted) {
@@ -194,7 +194,7 @@ public class Shooter implements Subsystem {
 
     /**
      * decides whether the robot is ready to shoot
-     * 
+     *
      * @return returns if robot is ready to shoot
      */
     public boolean isFinished() {
@@ -208,7 +208,7 @@ public class Shooter implements Subsystem {
     /**
      * limits shooter turn radius
      */
-    
+
     //moves the turret
     public void turnTurret(double turnSpeed) {
         turretTurningMotor.set(turnSpeed);
@@ -225,7 +225,7 @@ public class Shooter implements Subsystem {
         }
     }
     //get's the turret current encoder value
-    public double getTurretEncoder() {e
+    public double getTurretEncoder() {
         return turretTurningMotor.getSelectedSensorPosition()*180.00/82000.00; //converts radians to degrees
     }
     //gets the current shooter speed
@@ -249,7 +249,7 @@ public class Shooter implements Subsystem {
         return currentTurretDirection;
     }
 
-    
+
     //code red mountain dew TODO: change this name to code red
     public void goToCrashPosition() {
         if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
