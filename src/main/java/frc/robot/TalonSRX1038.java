@@ -2,14 +2,13 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
-public class TalonSRX1038 extends TalonSRX implements SpeedController {
+public class TalonSRX1038 extends TalonSRX implements MotorController {
     public TalonSRX1038(int address) {
         super(address);
     }
 
-    @Override
     public void pidWrite(double output) {
         set(output);
     }
@@ -42,5 +41,17 @@ public class TalonSRX1038 extends TalonSRX implements SpeedController {
     @Override
     public void stopMotor() {
         super.set(super.getControlMode(), 0);
+    }
+
+    public double getPosition() {
+        return super.getSelectedSensorPosition();
+    }
+
+    public void setPosition(int i) {
+        super.setSelectedSensorPosition(i);
+    }
+
+    public void resetPosition() {
+        setPosition(0);
     }
 }

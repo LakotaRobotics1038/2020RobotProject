@@ -1,12 +1,12 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-public class Gyro1038 extends GyroBase {
+public class Gyro1038 implements Gyro {
 
     // Variables
-    private final int SENSOR_ID_CODE = 0x02;
+    public final int SENSOR_ID_CODE = 0x02;
     private final int COMMAND = 0x03;
     private final int HEADING_DATA = 0x04;
     private final int INTEGRATED_Z_VALUE = 0x06;
@@ -29,7 +29,8 @@ public class Gyro1038 extends GyroBase {
      * calibrates the gyro
      */
     private Gyro1038() {
-        I2CBus = new I2C(I2C.Port.kOnboard, DEVICE_ADDRESS);
+        super();
+        I2CBus = new I2C(I2C.Port.kMXP, DEVICE_ADDRESS);
         calibrate();
     }
 
@@ -48,13 +49,14 @@ public class Gyro1038 extends GyroBase {
 
     @Override
     public double getAngle() {
+        readGyro();
         return gyroVal;
     }
 
     /**
      * Calculates the heading of the gyro
      */
-    public void readGyro() {
+    private void readGyro() {
         byte[] dataBuffer = new byte[6];
 
         if (I2CBus == null) {
@@ -91,10 +93,10 @@ public class Gyro1038 extends GyroBase {
         I2CBus.write(SENSOR_ID_CODE, NORMAL_MEASUREMENT_MODE);
     }
 
-    @Override
     /**
      * This method is not currently implemented
      */
+    @Override
     public double getRate() {
         return 0;
     }

@@ -1,6 +1,6 @@
 package frc.subsystem;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import frc.robot.Limelight;
@@ -259,9 +259,10 @@ public class Shooter implements Subsystem {
         return shooterMotor1.getSelectedSensorVelocity() / 410.00;
     }
 
-    // public boolean getHardStop() {
-    // return hardStop.get();
-    // }
+    public boolean getHardStop() {
+        return false;
+        // return hardStop.get();
+    }
 
     // this sets the turret encoder position to 0
     public void resetTurretEncoder() {

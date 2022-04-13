@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
-
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.auton.Auton;
 import frc.auton.DriveAuton;
 import frc.auton.Shooting3BallAuton;
@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     private Auton auton = new Auton();
 
     // Compressor
-    public Compressor c = new Compressor();
+    public Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 
     // Endgame
     // public Endgame endgame = new Endgame();

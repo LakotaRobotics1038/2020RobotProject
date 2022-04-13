@@ -2,10 +2,11 @@ package frc.subsystem;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.CANSpark1038;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import com.revrobotics.CANEncoder;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 //77 is the safety port
 
@@ -28,8 +29,12 @@ public class Endgame implements Subsystem {
     };
 
     public directionsOptions Directions = directionsOptions.stop;
-    public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(MOTOR_UNLOCK_PORT, MOTOR_LOCK_PORT);
-    public DoubleSolenoid EndgameLockSolenoid = new DoubleSolenoid(ENDGAME_UNLOCK_PORT, ENDGAME_LOCK_PORT);
+    public DoubleSolenoid MotorLockSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+            MOTOR_UNLOCK_PORT,
+            MOTOR_LOCK_PORT);
+    public DoubleSolenoid EndgameLockSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+            ENDGAME_UNLOCK_PORT,
+            ENDGAME_LOCK_PORT);
     public boolean safetyIsLocked = true; // Safety lock for endgame
     public boolean MotorIsLocked = true; // Motor lock for endgame
     public boolean endgameState = false; // Is endgame up or down
@@ -39,7 +44,7 @@ public class Endgame implements Subsystem {
                                                                                     // spin counter-clockwise, a
                                                                                     // positive value makes it spin
                                                                                     // clockwise
-    public CANEncoder encoder = new CANEncoder(motor);
+    public RelativeEncoder encoder = motor.getEncoder();
     private static Endgame endgame;
 
     public static Endgame getInstance() {

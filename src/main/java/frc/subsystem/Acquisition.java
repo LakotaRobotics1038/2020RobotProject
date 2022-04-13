@@ -3,6 +3,7 @@ package frc.subsystem;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -17,7 +18,8 @@ public class Acquisition implements Subsystem {
     private final int LOWER_ACUQUISITION_CHANNEL = 2;
 
     // Solenoid
-    private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL,
+    private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+            RAISE_ACQUISITION_CHANNEL,
             LOWER_ACUQUISITION_CHANNEL);
     private AcquisitionStates acquisitionState = AcquisitionStates.In;
 
