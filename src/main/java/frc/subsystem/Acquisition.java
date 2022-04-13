@@ -29,13 +29,13 @@ public class Acquisition implements Subsystem {
     private CANSpark1038 beaterBar = new CANSpark1038(beaterBarPort, MotorType.kBrushless);
 
     // Motor speeds
-    private final static double BEATER_BAR_SPEED = .65;
+    private final static double BEATER_BAR_SPEED = .85;
 
     // Acquisition instance
     private static Acquisition acquisition;
 
     /**
-     * returns the acquisiton instance when the robot starts
+     * returns the acquisition instance when the robot starts
      *
      * @return acquisition instance
      */
@@ -64,22 +64,34 @@ public class Acquisition implements Subsystem {
         }
     }
 
+    public void down() {
+        switch (acquisitionState) {
+            case In:
+                acquisitionSolenoid.set(Value.kReverse);
+                acquisitionState = AcquisitionStates.Out;
+                break;
+            case Out:
+                System.out.println("already out");
+                break;
+        }
+    }
+
     /**
-     * sets the speed that the acquistion will pull the balls into storage
+     * sets the speed that the acquisition will pull the balls into storage
      */
     public void runBeaterBarFwd() {
         beaterBar.set(BEATER_BAR_SPEED);
     }
 
     /**
-     * sets the speed that the acquisiont will throw the balls out of storage
+     * sets the speed that the acquisition will throw the balls out of storage
      */
     public void runBeaterBarRev() {
         beaterBar.set(-BEATER_BAR_SPEED);
     }
 
     /**
-     * stops the acquistion from pulling in or throwing balls out of storage
+     * stops the acquisition from pulling in or throwing balls out of storage
      */
     public void stopBeaterBar() {
         beaterBar.set(0);

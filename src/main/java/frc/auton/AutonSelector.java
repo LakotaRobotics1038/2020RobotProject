@@ -26,7 +26,6 @@ public class AutonSelector {
     }
 
     public SequentialCommandGroup chooseAuton() {
-        // TODO: Connect auton chooser to dashboard
         position = Dashboard.getInstance().getPosition();
         autonChooser = Dashboard.getInstance().getAutonChooser();
 

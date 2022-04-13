@@ -1,0 +1,14 @@
+Limelight values:
+Hue-color
+58
+98
+Saturation-how much color is present 
+125
+255
+Value - intensity of color
+125
+255
+Erosion Steps
+0
+Dilation Steps
+0

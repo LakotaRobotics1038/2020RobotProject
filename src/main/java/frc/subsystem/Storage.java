@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-
 import frc.robot.CANSpark1038;
 
 public class Storage implements Subsystem {
@@ -18,7 +17,7 @@ public class Storage implements Subsystem {
 
     // shuttle motor and speed
     private CANSpark1038 shuttleMotor = new CANSpark1038(SHUTTLE_MOTOR_PORT, MotorType.kBrushless);
-    private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
+    public CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
     private final static double shuttleMotorSpeed = 1.0;
 
     // declares storage
@@ -36,6 +35,8 @@ public class Storage implements Subsystem {
         Forward, Reverse
     }
 
+    public static boolean redTeam = false;
+    public static boolean checking = true;
     /**
      * returns the storage instance when the robot starts
      *
@@ -86,13 +87,24 @@ public class Storage implements Subsystem {
      * runs the ball storage
      */
     public void periodic() {
+        //System.out.println(laserStart.get() + ":"+ laserEnd.get());
+        if(laserStart.get() && checking){
+            redTeam = true;
+        }
+        /*
+        if(shuttleMotorEncoder.getPosition() != 547){
+            redTeam = true;
+        }
+        */
         if (!manualStorageForward && !manualStorageReverse) {
             if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get()) // sensor
             {
                 shuttleMotor.set(shuttleMotorSpeed);
-            } else if (laserStart.get() && !laserEnd.get()) {
+            } 
+            else if (laserStart.get() && !laserEnd.get()) {
                 shuttleMotorEncoder.setPosition(0);
-            } else {
+            } 
+            else {
                 shuttleMotor.set(0);
             }
         } else if (manualStorageForward) {

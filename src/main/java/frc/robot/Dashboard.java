@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.subsystem.Shooter;
 
-// TODO gyro
-// TODO match time (sam's turn)
 public class Dashboard {
     private static Dashboard dashboard;
 
@@ -48,3 +46,5 @@ public class Dashboard {
         return autonChooser;
     }
 }
+
+//
