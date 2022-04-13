@@ -25,10 +25,9 @@ public class Spinner implements Subsystem {
     private final Color kGreenMaximumTarget = ColorMatch.makeColor(0.28, 0.6, 0.3);
     private final Color kRedMaximumTarget = ColorMatch.makeColor(0.6, 0.3, 0.15);
     private final Color kYellowMaximumTarget = ColorMatch.makeColor(0.4, 0.55, 0.15);
-    private final String colorString = "Unknown"; 
+    private final String colorString = "Unknown";
     Color detectedColor = colorSensor.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
-
 
     private final int SPINNER_MOTOR_PORT = 50;
     private CANSpark1038 spinnerMotor = new CANSpark1038(SPINNER_MOTOR_PORT, MotorType.kBrushless);
@@ -98,20 +97,16 @@ public class Spinner implements Subsystem {
         return colorEnabled;
     }
 
-    public String getCurrentColor(){
-        if (0.07 < colorSensor.getRed() && colorSensor.getRed() < 0.17){
+    public String getCurrentColor() {
+        if (0.07 < colorSensor.getRed() && colorSensor.getRed() < 0.17) {
             return "Blue";
-        }
-        else if (0.5 < colorSensor.getRed() && colorSensor.getRed() < 0.6){
+        } else if (0.5 < colorSensor.getRed() && colorSensor.getRed() < 0.6) {
             return "Red";
-        }
-        else if (0.22 < colorSensor.getRed() && colorSensor.getRed() < 0.32) {
+        } else if (0.22 < colorSensor.getRed() && colorSensor.getRed() < 0.32) {
             return "Green";
-        }
-        else if (0.35 < colorSensor.getRed() && colorSensor.getRed() < 0.45){
+        } else if (0.35 < colorSensor.getRed() && colorSensor.getRed() < 0.45) {
             return "Yellow";
-        }
-        else {
+        } else {
             return "Unknown";
         }
     }

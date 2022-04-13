@@ -14,41 +14,42 @@ import frc.subsystem.Storage;
 
 public class AcquireCommand extends CommandBase {
 
-  Acquisition acquisition = Acquisition.getInstance();
-  Storage storage = Storage.getInstance();
+    Acquisition acquisition = Acquisition.getInstance();
+    Storage storage = Storage.getInstance();
 
-  private static double END_TIME;
-  /**
-   * Creates a new MoveAcquisitionCommand.
-   */
-  public AcquireCommand(double endTime) {
-    END_TIME = endTime;
-  }
+    private static double END_TIME;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    acquisition.toggleAcquisitionPosition();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if(Timer.getMatchTime() <= 14) {
-      storage.periodic();
-      acquisition.runBeaterBarFwd();
+    /**
+     * Creates a new MoveAcquisitionCommand.
+     */
+    public AcquireCommand(double endTime) {
+        END_TIME = endTime;
     }
-  }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    acquisition.stopBeaterBar();
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        acquisition.toggleAcquisitionPosition();
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return Timer.getMatchTime() <= END_TIME;
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        if (Timer.getMatchTime() <= 14) {
+            storage.periodic();
+            acquisition.runBeaterBarFwd();
+        }
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        acquisition.stopBeaterBar();
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return Timer.getMatchTime() <= END_TIME;
+    }
 }

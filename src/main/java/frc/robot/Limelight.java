@@ -29,17 +29,21 @@ public class Limelight {
 
     public enum LEDStates {
         On(0), Off(1);
-        private int value; 
-        private LEDStates(int value) { this.value = value; }
+
+        private int value;
+
+        private LEDStates(int value) {
+            this.value = value;
+        }
     };
 
     private Limelight() {
-       changeLEDStatus(LEDStates.Off);
+        changeLEDStatus(LEDStates.Off);
     }
 
     /**
      * returns limelight instance when robot is turned on
-     * 
+     *
      * @return the limelight instance
      */
     public static Limelight getInstance() {
@@ -66,7 +70,7 @@ public class Limelight {
 
     /**
      * tells if robot has acquired the target
-     * 
+     *
      * @return whether or not the robot has a target
      */
     public boolean canSeeTarget() {
@@ -83,17 +87,19 @@ public class Limelight {
 
     /**
      * returns how far from center vertically the robot is
+     * 
      * @return distance from center vertically
      */
     public double getYOffset() {
-        /* if they tell me what to do i wont do it	
-         * it ha been 5 minutes since they told me to do something	
-         * i am starting to wonder if they are all idiots. 	
-         * drew and sam are talking nerd talk	
-         * sam is slacking but still talking nerd	
-         * i am very bored and want chocy milk	
-         * i won the war over the yard stick	
-         * they still have not noticed              -Shawn Tomas
+        /*
+         * if they tell me what to do i wont do it
+         * it ha been 5 minutes since they told me to do something
+         * i am starting to wonder if they are all idiots.
+         * drew and sam are talking nerd talk
+         * sam is slacking but still talking nerd
+         * i am very bored and want chocy milk
+         * i won the war over the yard stick
+         * they still have not noticed -Shawn Tomas
          */
         y = ty.getDouble(defaultOffset);
         return y;
@@ -107,9 +113,9 @@ public class Limelight {
         double power = ty.getDouble(defaultOffset);
         return power * -.00417 + .55;
     }
-    
+
     public double getShooterSetpoint() {
         double setpoint = ty.getDouble(defaultOffset);
-        return (setpoint * -250 + 31000)/(4100.00);
+        return (setpoint * -250 + 31000) / (4100.00);
     }
 }

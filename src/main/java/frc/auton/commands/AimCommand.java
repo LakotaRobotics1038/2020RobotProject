@@ -23,7 +23,6 @@ public class AimCommand extends CommandBase {
         END_TIME = endTime;
     }
 
-
     @Override
     public void initialize() {
         shooter.setTurretDirection(TurretDirections.Left);
@@ -37,10 +36,10 @@ public class AimCommand extends CommandBase {
 
         // TODO: Get the limelight working here
         // if (shooter.getTurretEncoder() < TURRET_90_DEGREES) {
-        //      shooter.turnTurret(TURRET_SPEED);
+        // shooter.turnTurret(TURRET_SPEED);
         // } else {
-        //     shooter.turnTurret(0);
-        //      turned = true;
+        // shooter.turnTurret(0);
+        // turned = true;
         // }
     }
 

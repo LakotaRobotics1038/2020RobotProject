@@ -146,35 +146,43 @@ public class Shooter implements Subsystem {
         shooterMotor1.set(-power);
         shooterMotor2.set(power);
     }
-    //Stops the speedPID
+
+    // Stops the speedPID
     public void disableSpeedPID() {
         isRunning = false;
     }
-    //checks if the speedPID is at the setpoint (What speed we want the shooter at)
+
+    // checks if the speedPID is at the setpoint (What speed we want the shooter at)
     public boolean speedOnTarget() {
         return speedPID.atSetpoint();
     }
-    //sets the shooter to manual speed, disabling the PID
+
+    // sets the shooter to manual speed, disabling the PID
     public void shootManually(double speed) {
         shooterMotor1.set(speed);
         shooterMotor2.set(-speed);
     }
-    //pass thru the turret direction you want, then this will set the turret to that
+
+    // pass thru the turret direction you want, then this will set the turret to
+    // that
     public void setTurretDirection(TurretDirections value) {
         currentTurretDirection = value;
     }
-    //enables the PIDs and what not
+
+    // enables the PIDs and what not
     public void enable() {
         isEnabled = true;
     }
-    //Disabled the PIDs and what not, screw this
+
+    // Disabled the PIDs and what not, screw this
     public void disable() {
         isEnabled = false;
     }
-    //Executes the PID
+
+    // Executes the PID
     public void periodic() {
         if (isEnabled) {
-            //executeAimPID();
+            // executeAimPID();
             executeSpeedPID();
         }
     }
@@ -200,7 +208,8 @@ public class Shooter implements Subsystem {
     public boolean isFinished() {
         return positionPID.atSetpoint() && speedPID.atSetpoint() && isRunning;
     }
-    //Returns to see if the turret is aimed that the target
+
+    // Returns to see if the turret is aimed that the target
     public boolean turretOnTarget() {
         return positionPID.atSetpoint() && limelight.canSeeTarget();
     }
@@ -209,11 +218,12 @@ public class Shooter implements Subsystem {
      * limits shooter turn radius
      */
 
-    //moves the turret
+    // moves the turret
     public void turnTurret(double turnSpeed) {
         turretTurningMotor.set(turnSpeed);
     }
-    //switch case for what direction the turret spins
+
+    // switch case for what direction the turret spins
     public void swivelEy() {
         switch (currentTurretDirection) {
             case Left:
@@ -224,33 +234,38 @@ public class Shooter implements Subsystem {
                 break;
         }
     }
-    //get's the turret current encoder value
+
+    // get's the turret current encoder value
     public double getTurretEncoder() {
-        return turretTurningMotor.getSelectedSensorPosition()*180.00/82000.00; //converts radians to degrees
+        return turretTurningMotor.getSelectedSensorPosition() * 180.00 / 82000.00; // converts radians to degrees
     }
-    //gets the current shooter speed
+
+    // gets the current shooter speed
     public double getShooterSpeed() {
-        return shooterMotor1.getSelectedSensorVelocity()/4100.00; //converts to speed
+        return shooterMotor1.getSelectedSensorVelocity() / 4100.00; // converts to speed
     }
-    //returns the hard stop of the robot before it breaks
+
+    // returns the hard stop of the robot before it breaks
     public boolean getHardStop() {
         return hardStop.get();
     }
-    //this sets the turret encoder position to 0
+
+    // this sets the turret encoder position to 0
     public void resetTurretEncoder() {
         turretTurningMotor.setSelectedSensorPosition(0);
     }
-    //stops the turret from moving
+
+    // stops the turret from moving
     private void stopTurret() {
         turretTurningMotor.set(0);
     }
-    //returns the turret directions
+
+    // returns the turret directions
     public TurretDirections getTurretDirection() {
         return currentTurretDirection;
     }
 
-
-    //code red mountain dew TODO: change this name to code red
+    // code red mountain dew TODO: change this name to code red
     public void goToCrashPosition() {
         if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 1000) {
             stopTurret();
@@ -262,11 +277,13 @@ public class Shooter implements Subsystem {
             swivelEy();
         }
     }
-    //hold the turret position
+
+    // hold the turret position
     public void holdPosition() {
         turretTurningMotor.set(0);
     }
-    //moves the turret
+
+    // moves the turret
     public void move() {
         if (hardStop.get()) {
             turretTurningMotor.setSelectedSensorPosition(0);

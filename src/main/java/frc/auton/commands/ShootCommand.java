@@ -2,7 +2,6 @@ package frc.auton.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.Timer;
-import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.Storage;
 import frc.subsystem.Storage.ManualStorageModes;

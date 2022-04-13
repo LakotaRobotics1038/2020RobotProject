@@ -5,18 +5,15 @@ import frc.auton.commands.ShootCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.auton.commands.AimCommand;
 
-
-public class Shooting3BallAuton extends Auton{
+public class Shooting3BallAuton extends Auton {
     public Shooting3BallAuton() {
         super();
-        
+
         addCommands(
-            new AimCommand(11),
-            new ParallelCommandGroup(
-                new ShootCommand(6),
-                new AimCommand(6)
-            ),
-            new DriveStraightCommand(200)
-        );
+                new AimCommand(11),
+                new ParallelCommandGroup(
+                        new ShootCommand(6),
+                        new AimCommand(6)),
+                new DriveStraightCommand(200));
     }
 }

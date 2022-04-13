@@ -26,7 +26,7 @@ public class DriveTrain implements Subsystem {
 
     public static CANSpark1038 CANSparkRightFront = new CANSpark1038(57, MotorType.kBrushless);
     public static CANSpark1038 CANSparkRightBack = new CANSpark1038(58, MotorType.kBrushless);
-    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);//previously 55
+    public static CANSpark1038 CANSparkLeftFront = new CANSpark1038(52, MotorType.kBrushless);// previously 55
     public static CANSpark1038 CANSparkLeftBack = new CANSpark1038(56, MotorType.kBrushless);
 
     public CANEncoder CANSparkRightEncoder = new CANEncoder(CANSparkRightBack);
@@ -61,9 +61,9 @@ public class DriveTrain implements Subsystem {
 
         CANSparkRightFront.follow(CANSparkRightBack);
         CANSparkLeftFront.follow(CANSparkLeftBack);
-        CANSparkRightEncoder.setPositionConversionFactor(1/24.785587);
-        CANSparkLeftEncoder.setPositionConversionFactor(1/24.785587);
-        
+        CANSparkRightEncoder.setPositionConversionFactor(1 / 24.785587);
+        CANSparkLeftEncoder.setPositionConversionFactor(1 / 24.785587);
+
         differentialDrive = new DifferentialDrive(CANSparkLeftBack, CANSparkRightBack);
     }
 
@@ -104,18 +104,18 @@ public class DriveTrain implements Subsystem {
     // Switch between drive modes
     public void driveModeToggler() {
         switch (currentDriveMode) {
-        case tankDrive:
-            currentDriveMode = DriveModes.singleArcadeDrive;
-            break;
-        case singleArcadeDrive:
-            currentDriveMode = DriveModes.dualArcadeDrive;
-            break;
-        case dualArcadeDrive:
-            currentDriveMode = DriveModes.tankDrive;
-            break;
-        default:
-            System.out.println("Help I have fallen and I can't get up!");
-            break;
+            case tankDrive:
+                currentDriveMode = DriveModes.singleArcadeDrive;
+                break;
+            case singleArcadeDrive:
+                currentDriveMode = DriveModes.dualArcadeDrive;
+                break;
+            case dualArcadeDrive:
+                currentDriveMode = DriveModes.tankDrive;
+                break;
+            default:
+                System.out.println("Help I have fallen and I can't get up!");
+                break;
         }
     }
 

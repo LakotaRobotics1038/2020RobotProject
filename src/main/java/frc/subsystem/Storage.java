@@ -20,7 +20,6 @@ public class Storage implements Subsystem {
     private CANSpark1038 shuttleMotor = new CANSpark1038(SHUTTLE_MOTOR_PORT, MotorType.kBrushless);
     private CANEncoder shuttleMotorEncoder = new CANEncoder(shuttleMotor);
     private final static double shuttleMotorSpeed = 1.0;
-    
 
     // declares storage
     private static Storage storage;
@@ -39,7 +38,7 @@ public class Storage implements Subsystem {
 
     /**
      * returns the storage instance when the robot starts
-     * 
+     *
      * @return storage instance
      */
     public static Storage getInstance() {
@@ -53,19 +52,19 @@ public class Storage implements Subsystem {
     private Storage() {
         shuttleMotor.setInverted(true);
         shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
-        shuttleMotorEncoder.setPositionConversionFactor(47/2);
+        shuttleMotorEncoder.setPositionConversionFactor(47 / 2);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {
         switch (mode) {
-        case Forward:
-            manualStorageForward = true;
-            break;
-        case Reverse:
-            manualStorageReverse = true;
-            break;
-        default:
-            break;
+            case Forward:
+                manualStorageForward = true;
+                break;
+            case Reverse:
+                manualStorageReverse = true;
+                break;
+            default:
+                break;
         }
     }
 
@@ -76,7 +75,7 @@ public class Storage implements Subsystem {
 
     /**
      * feeds the shooter
-     * 
+     *
      * @param power how fast to feed the shooter
      */
     public void feedShooter(double power) {
@@ -88,7 +87,7 @@ public class Storage implements Subsystem {
      */
     public void periodic() {
         if (!manualStorageForward && !manualStorageReverse) {
-            if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get())                                                                                // sensor
+            if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get()) // sensor
             {
                 shuttleMotor.set(shuttleMotorSpeed);
             } else if (laserStart.get() && !laserEnd.get()) {

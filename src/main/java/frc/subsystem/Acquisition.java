@@ -11,14 +11,16 @@ import frc.robot.CANSpark1038;
 public class Acquisition implements Subsystem {
     // Ports
     private final int beaterBarPort = 54;
-    
+
     // Solenoid channels
     private final int RAISE_ACQUISITION_CHANNEL = 3;
     private final int LOWER_ACUQUISITION_CHANNEL = 2;
 
     // Solenoid
-    private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL, LOWER_ACUQUISITION_CHANNEL);
+    private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(RAISE_ACQUISITION_CHANNEL,
+            LOWER_ACUQUISITION_CHANNEL);
     private AcquisitionStates acquisitionState = AcquisitionStates.In;
+
     private enum AcquisitionStates {
         In, Out
     }
@@ -28,17 +30,17 @@ public class Acquisition implements Subsystem {
 
     // Motor speeds
     private final static double BEATER_BAR_SPEED = .65;
-    
+
     // Acquisition instance
     private static Acquisition acquisition;
 
     /**
      * returns the acquisiton instance when the robot starts
-     * 
+     *
      * @return acquisition instance
      */
     public static Acquisition getInstance() {
-        if(acquisition == null) {
+        if (acquisition == null) {
             System.out.println("creating a new acquisition");
             acquisition = new Acquisition();
         }
