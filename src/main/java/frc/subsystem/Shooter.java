@@ -41,22 +41,28 @@ public class Shooter implements Subsystem {
     // Storage instance
     private Storage storage = Storage.getInstance();
 
+    // acquisition instance
+    private Acquisition acquisition = Acquisition.getInstance();
+
     // Position PID for turret
     private final double positionSetpoint = 0.0;
-    private final double positionTolerance = 1;
-    private final static double positionP = 0.036; // .15
+    private final double positionTolerance = .5;
+    private final static double positionP = 0.08; // .15
     private final static double positionI = 0.0;
     private final static double positionD = 0.0;
     private PIDController positionPID = new PIDController(positionP, positionI, positionD);
 
     // Speed PID for shooter
     private final double speedSetpoint = limelight.getShooterSetpoint();
-    private final double speedTolerance = 9001;
-    private final static double speedP = 0.00003;
-    private final static double speedI = 0.00001;
-    private final static double speedD = 0.00001;
+    private final double speedTolerance = 4;
+    private final static double speedP = 0.0063;
+    private final static double speedI = 0.0;
+    private final static double speedD = 0.0;
     private PIDController speedPID = new PIDController(speedP, speedI, speedD);
     private boolean isRunning = false;
+
+    // Hold position boolean
+    public boolean held = true;
 
     // Motor speed for shooter feeder
     private final static double feedSpeed = 1;
@@ -89,8 +95,9 @@ public class Shooter implements Subsystem {
      * Feeds ball into shooter
      */
     public void feedBall() {
-        if (isFinished()) {
+        if (isFinished() || held) {
             storage.enableManualStorage(ManualStorageModes.Forward);
+            acquisition.runBeaterBarFwd();
         }
     }
 
@@ -145,11 +152,12 @@ public class Shooter implements Subsystem {
         isRunning = true;
         speedPID.setSetpoint(limelight.getShooterSetpoint());
         double power = speedPID.calculate(getShooterSpeed()) + limelight.getMotorPower();
-        System.out.println("speed" + getShooterSpeed());
+        System.out.println("speed" + shooterMotor1.getSelectedSensorVelocity());
         System.out.println("setpoint: " + speedPID.getSetpoint());
         System.out.println("power" + power);
         shooterMotor1.set(-power);
         shooterMotor2.set(power);
+        System.out.println(getShooterSpeed());
     }
 
     // Stops the speedPID
@@ -211,7 +219,7 @@ public class Shooter implements Subsystem {
      * @return returns if robot is ready to shoot
      */
     public boolean isFinished() {
-        return positionPID.atSetpoint() && speedPID.atSetpoint() && isRunning;
+        return positionPID.atSetpoint() && speedPID.atSetpoint(); // && isRunning
     }
 
     // Returns to see if the turret is aimed that the target
@@ -248,7 +256,7 @@ public class Shooter implements Subsystem {
 
     // gets the current shooter speed
     public double getShooterSpeed() {
-        return shooterMotor1.getSelectedSensorVelocity() / 4100.00; // converts to speed
+        return shooterMotor1.getSelectedSensorVelocity() / 410.00;
     }
 
     // public boolean getHardStop() {
@@ -272,12 +280,12 @@ public class Shooter implements Subsystem {
 
     // code red mountain dew TODO: change this name to code red
     public void goToCrashPosition() {
-        if (Math.abs(turretTurningMotor.getSelectedSensorPosition()) < 2000) {
+        if (Math.abs(getTurretEncoder()) < 2) {
             stopTurret();
-        } else if (turretTurningMotor.getSelectedSensorPosition() > 0) {
+        } else if (getTurretEncoder() > 0) {
             currentTurretDirection = TurretDirections.Right;
             swivelEy();
-        } else if (turretTurningMotor.getSelectedSensorPosition() < 0) {
+        } else if (getTurretEncoder() < 0) {
             currentTurretDirection = TurretDirections.Left;
             swivelEy();
         }
@@ -286,6 +294,7 @@ public class Shooter implements Subsystem {
     // hold the turret position
     public void holdPosition() {
         turretTurningMotor.set(0);
+        held = true;
     }
 
     // moves the turret
@@ -299,6 +308,7 @@ public class Shooter implements Subsystem {
     // }
 
     public void move() {
+        held = false;
         // if (hardStop.get()) {
         // turretTurningMotor.setSelectedSensorPosition(0);
         // }

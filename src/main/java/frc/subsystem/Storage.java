@@ -37,6 +37,7 @@ public class Storage implements Subsystem {
 
     public static boolean redTeam = false;
     public static boolean checking = true;
+
     /**
      * returns the storage instance when the robot starts
      *
@@ -53,7 +54,7 @@ public class Storage implements Subsystem {
     private Storage() {
         shuttleMotor.setInverted(true);
         shuttleMotorEncoder.setPosition(SHUTTLE_MOTOR_ENCODER_COUNTS + ENCODER_OFFSET);
-        shuttleMotorEncoder.setPositionConversionFactor(47 / 2);
+        shuttleMotorEncoder.setPositionConversionFactor(47 / 2.2);
     }
 
     public void enableManualStorage(ManualStorageModes mode) {
@@ -100,10 +101,10 @@ public class Storage implements Subsystem {
             if (shuttleMotorEncoder.getPosition() < SHUTTLE_MOTOR_ENCODER_COUNTS && !laserEnd.get()) // sensor
             {
                 shuttleMotor.set(shuttleMotorSpeed);
-            } 
+            }
             else if (laserStart.get() && !laserEnd.get()) {
                 shuttleMotorEncoder.setPosition(0);
-            } 
+            }
             else {
                 shuttleMotor.set(0);
             }
