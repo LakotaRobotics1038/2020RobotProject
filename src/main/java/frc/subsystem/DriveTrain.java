@@ -15,7 +15,7 @@ public class DriveTrain implements Subsystem {
         tankDrive, singleArcadeDrive, dualArcadeDrive
     };
 
-    public DriveModes currentDriveMode = DriveModes.dualArcadeDrive;
+    public DriveModes currentDriveMode = DriveModes.tankDrive;
 
     public final double WHEEL_DIAMETER = 6;
     private final int HIGH_GEAR_PORT = 0;

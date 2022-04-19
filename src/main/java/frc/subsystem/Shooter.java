@@ -116,6 +116,7 @@ public class Shooter implements Subsystem {
         speedPID.calculate(0.0);
         shooterMotor1.set(0);
         shooterMotor2.set(0);
+        positionPID.calculate(0);
     }
 
     /**
@@ -326,16 +327,18 @@ public class Shooter implements Subsystem {
         }
     }
 
-    // public void manual(double turnDir) {
-    // System.out.println(turnDir + "," + getTurretEncoder());
-    // if (turnDir < 0 && getTurretEncoder() > RIGHT_STOP) {
-    // turretTurningMotor.set(turnDir/2);
-    // }
-    // else if (turnDir > 0 && getTurretEncoder() <LEFT_STOP) {
-    // turretTurningMotor.set(turnDir/2);
-    // }
-    // else{
-    // turretTurningMotor.set(0);
-    // }
-    // }
+    public void manual(double turnDir) {
+        System.out.println(turnDir + "," + getTurretEncoder());
+        if (turnDir < 0 && getTurretEncoder() > RIGHT_STOP) {
+            turretTurningMotor.set(turnDir);
+        } else if (turnDir > 0 && getTurretEncoder() < LEFT_STOP) {
+            turretTurningMotor.set(turnDir);
+        } else {
+            turretTurningMotor.set(0);
+        }
+    }
+
+    public void moveManually(double joystick) {
+        turretTurningMotor.set(.2);
+    }
 }

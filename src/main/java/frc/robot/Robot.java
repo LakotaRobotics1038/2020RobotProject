@@ -185,10 +185,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        shooter.disablePID();
         operator();
         driver();
         endgame.periodic();
-        storage.periodic();
+        // storage.periodic();
         SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
         System.out.println(shooter.isFinished());
     }
@@ -246,21 +247,30 @@ public class Robot extends TimedRobot {
         } else if (!operatorJoystick.getYButton()) {
             prevOperatorYState = false;
         }
-
-        if (operatorJoystick.getLeftButton()) {
-            shooter.executeSpeedPID();
+        if (operatorJoystick.getLeftTrigger() > 0) {
+            shooter.shootManually(-operatorJoystick.getLeftTrigger());
         } else {
-            shooter.disableSpeedPID();
             shooter.shootManually(0);
         }
-        if (shooter.isFinished() && operatorJoystick.getLeftButton()
-                || operatorJoystick.getLeftButton() && shooter.held) {
-            operatorJoystick.setLeftRumble(1);
-            operatorJoystick.setRightRumble(1);
+        if (operatorJoystick.getRightJoystickHorizontal() != 0) {
+            shooter.manual(operatorJoystick.getLeftJoystickHorizontal());
         } else {
-            operatorJoystick.setRightRumble(0);
-            operatorJoystick.setLeftRumble(0);
+            // shooter.manual(0);
         }
+        // if (operatorJoystick.getLeftButton()) {
+        // shooter.executeSpeedPID();
+        // } else {
+        // shooter.disableSpeedPID();
+        // shooter.shootManually(0);
+        // }
+        // if (shooter.isFinished() && operatorJoystick.getLeftButton()
+        // || operatorJoystick.getLeftButton() && shooter.held) {
+        // operatorJoystick.setLeftRumble(1);
+        // operatorJoystick.setRightRumble(1);
+        // } else {
+        // operatorJoystick.setRightRumble(0);
+        // operatorJoystick.setLeftRumble(0);
+        // }
 
         if (operatorJoystick.getLeftTrigger() > .5 && operatorJoystick.getLeftButton()) {
             shooter.feedBall();
@@ -286,22 +296,22 @@ public class Robot extends TimedRobot {
             limelight.changeLEDStatus(LEDStates.Off);
             prevOperatorAState = false;
         }
-        if (operatorJoystick.getAButton()) {
-            if (!prevOperatorAState) {
-                shooter.setTurretDirection(TurretDirections.Left);
-                prevOperatorAState = true;
-            }
-            limelight.changeLEDStatus(LEDStates.On);
-            shooter.move();
-        }
-        // else if (!endgame.endgameState) {
-        // shooter.manual(operatorJoystick.getRightJoystickHorizontal());
+        // if (operatorJoystick.getAButton()) {
+        // if (!prevOperatorAState) {
+        // shooter.setTurretDirection(TurretDirections.Left);
+        // prevOperatorAState = true;
         // }
-        else {
-            shooter.goToCrashPosition();
-            limelight.changeLEDStatus(LEDStates.Off);
-            prevOperatorAState = false;
-        }
+        // limelight.changeLEDStatus(LEDStates.On);
+        // shooter.move();
+        // }
+        // // else if (!endgame.endgameState) {
+        // // shooter.manual(operatorJoystick.getRightJoystickHorizontal());
+        // // }
+        // else {
+        // shooter.goToCrashPosition();
+        // limelight.changeLEDStatus(LEDStates.Off);
+        // prevOperatorAState = false;
+        // }
 
         System.out.println("Right joystick value " + operatorJoystick.getRightJoystickVertical());
 
