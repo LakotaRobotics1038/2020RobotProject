@@ -15,12 +15,12 @@ public class Acquisition implements Subsystem {
 
     // Solenoid channels
     private final int RAISE_ACQUISITION_CHANNEL = 3;
-    private final int LOWER_ACUQUISITION_CHANNEL = 2;
+    private final int LOWER_ACQUISITION_CHANNEL = 2;
 
     // Solenoid
     private DoubleSolenoid acquisitionSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
             RAISE_ACQUISITION_CHANNEL,
-            LOWER_ACUQUISITION_CHANNEL);
+            LOWER_ACQUISITION_CHANNEL);
     private AcquisitionStates acquisitionState = AcquisitionStates.In;
 
     private enum AcquisitionStates {
