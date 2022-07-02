@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
 
     // shooter
     private final Shooter shooter = Shooter.getInstance();
-    private double shooterSpeed = -.7;
+    private double shooterSpeed = 0.5;
     private PovPositions prevPovPosition = PovPositions.None;
 
     // spinner
@@ -168,14 +168,10 @@ public class Robot extends TimedRobot {
 
         if (operatorJoystick.getLeftButton()) {
             shooter.shootManually(shooterSpeed);
-        } else {
-            shooter.shootManually(0);
-        }
-
-        if (operatorJoystick.getLeftButton()) {
             operatorJoystick.setLeftRumble(1);
             operatorJoystick.setRightRumble(1);
         } else {
+            shooter.shootManually(0);
             operatorJoystick.setRightRumble(0);
             operatorJoystick.setLeftRumble(0);
         }
@@ -193,11 +189,11 @@ public class Robot extends TimedRobot {
         switch (operatorJoystick.getPOVPosition()) {
             case Up:
                 if (prevPovPosition != PovPositions.Up)
-                    shooterSpeed = MathUtil.clamp(shooterSpeed += .1, 0, 1);
+                    shooterSpeed = MathUtil.clamp(shooterSpeed += .1, 0.1, 1);
                 break;
             case Down:
                 if (prevPovPosition != PovPositions.Down)
-                    shooterSpeed = MathUtil.clamp(shooterSpeed -= .1, 0, 1);
+                    shooterSpeed = MathUtil.clamp(shooterSpeed -= .1, 0.1, 1);
                 break;
             default:
                 break;
