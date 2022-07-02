@@ -1,5 +1,7 @@
 package frc.subsystem;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
+
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import frc.robot.TalonSRX1038;
@@ -51,6 +53,9 @@ public class Shooter implements Subsystem {
 
     private Shooter() {
         turretTurningMotor.setSelectedSensorPosition(0);
+        shooterMotor2.follow(shooterMotor1);
+        shooterMotor1.setInverted(true);
+        shooterMotor2.setInverted(InvertType.OpposeMaster);
     }
 
     /**
@@ -71,7 +76,6 @@ public class Shooter implements Subsystem {
     // sets the shooter to manual speed, disabling the PID
     public void shootManually(double speed) {
         shooterMotor1.set(speed);
-        shooterMotor2.set(-speed);
     }
 
     // pass thru the turret direction you want, then this will set the turret to
