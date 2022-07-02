@@ -8,23 +8,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import frc.auton.Auton;
-import frc.auton.DriveAuton;
-import frc.auton.Shooting3BallAuton;
-import frc.robot.Limelight.LEDStates;
 import frc.subsystem.Storage;
+import frc.robot.Joystick1038.PovPositions;
 import frc.subsystem.Acquisition;
 import frc.subsystem.Shooter;
 import frc.subsystem.DriveTrain;
-import frc.subsystem.Endgame;
 import frc.subsystem.Storage.ManualStorageModes;
-import frc.subsystem.Shooter.TurretDirections;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,24 +27,10 @@ import frc.subsystem.Shooter.TurretDirections;
  * project.
  */
 public class Robot extends TimedRobot {
-    private static final String kDriveAuto = "Drive Auto";
-    private static final String k3BallAuto = "3 Ball Auto";
-    private static final String k5BallAuto = "5 Ball Auto";
-    private static final String k8BallAuto = "8 Ball Auto";
-    private String m_autoSelected;
-    private final SendableChooser<String> m_chooser = new SendableChooser<>();
-    public static CommandScheduler schedule = CommandScheduler.getInstance();
-    public static SequentialCommandGroup autonPath;
     private final Gyro1038 gyro = Gyro1038.getInstance();
-    private Auton auton = new Auton();
 
     // Compressor
     public Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
-
-    // Endgame
-    // public Endgame endgame = new Endgame();
-    private final Endgame endgame = Endgame.getInstance();
-    private boolean prevXState = false;
 
     // Drive
     private final DriveTrain driveTrain = DriveTrain.getInstance();
@@ -60,24 +39,19 @@ public class Robot extends TimedRobot {
     // Joystick
     private final Joystick1038 driverJoystick = new Joystick1038(0);
     private final Joystick1038 operatorJoystick = new Joystick1038(1);
-    public double multiplyer = .8;
+    public double multiplier = .8;
 
     // Storage
     private final Storage storage = Storage.getInstance();
 
-    // Aquisition
+    // Acquisition
     private final Acquisition acquisition = Acquisition.getInstance();
     private boolean prevOperatorYState = false;
-    private boolean prevOperatorAState = false;
-    private boolean prevDUpState = false;
-    private boolean prevDDownState = false;
-
-    // limelight
-    private final Limelight limelight = Limelight.getInstance();
 
     // shooter
     private final Shooter shooter = Shooter.getInstance();
     private double shooterSpeed = -.7;
+    private PovPositions prevPovPosition = PovPositions.None;
 
     // spinner
     // private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kMXP);
@@ -91,11 +65,6 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         shooter.resetTurretEncoder();
         gyro.calibrate();
-        m_chooser.setDefaultOption("Drive Auto", kDriveAuto);
-        m_chooser.addOption("3 Ball Auto", k3BallAuto);
-        m_chooser.addOption("5 Ball Auto", k5BallAuto);
-        m_chooser.addOption("8 Ball Auto", k8BallAuto);
-        SmartDashboard.putData("Auto choices", m_chooser);
     }
 
     /**
@@ -105,9 +74,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        limelight.read();
         // dashboard.update();
-        System.out.println(limelight.getYOffset());
         System.out.println(shooter.getShooterSpeed());
     }
 
@@ -120,35 +87,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        // autonPath = new GalacticCommands2();
-        // autonPath = new GalacticCommands();
-        System.out.println("Auton started");
-        m_autoSelected = m_chooser.getSelected();
-        System.out.println("Auto selected: " + m_autoSelected);
-        switch (m_autoSelected) {
-            case kDriveAuto:
-                autonPath = new DriveAuton();
-                System.out.println("Selected drive auton");
-                break;
-            case k3BallAuto:
-                autonPath = new Shooting3BallAuton();
-                System.out.println("Selected shoot auton");
-                break;
-            // case k5BallAuto:
-            // autonPath = new Shooting5BallAuton();
-            // System.out.println("Selected acquisition auton");
-            // break;
-            // case k8BallAuto:
-            // autonPath = new DriveAuton();
-            // System.out.println("Selected drive auton");
-            // break;
-            // default:
-            // System.out.println("how? just how? also why?");
-            // break;
-        }
-
-        schedule.schedule(autonPath);
-        System.out.println("Scheduled tasks");
     }
 
     /**
@@ -156,48 +94,29 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-
-        // driveTrain.tankDrive(.5, .5);
-
-        // if (driveTrain.getLeftDriveEncoderDistance() < 24) {
-        // driveTrain.tankDrive(0, 0);
-        // }
-
-        // shooter.setTurretDirection(TurretDirections.Left);
-        // limelight.changeLEDStatus(LEDStates.On);
-        // shooter.move();
-
-        // if (limelight.canSeeTarget()) {
-        // shooter.holdPosition();
-        // shooter.speedOnTarget();
-        // storage.feedShooter(.1);
-        // }
     }
 
     @Override
     public void teleopInit() {
-        endgame.reset(endgame.MIN_COUNT); // SETTING THE INTIAL POSITION!!!!!
-        // endgame.reset(0);
     }
 
     /**
      * This function is called periodically during operator control.
+     *
      */
     @Override
     public void teleopPeriodic() {
         operator();
         driver();
-        endgame.periodic();
         storage.periodic();
         SmartDashboard.putNumber("Shooter speed", -shooterSpeed);
-        System.out.println(shooter.isFinished());
     }
 
     public void driver() {
         switch (driveTrain.currentDriveMode) {
             case tankDrive:
-                driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-                        driverJoystick.getRightJoystickVertical() * multiplyer);
+                driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplier,
+                        driverJoystick.getRightJoystickVertical() * multiplier);
                 break;
             case dualArcadeDrive:
                 if (driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) > 0) {
@@ -207,26 +126,26 @@ public class Robot extends TimedRobot {
                 } else {
                     drivePower = 0;
                 }
-                driveTrain.dualArcadeDrive(drivePower * multiplyer,
-                        driverJoystick.getRightJoystickHorizontal() * multiplyer);
+                driveTrain.dualArcadeDrive(drivePower * multiplier,
+                        driverJoystick.getRightJoystickHorizontal() * multiplier);
                 break;
             case singleArcadeDrive:
-                driveTrain.singleAracadeDrive(driverJoystick.getLeftJoystickVertical() * multiplyer,
-                        driverJoystick.getLeftJoystickHorizontal() * multiplyer);
+                driveTrain.singleArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplier,
+                        driverJoystick.getLeftJoystickHorizontal() * multiplier);
                 break;
         }
 
         if (driverJoystick.getRightButton() && driverJoystick.getRightTrigger() > .5) {
-            multiplyer = 1;
+            multiplier = 1;
             driveTrain.highGear();
         } else if (driverJoystick.getRightButton()) {
-            multiplyer = 1;
+            multiplier = 1;
             driveTrain.lowGear();
         } else if (driverJoystick.getRightTrigger() > .5) {
-            multiplyer = .8;
+            multiplier = .8;
             driveTrain.highGear();
         } else {
-            multiplyer = .8;
+            multiplier = .8;
             driveTrain.lowGear();
         }
     }
@@ -248,13 +167,12 @@ public class Robot extends TimedRobot {
         }
 
         if (operatorJoystick.getLeftButton()) {
-            shooter.executeSpeedPID();
+            shooter.shootManually(shooterSpeed);
         } else {
-            shooter.disableSpeedPID();
             shooter.shootManually(0);
         }
-        if (shooter.isFinished() && operatorJoystick.getLeftButton()
-                || operatorJoystick.getLeftButton() && shooter.held) {
+
+        if (operatorJoystick.getLeftButton()) {
             operatorJoystick.setLeftRumble(1);
             operatorJoystick.setRightRumble(1);
         } else {
@@ -272,55 +190,20 @@ public class Robot extends TimedRobot {
             storage.disableManualStorage();
         }
 
-        if (operatorJoystick.getBButton() || driverJoystick.getBButton()) {
-            shooter.holdPosition();
-        } else if (operatorJoystick.getAButton()) {
-            if (!prevOperatorAState) {
-                shooter.setTurretDirection(TurretDirections.Left);
-                prevOperatorAState = true;
-            }
-            limelight.changeLEDStatus(LEDStates.On);
-            shooter.move();
-        } else {
-            shooter.goToCrashPosition();
-            limelight.changeLEDStatus(LEDStates.Off);
-            prevOperatorAState = false;
+        switch (operatorJoystick.getPOVPosition()) {
+            case Up:
+                if (prevPovPosition != PovPositions.Up)
+                    shooterSpeed = MathUtil.clamp(shooterSpeed += .1, 0, 1);
+                break;
+            case Down:
+                if (prevPovPosition != PovPositions.Down)
+                    shooterSpeed = MathUtil.clamp(shooterSpeed -= .1, 0, 1);
+                break;
+            default:
+                break;
         }
-        if (operatorJoystick.getAButton()) {
-            if (!prevOperatorAState) {
-                shooter.setTurretDirection(TurretDirections.Left);
-                prevOperatorAState = true;
-            }
-            limelight.changeLEDStatus(LEDStates.On);
-            shooter.move();
-        }
-        // else if (!endgame.endgameState) {
-        // shooter.manual(operatorJoystick.getRightJoystickHorizontal());
-        // }
-        else {
-            shooter.goToCrashPosition();
-            limelight.changeLEDStatus(LEDStates.Off);
-            prevOperatorAState = false;
-        }
+        prevPovPosition = operatorJoystick.getPOVPosition();
 
-        System.out.println("Right joystick value " + operatorJoystick.getRightJoystickVertical());
-
-        // if (operatorJoystick.getRightJoystickVertical() < -.1) {
-        // endgame.Directions = directionsOptions.extending;
-        // }
-
-        // else if (operatorJoystick.getRightJoystickVertical() > .1) {
-        // endgame.Directions = directionsOptions.retracting;
-        // }
-
-        // if (operatorJoystick.getXButton()) {
-        // endgame.Directions = directionsOptions.stop;
-        // }
-
-        endgame.onJoyStick(operatorJoystick.getRightJoystickVertical());
-
-        if (operatorJoystick.getXButton()) {
-            endgame.settingTopPosition();
-        }
+        shooter.moveTurret(operatorJoystick.getRightJoystickHorizontal());
     }
 }

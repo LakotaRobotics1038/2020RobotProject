@@ -126,7 +126,7 @@ public class DriveTrain implements Subsystem {
     }
 
     // Drive robot using a single stick (input range -1 to 1)
-    public void singleAracadeDrive(double speed, double turnValue) {
+    public void singleArcadeDrive(double speed, double turnValue) {
         differentialDrive.arcadeDrive(speed, turnValue, true);
     }
 

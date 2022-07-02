@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Joystick1038 extends Joystick {
+    public enum PovPositions {
+        Up, Down, Left, Right, None
+    }
+
     // Button Locations
     private final int X_BUTTON = 3;
     private final int A_BUTTON = 1;
@@ -26,7 +30,7 @@ public class Joystick1038 extends Joystick {
 
     /**
      * Creates a new Xbox joystick object
-     * 
+     *
      * @param port USB port the joystick should be in
      */
     public Joystick1038(int port) {
@@ -34,12 +38,30 @@ public class Joystick1038 extends Joystick {
     }
 
     /**
-     * Returns the state of the POV on the controller
+     * @deprecated
+     *             Returns the state of the POV on the controller
      *
      * @return value of POV
      */
+    @Deprecated
     public int getPOV() {
-        return getPOV(0);
+        throw new Error("Use getPOVPosition");
+    }
+
+    public PovPositions getPOVPosition() {
+        int povVal = super.getPOV();
+        switch (povVal) {
+            case 0:
+                return PovPositions.Up;
+            case 90:
+                return PovPositions.Right;
+            case 180:
+                return PovPositions.Down;
+            case 270:
+                return PovPositions.Left;
+            default:
+                return PovPositions.None;
+        }
     }
 
     /**

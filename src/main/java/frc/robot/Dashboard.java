@@ -8,7 +8,6 @@ public class Dashboard {
     private static Dashboard dashboard;
 
     private Shooter shooter = Shooter.getInstance();
-    private Limelight limelight = Limelight.getInstance();
 
     private String position;
     private String autonChooser;
@@ -34,8 +33,6 @@ public class Dashboard {
 
     public void update() {
         SmartDashboard.putNumber("Shooter Angle", shooter.getTurretEncoder());
-        SmartDashboard.putBoolean("Limelight Can See Target", limelight.canSeeTarget());
-        SmartDashboard.putBoolean("Prox", shooter.getHardStop());
     }
 
     public String getPosition() {
@@ -46,5 +43,3 @@ public class Dashboard {
         return autonChooser;
     }
 }
-
-//
