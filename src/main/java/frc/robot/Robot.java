@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
 
     // Drive
     private final DriveTrain driveTrain = DriveTrain.getInstance();
-    private double drivePower = 0;
 
     // Joystick
     private final Joystick1038 driverJoystick = new Joystick1038(0);
@@ -75,7 +74,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         // dashboard.update();
-        System.out.println(shooter.getShooterSpeed());
     }
 
     /**
@@ -119,20 +117,17 @@ public class Robot extends TimedRobot {
                         driverJoystick.getRightY() * multiplier);
                 break;
             case dualArcadeDrive:
-                if (driverJoystick.getLeftY() > 0) {
-                    drivePower = (driverJoystick.getLeftY() - .1) * (1 / .9);
-                } else if (driverJoystick.getLeftY() < 0) {
-                    drivePower = (driverJoystick.getLeftY() + .1) * (1 / .9);
-                } else {
-                    drivePower = 0;
-                }
-                driveTrain.dualArcadeDrive(drivePower * multiplier,
+                driveTrain.arcadeDrive(driverJoystick.getLeftY() * multiplier,
                         driverJoystick.getRightX() * multiplier);
                 break;
             case singleArcadeDrive:
-                driveTrain.singleArcadeDrive(driverJoystick.getLeftY() * multiplier,
+                driveTrain.arcadeDrive(driverJoystick.getLeftY() * multiplier,
                         driverJoystick.getLeftX() * multiplier);
                 break;
+        }
+
+        if (driverJoystick.getBackButton()) {
+            driveTrain.driveModeToggler();
         }
 
         if (driverJoystick.getRightBumper() && driverJoystick.getRightTriggerDigital()) {

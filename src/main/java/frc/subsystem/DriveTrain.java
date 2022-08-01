@@ -52,8 +52,8 @@ public class DriveTrain implements Subsystem {
 
         CANSparkLeftBack.setInverted(true);
         CANSparkLeftFront.setInverted(true);
-        CANSparkRightBack.setInverted(true);
-        CANSparkRightFront.setInverted(true);
+        CANSparkRightBack.setInverted(false);
+        CANSparkRightFront.setInverted(false);
 
         CANSparkLeftBack.setIdleMode(IdleMode.kCoast);
         CANSparkLeftFront.setIdleMode(IdleMode.kCoast);
@@ -120,18 +120,25 @@ public class DriveTrain implements Subsystem {
         }
     }
 
-    // Drive robot with tank controls (input range -1 to 1 for each stick)
+    /**
+     * Drive the robot in tank mode
+     *
+     * @param leftStickInput  the forward speed of the left side of the robot
+     *                        (-1 to 1)
+     * @param rightStickInput the forward speed of the right side of the robot
+     *                        (-1 to 1)
+     */
     public void tankDrive(double leftStickInput, double rightStickInput) {
         differentialDrive.tankDrive(leftStickInput, rightStickInput, true);
     }
 
-    // Drive robot using a single stick (input range -1 to 1)
-    public void singleArcadeDrive(double speed, double turnValue) {
-        differentialDrive.arcadeDrive(speed, turnValue, true);
-    }
-
-    // Drive robot using 2 sticks (input ranges -1 to 1)
-    public void dualArcadeDrive(double yaxis, double xaxis) {
-        differentialDrive.arcadeDrive(yaxis, xaxis, true);
+    /**
+     * Drive the robot in single stick arcade mode
+     *
+     * @param speed The forward speed of the robot (-1 to 1)
+     * @param turn  The turn speed of the robot (-1 to 1)
+     */
+    public void arcadeDrive(double speed, double turn) {
+        differentialDrive.arcadeDrive(speed, turn, true);
     }
 }
