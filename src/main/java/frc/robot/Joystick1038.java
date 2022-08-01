@@ -1,32 +1,26 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class Joystick1038 extends Joystick {
+public class Joystick1038 extends XboxController {
     public enum PovPositions {
         Up, Down, Left, Right, None
     }
 
-    // Button Locations
-    private final int X_BUTTON = 3;
-    private final int A_BUTTON = 1;
-    private final int B_BUTTON = 2;
-    private final int Y_BUTTON = 4;
-    private final int LEFT_BUTTON = 5;
-    private final int RIGHT_BUTTON = 6;
-    private final int SQUARE_BUTTON = 7;
-    private final int LINE_BUTTON = 8;
-    private final int LEFT_JOYSTICK_CLICK = 9;
-    private final int RIGHT_JOYSTICK_CLICK = 10;
-
-    // Joystick locations
-    private final int LEFT_STICK_HORIZONTAL = 0;
-    private final int LEFT_STICK_VERTICAL = 1;
-    private final int RIGHT_STICK_HORIZONTAL = 4;
-    private final int RIGHT_STICK_VERTICAL = 5;
-    private final int LEFT_TRIGGER = 2;
-    private final int RIGHT_TRIGGER = 3;
+    public final JoystickButton xButton;
+    public final JoystickButton yButton;
+    public final JoystickButton aButton;
+    public final JoystickButton bButton;
+    public final JoystickButton leftBumper;
+    public final JoystickButton leftStick;
+    public final Trigger leftTrigger;
+    public final JoystickButton rightBumper;
+    public final JoystickButton rightStick;
+    public final Trigger rightTrigger;
+    public final JoystickButton backButton;
+    public final JoystickButton startButton;
 
     /**
      * Creates a new Xbox joystick object
@@ -35,6 +29,18 @@ public class Joystick1038 extends Joystick {
      */
     public Joystick1038(int port) {
         super(port);
+        xButton = new JoystickButton(this, XboxController.Button.kX.value);
+        yButton = new JoystickButton(this, XboxController.Button.kY.value);
+        aButton = new JoystickButton(this, XboxController.Button.kA.value);
+        bButton = new JoystickButton(this, XboxController.Button.kB.value);
+        leftBumper = new JoystickButton(this, XboxController.Button.kLeftBumper.value);
+        leftStick = new JoystickButton(this, XboxController.Button.kLeftStick.value);
+        leftTrigger = new Trigger(this::getLeftTriggerDigital);
+        rightBumper = new JoystickButton(this, XboxController.Button.kRightBumper.value);
+        rightStick = new JoystickButton(this, XboxController.Button.kRightStick.value);
+        rightTrigger = new Trigger(this::getRightTriggerDigital);
+        backButton = new JoystickButton(this, XboxController.Button.kBack.value);
+        startButton = new JoystickButton(this, XboxController.Button.kStart.value);
     }
 
     /**
@@ -65,101 +71,11 @@ public class Joystick1038 extends Joystick {
     }
 
     /**
-     * Returns the state of the X button on the controller
-     *
-     * @return is the X button pressed
-     */
-    public boolean getXButton() {
-        return getRawButton(X_BUTTON);
-    }
-
-    /**
-     * Returns the state of the A button on the controller
-     *
-     * @return is the A button pressed
-     */
-    public boolean getAButton() {
-        return getRawButton(A_BUTTON);
-    }
-
-    /**
-     * Returns the state of the B button on the controller
-     *
-     * @return is the B button pressed
-     */
-    public boolean getBButton() {
-        return getRawButton(B_BUTTON);
-    }
-
-    /**
-     * Returns the state of the Y button on the controller
-     *
-     * @return is the Y button pressed
-     */
-    public boolean getYButton() {
-        return getRawButton(Y_BUTTON);
-    }
-
-    /**
-     * Returns the state of the left button on the controller
-     *
-     * @return is the left button pressed
-     */
-    public boolean getLeftButton() {
-        return getRawButton(LEFT_BUTTON);
-    }
-
-    /**
-     * Returns the state of the right button on the controller
-     *
-     * @return is the right button pressed
-     */
-    public boolean getRightButton() {
-        return getRawButton(RIGHT_BUTTON);
-    }
-
-    /**
-     * Returns the state of the back button on the controller
-     *
-     * @return is the back button pressed
-     */
-    public boolean getSquareButton() {
-        return getRawButton(SQUARE_BUTTON);
-    }
-
-    /**
-     * Returns the state of the start button on the controller
-     *
-     * @return is the start button pressed
-     */
-    public boolean getLineButton() {
-        return getRawButton(LINE_BUTTON);
-    }
-
-    /**
-     * Returns the state of the left joystick click on the controller
-     *
-     * @return is the left joystick button pressed
-     */
-    public boolean getLeftJoystickClick() {
-        return getRawButton(LEFT_JOYSTICK_CLICK);
-    }
-
-    /**
-     * Returns the state of the right joystick click on the controller
-     *
-     * @return is the right joystick button pressed
-     */
-    public boolean getRightJoystickClick() {
-        return getRawButton(RIGHT_JOYSTICK_CLICK);
-    }
-
-    /**
      * Returns the joystick axis value or 0 if less than deadband
      *
      * @return value of input axis, after deadband
      */
-    public double deadband(double value) {
+    private double deadband(double value) {
         return Math.abs(value) < 0.10 ? 0 : value;
     }
 
@@ -169,8 +85,8 @@ public class Joystick1038 extends Joystick {
      * @return value of the left joystick vertical axis, inverted so positive values
      *         are joystick up
      */
-    public double getLeftJoystickVertical() {
-        return deadband(-getRawAxis(LEFT_STICK_VERTICAL));
+    public double getLeftY() {
+        return deadband(-super.getLeftY());
     }
 
     /**
@@ -178,8 +94,8 @@ public class Joystick1038 extends Joystick {
      *
      * @return value of the left joystick horizontal axis
      */
-    public double getLeftJoystickHorizontal() {
-        return deadband(getRawAxis(LEFT_STICK_HORIZONTAL));
+    public double getLeftX() {
+        return deadband(super.getLeftX());
     }
 
     /**
@@ -188,8 +104,8 @@ public class Joystick1038 extends Joystick {
      * @return value of the right joystick vertical axis, inverted so positive
      *         values are joystick up
      */
-    public double getRightJoystickVertical() {
-        return deadband(-getRawAxis(RIGHT_STICK_VERTICAL));
+    public double getRightY() {
+        return deadband(-super.getRightY());
     }
 
     /**
@@ -197,26 +113,26 @@ public class Joystick1038 extends Joystick {
      *
      * @return value of the right joystick horizontal axis
      */
-    public double getRightJoystickHorizontal() {
-        return deadband(getRawAxis(RIGHT_STICK_HORIZONTAL));
+    public double getRightX() {
+        return deadband(super.getRightX());
     }
 
     /**
-     * Returns the state of the left trigger on its axis
+     * Returns the state of the left trigger as on or off
      *
      * @return value of the left trigger axis
      */
-    public double getLeftTrigger() {
-        return getRawAxis(LEFT_TRIGGER);
+    public boolean getLeftTriggerDigital() {
+        return super.getLeftTriggerAxis() > .5;
     }
 
     /**
-     * Returns the state of the right trigger on its axis
+     * Returns the state of the right trigger as on or off
      *
      * @return value of the right trigger axis
      */
-    public double getRightTrigger() {
-        return getRawAxis(RIGHT_TRIGGER);
+    public boolean getRightTriggerDigital() {
+        return super.getRightTriggerAxis() > .5;
     }
 
     /**
@@ -225,9 +141,8 @@ public class Joystick1038 extends Joystick {
      * @param speed the rumble speed between 0.0 and 1.0
      * @return the new speed
      */
-    public double setLeftRumble(double speed) {
-        setRumble(GenericHID.RumbleType.kLeftRumble, speed);
-        return speed;
+    public void setLeftRumble(double speed) {
+        setRumble(RumbleType.kLeftRumble, speed);
     }
 
     /**
@@ -236,8 +151,7 @@ public class Joystick1038 extends Joystick {
      * @param speed the rumble speed between 0.0 and 1.0
      * @return the new speed
      */
-    public double setRightRumble(double speed) {
-        setRumble(GenericHID.RumbleType.kRightRumble, speed);
-        return speed;
+    public void setRightRumble(double speed) {
+        setRumble(RumbleType.kRightRumble, speed);
     }
 }

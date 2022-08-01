@@ -115,33 +115,33 @@ public class Robot extends TimedRobot {
     public void driver() {
         switch (driveTrain.currentDriveMode) {
             case tankDrive:
-                driveTrain.tankDrive(driverJoystick.getLeftJoystickVertical() * multiplier,
-                        driverJoystick.getRightJoystickVertical() * multiplier);
+                driveTrain.tankDrive(driverJoystick.getLeftY() * multiplier,
+                        driverJoystick.getRightY() * multiplier);
                 break;
             case dualArcadeDrive:
-                if (driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) > 0) {
-                    drivePower = (driverJoystick.getLeftJoystickVertical() - .1) * (1 / .9);
-                } else if (driverJoystick.deadband(driverJoystick.getLeftJoystickVertical()) < 0) {
-                    drivePower = (driverJoystick.getLeftJoystickVertical() + .1) * (1 / .9);
+                if (driverJoystick.getLeftY() > 0) {
+                    drivePower = (driverJoystick.getLeftY() - .1) * (1 / .9);
+                } else if (driverJoystick.getLeftY() < 0) {
+                    drivePower = (driverJoystick.getLeftY() + .1) * (1 / .9);
                 } else {
                     drivePower = 0;
                 }
                 driveTrain.dualArcadeDrive(drivePower * multiplier,
-                        driverJoystick.getRightJoystickHorizontal() * multiplier);
+                        driverJoystick.getRightX() * multiplier);
                 break;
             case singleArcadeDrive:
-                driveTrain.singleArcadeDrive(driverJoystick.getLeftJoystickVertical() * multiplier,
-                        driverJoystick.getLeftJoystickHorizontal() * multiplier);
+                driveTrain.singleArcadeDrive(driverJoystick.getLeftY() * multiplier,
+                        driverJoystick.getLeftX() * multiplier);
                 break;
         }
 
-        if (driverJoystick.getRightButton() && driverJoystick.getRightTrigger() > .5) {
+        if (driverJoystick.getRightBumper() && driverJoystick.getRightTriggerDigital()) {
             multiplier = 1;
             driveTrain.highGear();
-        } else if (driverJoystick.getRightButton()) {
+        } else if (driverJoystick.getRightBumper()) {
             multiplier = 1;
             driveTrain.lowGear();
-        } else if (driverJoystick.getRightTrigger() > .5) {
+        } else if (driverJoystick.getRightTriggerDigital()) {
             multiplier = .8;
             driveTrain.highGear();
         } else {
@@ -151,9 +151,9 @@ public class Robot extends TimedRobot {
     }
 
     public void operator() {
-        if (operatorJoystick.getRightButton()) {
+        if (operatorJoystick.getRightBumper()) {
             acquisition.runBeaterBarFwd();
-        } else if (operatorJoystick.getRightTrigger() > .5) {
+        } else if (operatorJoystick.getRightTriggerDigital()) {
             acquisition.runBeaterBarRev();
         } else {
             acquisition.stopBeaterBar();
@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
             prevOperatorYState = false;
         }
 
-        if (operatorJoystick.getLeftButton()) {
+        if (operatorJoystick.getLeftBumper()) {
             shooter.shootManually(shooterSpeed);
             operatorJoystick.setLeftRumble(1);
             operatorJoystick.setRightRumble(1);
@@ -176,11 +176,11 @@ public class Robot extends TimedRobot {
             operatorJoystick.setLeftRumble(0);
         }
 
-        if (operatorJoystick.getLeftTrigger() > .5 && operatorJoystick.getLeftButton()) {
+        if (operatorJoystick.getLeftTriggerDigital() && operatorJoystick.getLeftBumper()) {
             shooter.feedBall();
-        } else if (operatorJoystick.getLeftJoystickVertical() > .5) {
+        } else if (operatorJoystick.getLeftY() > .5) {
             storage.enableManualStorage(ManualStorageModes.Forward);
-        } else if (operatorJoystick.getLeftJoystickVertical() < -.5) {
+        } else if (operatorJoystick.getLeftY() < -.5) {
             storage.enableManualStorage(ManualStorageModes.Reverse);
         } else {
             storage.disableManualStorage();
@@ -200,6 +200,6 @@ public class Robot extends TimedRobot {
         }
         prevPovPosition = operatorJoystick.getPOVPosition();
 
-        shooter.moveTurret(-operatorJoystick.getRightJoystickHorizontal());
+        shooter.moveTurret(-operatorJoystick.getRightY());
     }
 }
