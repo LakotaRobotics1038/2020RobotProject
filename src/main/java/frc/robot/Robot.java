@@ -195,6 +195,6 @@ public class Robot extends TimedRobot {
         }
         prevPovPosition = operatorJoystick.getPOVPosition();
 
-        shooter.moveTurret(-operatorJoystick.getRightY());
+        shooter.moveTurret(-operatorJoystick.getRightX());
     }
 }
